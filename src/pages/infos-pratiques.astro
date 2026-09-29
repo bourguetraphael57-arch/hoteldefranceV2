@@ -1,0 +1,88 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import PageHero from '../components/PageHero.astro';
+import AccessibilityNotice from '../components/AccessibilityNotice.astro';
+import ConfirmNote from '../components/ConfirmNote.astro';
+import { hotel } from '../data/hotel';
+import { seo } from '../data/seo';
+---
+<BaseLayout title={seo.infos.title} description={seo.infos.description}>
+  <Breadcrumbs items={[{ href: '/infos-pratiques/', label: 'Infos pratiques' }]} />
+  <PageHero
+    title="Infos pratiques et accessibilité"
+    lead="Horaires, accès, stationnement, équipements : l’essentiel pour préparer votre séjour. Si vous avez des besoins particuliers, lisez la rubrique accessibilité et appelez l’hôtel avant de réserver."
+  >
+    <nav aria-label="Sur cette page" class="mt-5">
+      <ul class="anchor-nav">
+        <li><a href="#horaires">Horaires</a></li>
+        <li><a href="#acces">Accès</a></li>
+        <li><a href="#equipements">Équipements</a></li>
+        <li><a href="#accessibilite">Accessibilité</a></li>
+      </ul>
+    </nav>
+  </PageHero>
+
+  <section class="section section--tight" aria-labelledby="horaires">
+    <div class="container">
+      <h2 id="horaires">Horaires</h2>
+      <dl class="facts facts--lg mt-5">
+        <dt>Arrivées</dt><dd>{hotel.horaires.arrivee}</dd>
+        <dt>Départs</dt><dd>{hotel.horaires.depart}</dd>
+        <dt>Petit-déjeuner</dt><dd>{hotel.horaires.petitDejeuner}</dd>
+        <dt>Restaurant</dt><dd>Dîner de 19 h à 21 h selon le site actuel (à confirmer) — <a href="/restaurant/#titre-horaires">horaires détaillés</a></dd>
+      </dl>
+      <p class="mt-4 muted">Vous arrivez après 20 h ? Prévenez l’hôtel.</p>
+    </div>
+  </section>
+
+  <section class="section section--alt" aria-labelledby="acces">
+    <div class="container split">
+      <div class="stack">
+        <h2 id="acces">Venir à l’hôtel</h2>
+        <address><strong>{hotel.nom}</strong><br />{hotel.adresse.rue}<br />{hotel.adresse.codePostal} {hotel.adresse.ville}</address>
+        <h3 class="h4">En voiture</h3>
+        <p>{hotel.acces.voiture}</p>
+        <h3 class="h4">En train</h3>
+        <p>{hotel.acces.train}</p>
+        <ConfirmNote items={[hotel.acces.trainAConfirmer]} />
+        <h3 class="h4">En avion</h3>
+        <p>{hotel.acces.avion}</p>
+        <p><a class="btn btn--secondary" href={hotel.itineraire} rel="noopener">Calculer l’itinéraire<span class="sr-only"> (Google Maps, site externe)</span></a></p>
+      </div>
+      <div class="stack">
+        <h3 class="h4">À proximité</h3>
+        <ul class="checklist">{hotel.acces.proximite.map((p) => <li>{p.lieu} : {p.distance}</li>)}</ul>
+        <ConfirmNote items={['distances reprises du site actuel ; le site actuel donne aussi 31 km pour les bateliers de la Malène']} />
+        <h3 class="h4">Stationnement</h3>
+        <p>Parking privé sécurisé à l’hôtel et garage pour les motos et les vélos.</p>
+        <ConfirmNote items={['parking gratuit ou payant, nombre de places, stationnement des autocars']} />
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="equipements">
+    <div class="container">
+      <h2 id="equipements">Équipements et services</h2>
+      <div class="table-wrap mt-5" role="region" aria-labelledby="caption-equipements" tabindex="0">
+        <table class="table">
+          <caption id="caption-equipements">Équipements annoncés sur le site actuel</caption>
+          <thead><tr><th scope="col">Équipement</th><th scope="col">Précision</th><th scope="col">À confirmer par l’hôtel</th></tr></thead>
+          <tbody>
+            {hotel.equipements.map((e) => (
+              <tr><th scope="row">{e.label}</th><td>{'detail' in e ? e.detail : '—'}</td><td>{'aConfirmer' in e ? e.aConfirmer : '—'}</td></tr>
+            ))}
+            <tr><th scope="row">Animaux</th><td>{hotel.animaux.texte}</td><td>{hotel.animaux.aConfirmer}</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--alt" aria-labelledby="accessibilite-titre">
+    <div class="container--narrow">
+      <AccessibilityNotice full />
+      <p class="mt-5"><a href="/faq/#accessibilite">Questions fréquentes sur l’accessibilité</a></p>
+    </div>
+  </section>
+</BaseLayout>

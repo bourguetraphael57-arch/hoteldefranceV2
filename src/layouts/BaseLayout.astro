@@ -1,0 +1,178 @@
+---
+import '../styles/global.css';
+import { hotel, adresseComplete } from '../data/hotel';
+import { navPrincipale, navPied } from '../data/navigation';
+import { bookingUrl } from '../lib/reservit';
+import Icon from '../components/Icon.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  /** Image de partage (chemin absolu depuis /public). */
+  image?: string;
+  noindex?: boolean;
+}
+const { title, description, image = '/images/libres/meyrueis-drone-1600.jpg', noindex = false } = Astro.props;
+const site = Astro.site ?? new URL(Astro.url.origin);
+const canonical = new URL(Astro.url.pathname, site).href;
+const path = Astro.url.pathname;
+const isCurrent = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
+const resa = bookingUrl();
+
+const hotelLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Hotel',
+  '@id': new URL('/#hotel', site).href,
+  name: hotel.nom,
+  url: new URL('/', site).href,
+  telephone: hotel.telephone.international,
+  email: hotel.email,
+  image: new URL('/images/libres/meyrueis-drone-1600.jpg', site).href,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: '10 place Jean Séquier',
+    postalCode: hotel.adresse.codePostal,
+    addressLocality: hotel.adresse.ville,
+    addressRegion: hotel.adresse.region,
+    addressCountry: hotel.adresse.pays,
+  },
+  geo: { '@type': 'GeoCoordinates', latitude: hotel.geo.lat, longitude: hotel.geo.lng },
+  checkinTime: '15:00',
+  checkoutTime: '11:00',
+  numberOfRooms: hotel.nombreChambres,
+};
+---
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex" />}
+    <meta name="theme-color" content="#F6F1E7" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preload" href="/fonts/source-serif-4-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="fr_FR" />
+    <meta property="og:site_name" content={hotel.nom} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={new URL(image, site).href} />
+    <script is:inline>document.documentElement.classList.add('js');</script>
+    {!noindex && <script type="application/ld+json" set:html={JSON.stringify(hotelLd)} />}
+    <slot name="head" />
+  </head>
+  <body>
+    <a class="skip-link" href="#contenu">Aller au contenu</a>
+    <div class="mockup-banner" role="note">
+      <p><strong>Maquette non officielle</strong> — pour réserver, utilisez les coordonnées officielles de l’hôtel : <a href={hotel.telephone.href}>{hotel.telephone.affiche}</a>.</p>
+    </div>
+    <div class="header-sentinel" aria-hidden="true"></div>
+    <header class="site-header" data-header>
+      <div class="container site-header__inner">
+        <a class="brand" href="/">{hotel.nom}<span>Meyrueis · Lozère</span></a>
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="menu-principal" hidden data-nav-toggle>
+          <span class="nav-toggle__open"><Icon name="menu" /></span><span class="nav-toggle__close"><Icon name="close" /></span><span data-label>Menu</span>
+        </button>
+        <nav class="site-nav" id="menu-principal" aria-label="Menu principal" data-nav>
+          <ul>
+            {navPrincipale.map((l) => (
+              <li><a href={l.href} aria-current={isCurrent(l.href) ? 'page' : undefined}>{l.label}</a></li>
+            ))}
+          </ul>
+          <div class="site-nav__extra">
+            <a class="btn btn--primary" href={resa}>Réserver en ligne</a>
+            <a class="btn btn--ghost" href={hotel.telephone.href}><Icon name="phone" /> Appeler le {hotel.telephone.affiche}</a>
+            <a class="btn btn--ghost" href="/contact/">Nous écrire</a>
+          </div>
+        </nav>
+        <div class="header-actions">
+          <a class="tel" href={hotel.telephone.href}><span class="sr-only">Appeler le </span>{hotel.telephone.affiche}</a>
+          <a class="btn btn--primary" href={resa}>Réserver</a>
+        </div>
+      </div>
+    </header>
+
+    <main id="contenu" tabindex="-1">
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <div class="container">
+        <div class="footer-grid">
+          <div>
+            <h2>{hotel.nom}</h2>
+            <address class="stack">
+              <p>{hotel.adresse.rue}<br />{hotel.adresse.codePostal} {hotel.adresse.ville}</p>
+              <p><a href={hotel.telephone.href}>{hotel.telephone.affiche}</a><br /><a href={`mailto:${hotel.email}`}>{hotel.email}</a></p>
+            </address>
+            <p class="mt-4">Arrivées {hotel.horaires.arrivee}<br />Départs {hotel.horaires.depart}</p>
+            <p class="mt-4"><a href={hotel.itineraire} rel="noopener">Itinéraire vers l’hôtel<span class="sr-only"> (Google Maps)</span></a></p>
+          </div>
+          {navPied.map((col) => (
+            <div>
+              <h2>{col.titre}</h2>
+              <ul>{col.liens.map((l) => <li><a href={l.href}>{l.label}</a></li>)}</ul>
+            </div>
+          ))}
+        </div>
+        <div class="footer-bottom">
+          <p><strong>Maquette non officielle</strong> de refonte du site du {hotel.nom}, réalisée sans validation de l’établissement. Les informations proviennent du site actuel et restent à confirmer par l’hôtel.</p>
+          <p>Photos du village et des environs sous licence libre : <a href="/credits-photos/">crédits photos</a>.</p>
+          <p class="sr-only">{adresseComplete}</p>
+        </div>
+      </div>
+    </footer>
+
+    <nav class="mobile-bar" aria-label="Actions rapides" data-mobile-bar>
+      <a class="is-primary" href={resa}><Icon name="calendar" />Réserver</a>
+      <a href={hotel.telephone.href}><Icon name="phone" />Appeler</a>
+      <a href={hotel.itineraire} rel="noopener"><Icon name="map" />Itinéraire</a>
+    </nav>
+
+    <script>
+      // En-tête : ombre après défilement (IntersectionObserver sur une sentinelle).
+      const header = document.querySelector<HTMLElement>('[data-header]');
+      const sentinel = document.querySelector('.header-sentinel');
+      if (header && sentinel && 'IntersectionObserver' in window) {
+        new IntersectionObserver(([entry]) => header.classList.toggle('is-scrolled', !entry?.isIntersecting)).observe(sentinel);
+      }
+
+      // Menu mobile.
+      const toggle = document.querySelector<HTMLButtonElement>('[data-nav-toggle]');
+      const nav = document.querySelector<HTMLElement>('[data-nav]');
+      const label = toggle?.querySelector('[data-label]');
+      const outside = [document.querySelector('main'), document.querySelector('footer'), document.querySelector('[data-mobile-bar]')];
+      const mq = window.matchMedia('(min-width: 64rem)');
+      const setOpen = (open: boolean, restoreFocus = false) => {
+        if (!toggle || !nav) return;
+        toggle.setAttribute('aria-expanded', String(open));
+        nav.classList.toggle('is-open', open);
+        if (label) label.textContent = open ? 'Fermer' : 'Menu';
+        outside.forEach((el) => el?.toggleAttribute('inert', open));
+        document.documentElement.style.overflow = open ? 'hidden' : '';
+        if (open && header) nav.style.setProperty('--nav-top', `${header.getBoundingClientRect().bottom}px`);
+        if (!open && restoreFocus) toggle.focus();
+      };
+      if (toggle && nav) {
+        toggle.hidden = false;
+        toggle.addEventListener('click', () => setOpen(toggle.getAttribute('aria-expanded') !== 'true'));
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') setOpen(false, true);
+        });
+        nav.addEventListener('click', (e) => { if ((e.target as HTMLElement).closest('a')) setOpen(false); });
+        mq.addEventListener('change', () => setOpen(false));
+      }
+
+      // Barre mobile masquée pendant la saisie (clavier virtuel).
+      const bar = document.querySelector<HTMLElement>('[data-mobile-bar]');
+      const isField = (el: EventTarget | null) => el instanceof HTMLElement && el.matches('input, select, textarea');
+      document.addEventListener('focusin', (e) => { if (isField(e.target)) bar?.classList.add('is-hidden'); });
+      document.addEventListener('focusout', (e) => { if (isField(e.target)) bar?.classList.remove('is-hidden'); });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,15 @@
+---
+/** Affichage d'un prix indicatif. Sans prix : texte explicite, jamais « -€ ». */
+import { formatEuros } from '../lib/format';
+interface Props { prix?: number; unite?: string; base?: string; indicatif?: boolean; vide?: string }
+const { prix, unite, base, indicatif = true, vide = 'Tarif sur demande' } = Astro.props;
+---
+{prix !== undefined ? (
+  <p class="price">
+    {formatEuros(prix)}{unite && <small> {unite}</small>}
+    {base && <small class="price__base"><br />{base}</small>}
+    {indicatif && <small class="price__note"><br /><span class="badge-confirm">Tarif indicatif, à confirmer</span></small>}
+  </p>
+) : (
+  <p class="price-unknown">{vide}</p>
+)}

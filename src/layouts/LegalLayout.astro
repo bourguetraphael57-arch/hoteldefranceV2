@@ -1,0 +1,18 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+interface Props { title: string; description: string; h1: string; href: string; maj: string; sommaire: { id: string; label: string }[] }
+const { title, description, h1, href, maj, sommaire } = Astro.props;
+---
+<BaseLayout title={title} description={description}>
+  <Breadcrumbs items={[{ href, label: h1 }]} />
+  <article class="container--narrow section--tight prose">
+    <h1 id="titre-page">{h1}</h1>
+    <p class="muted">Dernière mise à jour : {maj}</p>
+    <nav aria-label="Sommaire" class="panel">
+      <p><strong>Sommaire</strong></p>
+      <ol>{sommaire.map((s) => <li><a href={`#${s.id}`}>{s.label}</a></li>)}</ol>
+    </nav>
+    <slot />
+  </article>
+</BaseLayout>

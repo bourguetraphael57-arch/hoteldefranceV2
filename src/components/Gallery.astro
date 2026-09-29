@@ -1,0 +1,92 @@
+---
+/**
+ * Galerie de photos sous licence libre. Sans JS, chaque vignette est un lien vers l'image.
+ * Avec JS, une visionneuse <dialog> s'ouvre (clavier : ← →, Échap).
+ */
+import { getPhoto } from '../data/photos';
+interface Props { ids: string[]; label: string }
+const { ids, label } = Astro.props;
+const items = ids.map(getPhoto);
+---
+<div class="gallery-wrap" data-gallery>
+  <ul class="gallery" aria-label={label}>
+    {items.map((p, i) => (
+      <li>
+        <figure>
+          <a class="gallery__thumb" href={`${p.src}-1600.jpg`} data-index={i} data-full={`${p.src}-1600.webp`} data-alt={p.alt}
+             data-credit={`Photo : ${p.auteur}, ${p.licence}`} data-licence={p.licenceUrl} data-source={p.source}>
+            <picture>
+              <source type="image/webp" srcset={`${p.src}-800.webp`} />
+              <img src={`${p.src}-800.jpg`} width="800" height={Math.round((p.hauteur * 800) / p.largeur)} alt={p.alt} loading="lazy" decoding="async" />
+            </picture>
+            <span class="sr-only"> — agrandir</span>
+          </a>
+          <figcaption class="credit">
+            {p.sujet}. Photo : {p.auteur}, <a href={p.licenceUrl} rel="license noopener">{p.licence}</a>, <a href={p.source} rel="noopener">source<span class="sr-only"> de la photo « {p.sujet} »</span></a>
+          </figcaption>
+        </figure>
+      </li>
+    ))}
+  </ul>
+  <dialog class="lightbox" aria-label={`Visionneuse : ${label}`}>
+    <div class="lightbox__inner">
+      <div class="lightbox__bar">
+        <p class="lightbox__count" aria-live="polite"></p>
+        <button type="button" data-close>Fermer</button>
+      </div>
+      <figure>
+        <img alt="" />
+        <figcaption></figcaption>
+      </figure>
+      <div class="lightbox__bar">
+        <button type="button" data-prev>← Précédente</button>
+        <button type="button" data-next>Suivante →</button>
+      </div>
+    </div>
+  </dialog>
+</div>
+
+<script>
+  for (const root of document.querySelectorAll<HTMLElement>('[data-gallery]')) {
+    const dialog = root.querySelector('dialog');
+    const links = [...root.querySelectorAll<HTMLAnchorElement>('.gallery__thumb')];
+    if (!dialog || typeof dialog.showModal !== 'function' || links.length === 0) continue;
+    const img = dialog.querySelector('img')!;
+    const caption = dialog.querySelector('figcaption')!;
+    const count = dialog.querySelector('.lightbox__count')!;
+    let current = 0;
+    let opener: HTMLElement | null = null;
+
+    const show = (i: number) => {
+      current = (i + links.length) % links.length;
+      const a = links[current]!;
+      img.src = a.dataset.full ?? a.href;
+      img.alt = a.dataset.alt ?? '';
+      caption.textContent = '';
+      caption.append(`${a.dataset.alt ?? ''}. ${a.dataset.credit ?? ''} — `);
+      const src = document.createElement('a');
+      src.href = a.dataset.source ?? '#';
+      src.textContent = 'source et licence';
+      caption.append(src);
+      count.textContent = `Photo ${current + 1} sur ${links.length}`;
+    };
+
+    links.forEach((a, i) =>
+      a.addEventListener('click', (e) => {
+        e.preventDefault();
+        opener = a;
+        show(i);
+        dialog.showModal();
+      }),
+    );
+    dialog.querySelector('[data-close]')?.addEventListener('click', () => dialog.close());
+    dialog.querySelector('[data-prev]')?.addEventListener('click', () => show(current - 1));
+    dialog.querySelector('[data-next]')?.addEventListener('click', () => show(current + 1));
+    dialog.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') show(current - 1);
+      if (e.key === 'ArrowRight') show(current + 1);
+    });
+    dialog.addEventListener('click', (e) => { if (e.target === dialog) dialog.close(); });
+    dialog.addEventListener('close', () => opener?.focus());
+  }
+</script>

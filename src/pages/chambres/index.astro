@@ -1,0 +1,100 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import PageHero from '../../components/PageHero.astro';
+import RoomCard from '../../components/RoomCard.astro';
+import OfferCard from '../../components/OfferCard.astro';
+import BookingBlock from '../../components/BookingBlock.astro';
+import ConfirmNote from '../../components/ConfirmNote.astro';
+import { chambres, equipementsCommuns, vuesChambres } from '../../data/chambres';
+import { getOffre } from '../../data/offres';
+import { hotel } from '../../data/hotel';
+import { personnes } from '../../lib/format';
+import { seo } from '../../data/seo';
+
+const petitDej = getOffre('petit-dejeuner')!;
+const demiPension = getOffre('demi-pension')!;
+---
+<BaseLayout title={seo.chambres.title} description={seo.chambres.description}>
+  <Breadcrumbs items={[{ href: '/chambres/', label: 'Chambres' }]} />
+  <PageHero
+    title="Nos chambres à Meyrueis"
+    lead={`Selon le site actuel, les ${hotel.nombreChambres} chambres ont été rénovées en ${hotel.renovation} et sont desservies par un ascenseur (à confirmer). ${vuesChambres}`}
+  />
+
+  <section class="section section--tight" aria-labelledby="titre-equipements">
+    <div class="container">
+      <h2 id="titre-equipements">Dans toutes les chambres</h2>
+      <ul class="checklist grid grid--3 mt-5">
+        {equipementsCommuns.map((e) => <li>{e}</li>)}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section--alt" aria-labelledby="titre-categories">
+    <div class="container">
+      <div class="section__head">
+        <h2 id="titre-categories">Choisir sa chambre</h2>
+        <p>Les tarifs varient selon les dates : ils s’affichent sur le moteur de réservation.</p>
+      </div>
+      <div class="grid grid--4">
+        {chambres.map((c) => <RoomCard chambre={c} />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="titre-comparatif" id="comparatif">
+    <div class="container">
+      <h2 id="titre-comparatif">Comparer les chambres</h2>
+      <div class="table-wrap mt-5" role="region" aria-labelledby="caption-comparatif" tabindex="0">
+        <table class="table">
+          <caption id="caption-comparatif">Comparatif des quatre catégories de chambres</caption>
+          <thead>
+            <tr>
+              <th scope="col">Chambre</th>
+              <th scope="col">Capacité</th>
+              <th scope="col">Literie</th>
+              <th scope="col">Surface</th>
+              <th scope="col">Salle de bain</th>
+              <th scope="col">Tarif</th>
+            </tr>
+          </thead>
+          <tbody>
+            {chambres.map((c) => (
+              <tr>
+                <th scope="row"><a href={`/chambres/${c.slug}/`}>{c.nom}</a></th>
+                <td>{c.capacite ? personnes(c.capacite) : 'Non communiquée'}</td>
+                <td>{c.literie ?? 'Non communiquée'}</td>
+                <td>{c.surface ?? 'Non communiquée'}</td>
+                <td>Baignoire ou douche, WC</td>
+                <td>Selon les dates</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <ConfirmNote class="mt-5">
+        la literie et la surface des chambres twin, triple et familiale ne sont pas publiées sur le site actuel ; le type de salle de bain (baignoire ou douche) varie selon la chambre
+      </ConfirmNote>
+    </div>
+  </section>
+
+  <section class="section section--alt" aria-labelledby="titre-repas">
+    <div class="container">
+      <div class="section__head">
+        <h2 id="titre-repas">Petit-déjeuner et demi-pension</h2>
+        <p>Le petit-déjeuner est servi de 7 h 30 à 9 h 30, en supplément du prix de la chambre.</p>
+      </div>
+      <div class="grid grid--2">
+        <OfferCard offre={petitDej} />
+        <OfferCard offre={demiPension} />
+      </div>
+    </div>
+  </section>
+
+  <div class="section">
+    <div class="container--narrow">
+      <BookingBlock />
+    </div>
+  </div>
+</BaseLayout>

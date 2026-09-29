@@ -1,0 +1,105 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import BookingBlock from '../../components/BookingBlock.astro';
+import RoomCard from '../../components/RoomCard.astro';
+import PhotoPending from '../../components/PhotoPending.astro';
+import PhotoOfficielle from '../../components/PhotoOfficielle.astro';
+import { photosDe, photoSalleDeBain, creditOfficiel } from '../../data/photos-officielles';
+import ConfirmNote from '../../components/ConfirmNote.astro';
+import AccessibilityNotice from '../../components/AccessibilityNotice.astro';
+import { chambres, equipementsCommuns, vuesChambres, type Chambre } from '../../data/chambres';
+import { hotel } from '../../data/hotel';
+import { personnes } from '../../lib/format';
+import { seo } from '../../data/seo';
+import { intros } from '../../data/intros';
+
+export function getStaticPaths() {
+  return chambres.map((chambre) => ({ params: { slug: chambre.slug }, props: { chambre } }));
+}
+interface Props { chambre: Chambre }
+const { chambre: c } = Astro.props;
+const meta = seo[c.slug as keyof typeof seo];
+const autres = chambres.filter((x) => x.slug !== c.slug);
+const [principale, ...secondaires] = photosDe(c.slug);
+const vignettes = [...secondaires, photoSalleDeBain];
+---
+<BaseLayout title={meta.title} description={meta.description}>
+  <Breadcrumbs items={[{ href: '/chambres/', label: 'Chambres' }, { href: `/chambres/${c.slug}/`, label: c.nom }]} />
+
+  <article>
+    <div class="container split section--tight">
+      <div class="stack">
+        <h1 id="titre-page">{c.nom}</h1>
+        <dl class="facts facts--lg">
+          <dt>Capacité</dt><dd>{c.capacite ? `${personnes(c.capacite)} maximum` : 'Non communiquée'}</dd>
+          <dt>Literie</dt><dd>{c.literie ?? 'Non communiquée'}</dd>
+          <dt>Surface</dt><dd>{c.surface ?? 'Non communiquée'}</dd>
+          <dt>Tarif</dt><dd>Selon les dates, affiché sur le moteur de réservation</dd>
+        </dl>
+        <p>{intros[c.slug as keyof typeof intros] ?? c.resume}</p>
+        <ConfirmNote items={c.aConfirmer} />
+        <div class="btn-row">
+          <a class="btn btn--primary" href="#reserver">Choisir mes dates</a>
+          <a class="btn btn--ghost" href={hotel.telephone.href}>Appeler le {hotel.telephone.affiche}</a>
+        </div>
+      </div>
+      <div class="room-gallery">
+        {principale ? (
+          <>
+            <PhotoOfficielle photo={principale} class="room-gallery__main" legende={false} eager />
+            {principale.remarque && <p class="credit">{principale.remarque}</p>}
+            <ul class="room-gallery__thumbs" aria-label={`Autres photos : ${c.nom.toLowerCase()} et salle de bain`}>
+              {vignettes.map((p) => (
+                <li>
+                  <a href={`${p.src}-1600.jpg`}>
+                    <PhotoOfficielle photo={p} legende={false} sizes="(min-width: 64rem) 12rem, 33vw" />
+                    <span class="sr-only"> — voir en grand format</span>
+                  </a>
+                  {p.remarque && <p class="credit">{p.remarque}</p>}
+                </li>
+              ))}
+            </ul>
+            <p class="credit">{creditOfficiel}. Photos du site actuel, affichées dans cette maquette non officielle en attente d’accord.</p>
+          </>
+        ) : (
+          <PhotoPending label={`${c.nom} (photo officielle en attente d’autorisation)`} ratio="4 / 3" class="media-rounded" />
+        )}
+      </div>
+    </div>
+
+    <div class="container section--tight">
+      <BookingBlock roomtcode={c.roomtcode} chambre={c.nom} titre={`Réserver la ${c.nom.toLowerCase()}`} />
+    </div>
+
+    <div class="container split section">
+      <section aria-labelledby="titre-equipements" class="stack">
+        <h2 id="titre-equipements">Équipements</h2>
+        <ul class="checklist">
+          {equipementsCommuns.map((e) => <li>{e}</li>)}
+          <li>Ascenseur (étages desservis à confirmer)</li>
+        </ul>
+        <p class="muted">{vuesChambres}</p>
+      </section>
+      <section aria-labelledby="titre-conditions" class="stack">
+        <h2 id="titre-conditions">Bon à savoir</h2>
+        <dl class="facts facts--lg">
+          <dt>Arrivée</dt><dd>{hotel.horaires.arrivee}</dd>
+          <dt>Départ</dt><dd>{hotel.horaires.depart}</dd>
+          <dt>Petit-déjeuner</dt><dd>{hotel.horaires.petitDejeuner}, en supplément</dd>
+          <dt>Animaux</dt><dd>Admis sous conditions, à signaler à la réservation</dd>
+        </dl>
+        <AccessibilityNotice headingLevel="h3" id="accessibilite-chambre" />
+      </section>
+    </div>
+  </article>
+
+  <section class="section section--alt" aria-labelledby="titre-autres">
+    <div class="container">
+      <h2 id="titre-autres">Les autres chambres</h2>
+      <div class="grid grid--3 mt-5">
+        {autres.map((x) => <RoomCard chambre={x} />)}
+      </div>
+    </div>
+  </section>
+</BaseLayout>

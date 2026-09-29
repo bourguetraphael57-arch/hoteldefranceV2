@@ -1,0 +1,71 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import PageHero from '../components/PageHero.astro';
+import Gallery from '../components/Gallery.astro';
+import ConfirmNote from '../components/ConfirmNote.astro';
+import { sites, themesSites, village, type ThemeSite } from '../data/environs';
+import { hotel } from '../data/hotel';
+import { seo } from '../data/seo';
+
+const themes = Object.keys(themesSites) as ThemeSite[];
+---
+<BaseLayout title={seo.environs.title} description={seo.environs.description} image="/images/libres/gorges-jonte-1600.jpg">
+  <Breadcrumbs items={[{ href: '/meyrueis-environs/', label: 'Meyrueis & environs' }]} />
+  <PageHero title="Meyrueis et ses environs" lead={village.intro} />
+
+  <section class="section section--tight" aria-labelledby="titre-galerie">
+    <div class="container">
+      <h2 id="titre-galerie">En images</h2>
+      <p class="muted mt-4">Photos sous licence libre (Wikimedia Commons). Sélectionnez une photo pour l’agrandir.</p>
+      <div class="mt-5">
+        <Gallery label="Meyrueis et ses environs" ids={['meyrueis-drone', 'meyrueis-pont', 'meyrueis-rue', 'gorges-jonte', 'causse-mejean', 'aigoual', 'gorges-tarn', 'vautours', 'dargilan', 'aven-armand']} />
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--alt" aria-labelledby="titre-sites">
+    <div class="container">
+      <div class="section__head">
+        <h2 id="titre-sites">Que visiter autour de l’hôtel</h2>
+        <p>Une sélection de sites proposée par l’hôtel. Les liens mènent vers des sites externes.</p>
+      </div>
+      <div class="table-wrap" role="region" aria-labelledby="caption-sites" tabindex="0">
+        <table class="table">
+          <caption id="caption-sites">Sites à visiter, par thème, avec la distance ou le temps de trajet depuis l’hôtel</caption>
+          <thead><tr><th scope="col">Site</th><th scope="col">Thème</th><th scope="col">Depuis l’hôtel</th><th scope="col">En savoir plus</th></tr></thead>
+          <tbody>
+            {themes.flatMap((t) => sites.filter((s) => s.theme === t)).map((s) => (
+              <tr>
+                <th scope="row">{s.nom}<br /><span class="muted">{s.texte}</span></th>
+                <td>{themesSites[s.theme]}</td>
+                <td>{s.distance}{s.distanceVerifiee && <><br /><small class="muted">{s.distanceVerifiee}</small></>}</td>
+                <td><a href={s.url} rel="noopener" class="ext">En savoir plus<span class="sr-only"> : {s.nom} (site externe)</span></a></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <ConfirmNote class="mt-5" items={['distances et temps de trajet (repris du site actuel, avec des unités différentes) ; quand une vérification cartographique donne une autre valeur, elle est indiquée en dessous']} />
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="titre-terroir">
+    <div class="container split">
+      <div class="stack">
+        <h2 id="titre-terroir">Terroir et rendez-vous</h2>
+        <p>{village.terroir}</p>
+        <ul class="checklist">
+          {hotel.evenements.map((e) => <li><strong>{e.nom}</strong> — {e.quand}</li>)}
+        </ul>
+        <ConfirmNote items={['dates du marché et de la foire pour la saison en cours']} />
+        <p>Besoin d’un conseil pour organiser vos journées ? L’équipe de l’hôtel connaît bien la région : <a href={hotel.telephone.href}>{hotel.telephone.affiche}</a>.</p>
+      </div>
+      <div class="panel panel--info stack">
+        <h2 class="h4">Randonner dans le Parc national</h2>
+        <p>Meyrueis est aux portes du Parc national des Cévennes. Restez sur les sentiers balisés et respectez la faune et les troupeaux.</p>
+        <p><a href="/offres/#circuits">Les circuits randonnée, vélo et moto proposés par l’hôtel</a></p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

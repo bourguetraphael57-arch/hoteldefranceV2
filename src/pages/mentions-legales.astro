@@ -1,0 +1,46 @@
+---
+import LegalLayout from '../layouts/LegalLayout.astro';
+import ConfirmNote from '../components/ConfirmNote.astro';
+import { hotel } from '../data/hotel';
+import { seo } from '../data/seo';
+const sommaire = [
+  { id: 'statut', label: 'Statut de ce site' },
+  { id: 'editeur', label: 'Éditeur' },
+  { id: 'hebergement', label: 'Hébergement' },
+  { id: 'prix', label: 'Prix et conditions de vente' },
+  { id: 'mediation', label: 'Médiation de la consommation' },
+  { id: 'propriete', label: 'Propriété intellectuelle et photos' },
+];
+---
+<LegalLayout title={seo.mentions.title} description={seo.mentions.description} h1="Mentions légales" href="/mentions-legales/" maj="29 septembre 2026 (proposition)" sommaire={sommaire}>
+  <h2 id="statut">Statut de ce site</h2>
+  <p class="note-confirm"><strong>Maquette non officielle.</strong> Ce site est une proposition de refonte réalisée sans l’accord de l’établissement. Il ne doit pas être mis en ligne comme site officiel avant validation par l’hôtel. Les informations ci-dessous reprennent celles du site actuel et doivent être vérifiées.</p>
+
+  <h2 id="editeur">Éditeur</h2>
+  <p>Informations publiées sur le site actuel :</p>
+  <ul>
+    <li>Dénomination : « APCl HOTEL DE FRANCE » (orthographe à vérifier)</li>
+    <li>Siège : place Jean Séquier, 48150 Meyrueis</li>
+    <li>Représentant : Thibault Cordelier, gérant</li>
+    <li>RCS Mende 442 392 155 — SIRET 442 392 155 00010 — code APE 5510Z</li>
+    <li>TVA intracommunautaire : FR70 442 392 155</li>
+    <li>Téléphone : <a href={hotel.telephone.href}>{hotel.telephone.affiche}</a> — e-mail : <a href={`mailto:${hotel.email}`}>{hotel.email}</a></li>
+  </ul>
+  <ConfirmNote items={['dénomination et forme juridique exactes', 'capital social (non renseigné sur le site actuel)', 'directeur de la publication', 'immatriculation au RCS (mention « A » à vérifier)']} />
+
+  <h2 id="hebergement">Hébergement</h2>
+  <p>Hébergeur du nouveau site : à désigner.</p>
+  <ConfirmNote items={['nom, adresse et téléphone de l’hébergeur retenu']} />
+
+  <h2 id="prix">Prix et conditions de vente</h2>
+  <p>Les tarifs des chambres sont indiqués sur le moteur de réservation en ligne (Reservit), avec les conditions propres à chaque tarif. Les prix des formules présentés sur ce site sont indicatifs.</p>
+  <p>Conformément à l’article L221-28 du Code de la consommation, le droit de rétractation ne s’applique pas aux prestations d’hébergement fournies à une date déterminée.</p>
+  <ConfirmNote items={['conditions générales de vente (absentes du site actuel) : réservation, acompte, annulation, paiement, taxe de séjour, animaux']} />
+
+  <h2 id="mediation">Médiation de la consommation</h2>
+  <p>Après avoir contacté l’hôtel et à défaut de réponse satisfaisante dans un délai de 60 jours, le client peut saisir gratuitement le Médiateur du Tourisme et du Voyage : <a href="https://www.mtv.travel/" rel="noopener">www.mtv.travel</a>.</p>
+  <ConfirmNote items={['adhésion actuelle de l’hôtel à ce médiateur']} />
+
+  <h2 id="propriete">Propriété intellectuelle et photos</h2>
+  <p>Les photos du village et des environs sont publiées sous licence libre ; leurs auteurs et licences figurent sur la page <a href="/credits-photos/">crédits photos</a>. Les photos officielles de l’hôtel ne sont pas utilisées sur cette maquette, faute d’autorisation écrite : des emplacements « Photo à venir » les remplacent.</p>
+</LegalLayout>

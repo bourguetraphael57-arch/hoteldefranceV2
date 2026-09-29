@@ -1,0 +1,36 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import PageHero from '../components/PageHero.astro';
+import { photos } from '../data/photos';
+---
+<BaseLayout title="Crédits photos | Grand Hôtel de France" description="Auteurs, licences et sources des photos libres de Meyrueis et de ses environs utilisées sur ce site : photos Wikimedia Commons, redimensionnées pour le web.">
+  <Breadcrumbs items={[{ href: '/credits-photos/', label: 'Crédits photos' }]} />
+  <PageHero
+    title="Crédits photos"
+    lead="Les photos du village et des environs proviennent de Wikimedia Commons et sont publiées sous licence libre. Elles ont été redimensionnées pour le web. Les photos des chambres proviennent du site actuel de l’hôtel : elles lui appartiennent et ne figurent ici que dans une maquette locale, en attente de son autorisation écrite."
+  />
+  <div class="container section--tight">
+    <div class="table-wrap" role="region" aria-labelledby="caption-credits" tabindex="0">
+      <table class="table">
+        <caption id="caption-credits">Photos utilisées, avec auteur, licence et source</caption>
+        <thead><tr><th scope="col">Sujet</th><th scope="col">Auteur</th><th scope="col">Licence</th><th scope="col">Source</th></tr></thead>
+        <tbody>
+          {photos.map((p) => (
+            <tr>
+              <th scope="row">{p.sujet}</th>
+              <td>{p.auteur}</td>
+              <td><a href={p.licenceUrl} rel="license noopener">{p.licence}</a></td>
+              <td><a href={p.source} rel="noopener">Page Wikimedia Commons<span class="sr-only"> : {p.sujet}</span></a></td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+    <p class="mt-5 muted">Les images sous licence CC BY-SA modifiées (redimensionnement) restent diffusées sous la même licence.</p>
+    <section class="mt-6 stack" aria-labelledby="titre-officielles">
+      <h2 id="titre-officielles">Photos des chambres</h2>
+      <p>Les photos des chambres et de la salle de bain sont reprises du site actuel du Grand Hôtel de France (hotel-meyrueis-lozere.fr), redimensionnées pour le web. Elles restent la propriété de l’hôtel. Aucune licence de réutilisation n’a été accordée : elles ne doivent pas être publiées en ligne sans l’autorisation écrite de l’établissement.</p>
+    </section>
+  </div>
+</BaseLayout>

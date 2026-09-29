@@ -1,0 +1,173 @@
+---
+/**
+ * Formulaire de contact / demande de disponibilité, rendu côté serveur.
+ * Fonctionne sans JavaScript ; le JS ajoute seulement la validation avant envoi.
+ */
+import { OBJETS, CHAMBRES_FORM, LIMITES, LIBELLES, type ContactData, type Erreurs } from '../lib/contact';
+
+interface Props { values: ContactData; errors: Erreurs; today: string }
+const { values: v, errors, today } = Astro.props;
+const errKeys = Object.keys(errors) as (keyof ContactData)[];
+const desc = (k: keyof ContactData, hint?: string) =>
+  [hint, errors[k] ? `${k}-err` : undefined].filter(Boolean).join(' ') || undefined;
+const inv = (k: keyof ContactData) => (errors[k] ? 'true' : undefined);
+---
+<form class="form" method="post" action="/contact/" novalidate data-contact-form>
+  {errKeys.length > 0 && (
+    <div class="alert alert--error" role="alert" tabindex="-1" id="erreurs" data-error-summary>
+      <h2>Le formulaire contient {errKeys.length} erreur{errKeys.length > 1 ? 's' : ''}</h2>
+      <ul>
+        {errKeys.map((k) => <li><a href={`#${k}`}>{LIBELLES[k]} : {errors[k]}</a></li>)}
+      </ul>
+    </div>
+  )}
+
+  <p class="muted">Les champs marqués « (obligatoire) » doivent être remplis. Indiquez au moins un e-mail ou un téléphone.</p>
+
+  <div class="field">
+    <label for="objet">Objet de votre demande <span class="req">(obligatoire)</span></label>
+    <select id="objet" name="objet" aria-invalid={inv('objet')}>
+      {Object.entries(OBJETS).map(([k, label]) => <option value={k} selected={v.objet === k}>{label}</option>)}
+    </select>
+  </div>
+
+  <div class="form-row form-row--2">
+    <div class="field">
+      <label for="nom">Nom et prénom <span class="req">(obligatoire)</span></label>
+      <input id="nom" name="nom" type="text" autocomplete="name" maxlength={LIMITES.nom} required value={v.nom}
+        aria-invalid={inv('nom')} aria-describedby={desc('nom')} />
+      {errors.nom && <p class="error" id="nom-err">{errors.nom}</p>}
+    </div>
+    <div class="field">
+      <label for="email">E-mail</label>
+      <input id="email" name="email" type="email" autocomplete="email" inputmode="email" maxlength={LIMITES.email} value={v.email}
+        aria-invalid={inv('email')} aria-describedby={desc('email', 'email-hint')} />
+      <p class="hint" id="email-hint">E-mail ou téléphone : au moins l’un des deux.</p>
+      {errors.email && <p class="error" id="email-err">{errors.email}</p>}
+    </div>
+  </div>
+
+  <div class="field">
+    <label for="telephone">Téléphone</label>
+    <input id="telephone" name="telephone" type="tel" autocomplete="tel" inputmode="tel" maxlength={LIMITES.telephone} value={v.telephone}
+      aria-invalid={inv('telephone')} aria-describedby={desc('telephone')} />
+    {errors.telephone && <p class="error" id="telephone-err">{errors.telephone}</p>}
+  </div>
+
+  <fieldset class="field" data-sejour>
+    <legend>Votre séjour <span class="req">(obligatoire pour une demande de disponibilité)</span></legend>
+    <div class="form-row form-row--2">
+      <div class="field">
+        <label for="arrivee">Arrivée</label>
+        <input id="arrivee" name="arrivee" type="date" min={today} value={v.arrivee} aria-invalid={inv('arrivee')} aria-describedby={desc('arrivee')} />
+        {errors.arrivee && <p class="error" id="arrivee-err">{errors.arrivee}</p>}
+      </div>
+      <div class="field">
+        <label for="depart">Départ</label>
+        <input id="depart" name="depart" type="date" min={today} value={v.depart} aria-invalid={inv('depart')} aria-describedby={desc('depart')} />
+        {errors.depart && <p class="error" id="depart-err">{errors.depart}</p>}
+      </div>
+    </div>
+    <div class="form-row form-row--3">
+      <div class="field">
+        <label for="adultes">Adultes</label>
+        <input id="adultes" name="adultes" type="number" min="1" max="60" inputmode="numeric" value={v.adultes} aria-invalid={inv('adultes')} aria-describedby={desc('adultes')} />
+        {errors.adultes && <p class="error" id="adultes-err">{errors.adultes}</p>}
+      </div>
+      <div class="field">
+        <label for="enfants">Enfants</label>
+        <input id="enfants" name="enfants" type="number" min="0" max="30" inputmode="numeric" value={v.enfants} aria-invalid={inv('enfants')} aria-describedby={desc('enfants')} />
+        {errors.enfants && <p class="error" id="enfants-err">{errors.enfants}</p>}
+      </div>
+      <div class="field">
+        <label for="chambre">Type de chambre</label>
+        <select id="chambre" name="chambre" aria-invalid={inv('chambre')} aria-describedby={desc('chambre')}>
+          {CHAMBRES_FORM.map((c) => <option value={c} selected={v.chambre === c || (!v.chambre && c === 'Indifférent')}>{c}</option>)}
+        </select>
+        {errors.chambre && <p class="error" id="chambre-err">{errors.chambre}</p>}
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="field">
+    <label for="message">Message <span class="req">(obligatoire sauf pour une demande de disponibilité)</span></label>
+    <textarea id="message" name="message" rows="6" maxlength={LIMITES.message} aria-invalid={inv('message')} aria-describedby={desc('message', 'message-hint')}>{v.message}</textarea>
+    <p class="hint" id="message-hint">
+      Besoin particulier (accessibilité, animal, arrivée tardive) ? Décrivez seulement ce qui aide l’hôtel à vous répondre ; n’indiquez pas d’information médicale.
+    </p>
+    {errors.message && <p class="error" id="message-err">{errors.message}</p>}
+  </div>
+
+  <div class="hp" aria-hidden="true">
+    <label for="site_web">Ne pas remplir ce champ</label>
+    <input id="site_web" name="site_web" type="text" tabindex="-1" autocomplete="off" />
+  </div>
+
+  <p class="muted"><small>
+    Vos données servent uniquement à répondre à votre demande. Elles ne sont pas enregistrées sur ce site et sont transmises
+    par e-mail à l’hôtel. Voir la <a href="/confidentialite/">politique de confidentialité</a>.
+  </small></p>
+
+  <div>
+    <button type="submit" class="btn btn--primary">Envoyer ma demande</button>
+  </div>
+  <p class="muted"><small>Une demande de disponibilité n’est pas une réservation : l’hôtel vous répond pour confirmer ou non.</small></p>
+</form>
+
+<script>
+  import { parseContact, validateContact, LIBELLES, type ContactData } from '../lib/contact';
+
+  const form = document.querySelector<HTMLFormElement>('[data-contact-form]');
+  const summary = document.querySelector<HTMLElement>('[data-error-summary]');
+  summary?.focus();
+
+  if (form) {
+    form.addEventListener('submit', (e) => {
+      const data = Object.fromEntries(new FormData(form).entries());
+      const today = new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+      const errors = validateContact(parseContact(data), today);
+      const keys = Object.keys(errors) as (keyof ContactData)[];
+
+      form.querySelectorAll('[data-client-error]').forEach((n) => n.remove());
+      form.querySelectorAll('[aria-invalid="true"]').forEach((n) => n.removeAttribute('aria-invalid'));
+      document.querySelector('[data-error-summary]')?.remove();
+      if (keys.length === 0) return;
+
+      e.preventDefault();
+      for (const k of keys) {
+        const field = form.querySelector<HTMLElement>(`#${k}`);
+        if (!field) continue;
+        field.setAttribute('aria-invalid', 'true');
+        const p = document.createElement('p');
+        p.className = 'error';
+        p.id = `${k}-err`;
+        p.dataset.clientError = '';
+        p.textContent = errors[k] ?? '';
+        document.getElementById(`${k}-err`)?.remove();
+        field.insertAdjacentElement('afterend', p);
+        const ids = new Set((field.getAttribute('aria-describedby') ?? '').split(' ').filter(Boolean));
+        ids.add(p.id);
+        field.setAttribute('aria-describedby', [...ids].join(' '));
+      }
+      const box = document.createElement('div');
+      box.className = 'alert alert--error';
+      box.setAttribute('role', 'alert');
+      box.tabIndex = -1;
+      box.dataset.errorSummary = '';
+      const h = document.createElement('h2');
+      h.textContent = `Le formulaire contient ${keys.length} erreur${keys.length > 1 ? 's' : ''}`;
+      const ul = document.createElement('ul');
+      for (const k of keys) {
+        const li = document.createElement('li');
+        const a = document.createElement('a');
+        a.href = `#${k}`;
+        a.textContent = `${LIBELLES[k]} : ${errors[k]}`;
+        li.append(a);
+        ul.append(li);
+      }
+      box.append(h, ul);
+      form.prepend(box);
+      box.focus();
+    });
+  }
+</script>

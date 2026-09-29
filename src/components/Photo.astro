@@ -1,0 +1,39 @@
+---
+/** Photo sous licence libre, avec son crédit (obligatoire pour CC BY / BY-SA). */
+import { getPhoto } from '../data/photos';
+
+interface Props {
+  id: string;
+  sizes?: string;
+  eager?: boolean;
+  /** Affiche le crédit sous l'image (sinon, à placer ailleurs sur la page). */
+  credit?: boolean;
+  class?: string;
+  alt?: string;
+}
+const { id, sizes = '(min-width: 64rem) 50vw, 100vw', eager = false, credit = true, class: className, alt } = Astro.props;
+const p = getPhoto(id);
+const w800 = 800;
+const h800 = Math.round((p.hauteur * 800) / p.largeur);
+---
+<figure class={className}>
+  <picture>
+    <source type="image/webp" srcset={`${p.src}-800.webp 800w, ${p.src}-1600.webp ${p.largeur}w`} sizes={sizes} />
+    <img
+      src={`${p.src}-800.jpg`}
+      srcset={`${p.src}-800.jpg 800w, ${p.src}-1600.jpg ${p.largeur}w`}
+      sizes={sizes}
+      width={w800}
+      height={h800}
+      alt={alt ?? p.alt}
+      loading={eager ? 'eager' : 'lazy'}
+      decoding={eager ? 'sync' : 'async'}
+      fetchpriority={eager ? 'high' : 'auto'}
+    />
+  </picture>
+  {credit && (
+    <figcaption class="credit">
+      Photo : {p.auteur}, <a href={p.licenceUrl} rel="license noopener">{p.licence}</a>, via <a href={p.source} rel="noopener">Wikimedia Commons<span class="sr-only"> (photo « {p.sujet} »)</span></a>
+    </figcaption>
+  )}
+</figure>

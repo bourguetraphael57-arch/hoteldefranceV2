@@ -1,0 +1,11 @@
+---
+/** Emplacement d'une photo officielle en attente d'autorisation de l'hôtel. */
+import Icon from './Icon.astro';
+interface Props { label: string; ratio?: string; class?: string }
+const { label, ratio = '3 / 2', class: className } = Astro.props;
+const text = `Photo à venir — ${label}`;
+---
+<div class:list={['photo-pending', className]} role="img" aria-label={text} style={`aspect-ratio: ${ratio}`}>
+  <Icon name="camera" />
+  <span aria-hidden="true">{text}</span>
+</div>

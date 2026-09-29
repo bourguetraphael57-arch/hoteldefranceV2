@@ -1,0 +1,95 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import PageHero from '../components/PageHero.astro';
+import Price from '../components/Price.astro';
+import PhotoPending from '../components/PhotoPending.astro';
+import ConfirmNote from '../components/ConfirmNote.astro';
+import { getOffre, offresPubliees } from '../data/offres';
+import { hotel } from '../data/hotel';
+import { seo } from '../data/seo';
+
+const groupe = getOffre('demi-pension-groupe')!;
+const etude = getOffre('journee-etude')!;
+const circuits = offresPubliees.filter((o) => o.categorie === 'circuits');
+---
+<BaseLayout title={seo.groupes.title} description={seo.groupes.description}>
+  <Breadcrumbs items={[{ href: '/groupes-seminaires/', label: 'Groupes & séminaires' }]} />
+  <PageHero
+    title="Groupes et séminaires à Meyrueis"
+    lead="Clubs de motards ou de voitures anciennes, associations de randonneurs, cyclistes, autocaristes ou équipes en séminaire : l’hôtel reçoit les groupes et peut organiser leurs circuits. Décrivez votre projet et votre budget, l’hôtel vous fera une proposition."
+  >
+    <div class="btn-row mt-5">
+      <a class="btn btn--primary" href="/contact/?objet=groupe">Demander un devis</a>
+      <a class="btn btn--ghost" href={hotel.telephone.href}>Appeler le {hotel.telephone.affiche}</a>
+    </div>
+  </PageHero>
+
+  <section class="section section--alt" aria-labelledby="titre-tourisme">
+    <div class="container split">
+      <div class="stack">
+        <h2 id="titre-tourisme">Groupes de tourisme et autocaristes</h2>
+        <p>Meyrueis est à environ 43 km de Millau. Autour du village, randonnées, circuits et activités de plein air attirent randonneurs, cyclistes, motards, clubs de voitures anciennes et associations.</p>
+        <ul class="checklist">
+          <li>Salle de restaurant voûtée de 70 couverts</li>
+          <li>Parking privé et garage pour motos et vélos</li>
+          <li>Circuits personnalisés préparés avec des partenaires locaux</li>
+        </ul>
+        <article class="panel stack" id={groupe.slug} aria-labelledby="titre-dpg">
+          <h3 id="titre-dpg">{groupe.titre}</h3>
+          <Price prix={groupe.prix} unite={groupe.unite} base={groupe.base} />
+          <ul class="checklist">{groupe.inclus.map((x) => <li>{x}</li>)}</ul>
+          <ConfirmNote items={groupe.aConfirmer} />
+        </article>
+      </div>
+      <PhotoPending label="Salle voûtée du restaurant" ratio="4 / 3" class="media-rounded" />
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="titre-seminaires">
+    <div class="container split split--reverse">
+      <div class="stack">
+        <h2 id="titre-seminaires">Réunions et séminaires</h2>
+        <p>Pour vos réunions, journées d’étude et séminaires, l’hôtel met à disposition une salle climatisée et équipée, avec vue sur le massif de l’Aigoual et le causse Méjean. Le wifi est gratuit.</p>
+        <p>Des activités (saut à l’élastique, canyoning, via ferrata) et des dégustations chez des producteurs locaux (Brasseurs de la Jonte, fromagerie du Fédou) peuvent compléter le programme.</p>
+        <ConfirmNote items={['capacité, surface et équipements de la salle de séminaires', 'activités et partenaires proposés actuellement']} />
+        <article class="panel stack" id={etude.slug} aria-labelledby="titre-etude">
+          <h3 id="titre-etude">{etude.titre}</h3>
+          <Price prix={etude.prix} unite={etude.unite} />
+          <p class="muted">Le contenu du forfait n’est pas détaillé sur le site actuel : il est à préciser avec l’hôtel selon votre programme.</p>
+        </article>
+      </div>
+      <PhotoPending label="Salle de séminaires" ratio="4 / 3" class="media-rounded" />
+    </div>
+  </section>
+
+  <section class="section section--alt" aria-labelledby="titre-circuits" id="circuits">
+    <div class="container">
+      <div class="section__head">
+        <h2 id="titre-circuits">Circuits organisés</h2>
+        <p>Des itinéraires entre gorges, causses et Aigoual, pour les groupes à moto, à vélo, en voiture, à pied ou en autocar.</p>
+      </div>
+      <div class="grid grid--3">
+        {circuits.map((o) => (
+          <article class="panel stack" id={o.slug === 'circuit-autocaristes' ? 'autocaristes' : undefined} aria-labelledby={`g-${o.slug}`}>
+            <h3 id={`g-${o.slug}`}>{o.titre}</h3>
+            <Price prix={o.prix} unite={o.unite} />
+            <ul class="checklist">{o.inclus.map((x) => <li>{x}</li>)}</ul>
+          </article>
+        ))}
+      </div>
+      <ConfirmNote class="mt-5" items={['les circuits affichent tous le même tarif de 78 € sur le site actuel ; ce que comprend ce prix n’est pas précisé']} />
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="titre-devis">
+    <div class="container--narrow stack center">
+      <h2 id="titre-devis">Préparer votre venue</h2>
+      <p>Indiquez vos dates, le nombre de participants et le type de séjour : l’hôtel étudie une proposition adaptée à vos attentes et à votre budget.</p>
+      <div class="btn-row" style="justify-content:center">
+        <a class="btn btn--primary" href="/contact/?objet=groupe">Demander un devis</a>
+        <a class="btn btn--ghost" href={`mailto:${hotel.email}`}>{hotel.email}</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

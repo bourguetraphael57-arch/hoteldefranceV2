@@ -1,0 +1,57 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import PageHero from '../components/PageHero.astro';
+import { faq } from '../data/faq';
+import { hotel } from '../data/hotel';
+import { seo } from '../data/seo';
+
+const ld = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faq.flatMap((t) => t.questions).map((q) => ({
+    '@type': 'Question',
+    name: q.question,
+    acceptedAnswer: { '@type': 'Answer', text: q.reponse.join(' ') },
+  })),
+};
+---
+<BaseLayout title={seo.faq.title} description={seo.faq.description}>
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(ld)} />
+  <Breadcrumbs items={[{ href: '/faq/', label: 'Questions fréquentes' }]} />
+  <PageHero title="Questions fréquentes">
+    <p class="lead">
+      Les réponses aux questions pratiques les plus courantes. Dans le doute, appelez la réception au{' '}
+      <a href={hotel.telephone.href}>{hotel.telephone.affiche}</a> ou <a href="/contact/?objet=question">écrivez à l’hôtel</a>.
+    </p>
+    <nav aria-label="Thèmes" class="mt-5">
+      <ul class="anchor-nav">{faq.map((t) => <li><a href={`#${t.id}`}><span class="sr-only">Questions : </span>{t.titre}</a></li>)}</ul>
+    </nav>
+  </PageHero>
+
+  <div class="container--narrow stack-lg section--tight">
+    {faq.map((t) => (
+      <section aria-labelledby={t.id}>
+        <h2 id={t.id}>{t.titre}</h2>
+        <div class="faq mt-4">
+          {t.questions.map((q) => (
+            <details id={`q-${q.id}`}>
+              <summary>{q.question}</summary>
+              <div class="faq__answer">{q.reponse.map((r) => <p>{r}</p>)}</div>
+            </details>
+          ))}
+        </div>
+      </section>
+    ))}
+  </div>
+
+  <script>
+    // Ouvre la question ciblée par l'ancre (#q-…).
+    const open = () => {
+      const el = location.hash ? document.getElementById(decodeURIComponent(location.hash.slice(1))) : null;
+      if (el instanceof HTMLDetailsElement) el.open = true;
+    };
+    open();
+    window.addEventListener('hashchange', open);
+  </script>
+</BaseLayout>

@@ -1,0 +1,40 @@
+---
+/**
+ * Encart accessibilité : ne reprend QUE les informations publiées par l'hôtel,
+ * zone par zone, sans badge ni pictogramme. Invite à appeler pour vérifier.
+ */
+import { hotel } from '../data/hotel';
+interface Props { full?: boolean; headingLevel?: 'h2' | 'h3'; id?: string }
+const { full = false, headingLevel = 'h2', id = 'accessibilite' } = Astro.props;
+const H = headingLevel;
+const titleId = `${id}-titre`;
+---
+<aside class="panel aside-access" aria-labelledby={titleId} id={id}>
+  <H id={titleId}>Accessibilité de l’hôtel</H>
+  {full ? (
+    <div class="stack mt-4">
+      <h3 class="h4">Chambres</h3>
+      <ul>{hotel.accessibilite.chambres.map((t) => <li>{t}</li>)}</ul>
+      <p>{hotel.accessibilite.restrictif} {hotel.accessibilite.contradiction}</p>
+      <h3 class="h4">Entrée et espaces communs</h3>
+      <p>Nous n’avons pas encore d’information vérifiée sur :</p>
+      <ul>{hotel.accessibilite.nonDocumente.map((t) => <li>{t}</li>)}</ul>
+      <h3 class="h4">Avant de réserver</h3>
+      <p>
+        Si vous ou l’un de vos proches avez des besoins particuliers de mobilité, appelez l’hôtel au{' '}
+        <a href={hotel.telephone.href}>{hotel.telephone.affiche}</a> ou{' '}
+        <a href="/contact/?objet=question">écrivez-lui</a> : l’équipe pourra vous décrire les lieux et vérifier avec vous si l’hôtel convient.
+      </p>
+    </div>
+  ) : (
+    <div class="stack mt-4">
+      <p>{hotel.accessibilite.chambres.join(' ')}</p>
+      <p>{hotel.accessibilite.restrictif} {hotel.accessibilite.contradiction}</p>
+      <p>
+        L’accès à l’entrée et aux espaces communs n’est pas encore documenté. Pour tout besoin particulier, appelez le{' '}
+        <a href={hotel.telephone.href}>{hotel.telephone.affiche}</a> avant de réserver.
+      </p>
+      <p><a href="/infos-pratiques/#accessibilite">Détail des informations d’accessibilité</a></p>
+    </div>
+  )}
+</aside>

@@ -1,0 +1,39 @@
+---
+import type { Chambre } from '../data/chambres';
+import { bookingUrl, availabilityUrl } from '../lib/reservit';
+import { personnes } from '../lib/format';
+import PhotoPending from './PhotoPending.astro';
+import PhotoOfficielle from './PhotoOfficielle.astro';
+import { photosDe } from '../data/photos-officielles';
+
+interface Props { chambre: Chambre; headingLevel?: 'h2' | 'h3' }
+const { chambre: c, headingLevel = 'h3' } = Astro.props;
+const H = headingLevel;
+const photo = photosDe(c.slug)[0];
+---
+<article class="card room-card">
+  <div class="card__media">
+    {photo
+      ? <PhotoOfficielle photo={photo} legende={false} sizes="(min-width: 64rem) 24rem, (min-width: 48rem) 50vw, 100vw" />
+      : <PhotoPending label={c.nom} />}
+  </div>
+  <div class="card__body">
+    {c.capacite && <p class="tag">{personnes(c.capacite)}</p>}
+    <H class="card__title"><a href={`/chambres/${c.slug}/`}>{c.nom}</a></H>
+    <p>{c.resume}</p>
+    <dl class="facts">
+      <dt>Capacité</dt><dd>{c.capacite ? `${personnes(c.capacite)} maximum` : 'Non communiquée'}</dd>
+      {c.literie && (<><dt>Literie</dt><dd>{c.literie}</dd></>)}
+      <dt>Surface</dt><dd>{c.surface ?? 'Non communiquée'}</dd>
+    </dl>
+    <p class="price-unknown">Tarif selon dates — voir disponibilités</p>
+    <div class="card__actions btn-row">
+      <a class="btn btn--primary" href={bookingUrl({ roomtcode: c.roomtcode })}>
+        Réserver<span class="sr-only"> la {c.nom.toLowerCase()} sur le site sécurisé Reservit</span>
+      </a>
+      <a class="btn btn--secondary" href={availabilityUrl()}>
+        Disponibilités<span class="sr-only"> (tableau Reservit)</span>
+      </a>
+    </div>
+  </div>
+</article>

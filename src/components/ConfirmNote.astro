@@ -1,0 +1,14 @@
+---
+/** Mention visible d'une information non validée par l'hôtel. */
+import Icon from './Icon.astro';
+interface Props { items?: readonly string[] | string[]; class?: string }
+const { items, class: className } = Astro.props;
+const list = items ?? [];
+---
+{(list.length > 0 || Astro.slots.has('default')) && (
+  <p class:list={['note-confirm', className]}>
+    <Icon name="info" class="note-confirm__icon" />
+    <strong>À confirmer :</strong>{' '}
+    {list.length > 0 ? list.join(' ; ').replace(/\.$/, '') : <slot />}.
+  </p>
+)}

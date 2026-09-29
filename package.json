@@ -1,0 +1,42 @@
+{
+  "name": "grand-hotel-de-france-meyrueis",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Proposition de refonte (non officielle) du site du Grand Hôtel de France à Meyrueis",
+  "type": "module",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "start": "node ./dist/server/entry.mjs",
+    "preview": "astro preview",
+    "check": "astro check",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "test:e2e": "playwright test",
+    "verify": "npm run check && npm run lint && npm run test && npm run build && npm run test:e2e"
+  },
+  "dependencies": {
+    "@astrojs/node": "11.1.6",
+    "@astrojs/sitemap": "3.7.4",
+    "@fontsource-variable/source-serif-4": "5.3.0",
+    "astro": "7.3.5",
+    "nodemailer": "10.0.12"
+  },
+  "devDependencies": {
+    "@astrojs/check": "0.9.10",
+    "@axe-core/playwright": "4.13.0",
+    "@eslint/js": "9.39.5",
+    "@playwright/test": "1.63.0",
+    "@types/nodemailer": "8.0.2",
+    "eslint": "9.39.5",
+    "eslint-plugin-astro": "1.7.0",
+    "eslint-plugin-jsx-a11y": "6.10.2",
+    "globals": "17.12.0",
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.71.0",
+    "vitest": "5.0.2"
+  }
+}

@@ -1,0 +1,115 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import PageHero from '../components/PageHero.astro';
+import PhotoPending from '../components/PhotoPending.astro';
+import ConfirmNote from '../components/ConfirmNote.astro';
+import { restaurant } from '../data/restaurant';
+import { hotel } from '../data/hotel';
+import { seo } from '../data/seo';
+
+const site = Astro.site ?? new URL(Astro.url.origin);
+const ld = {
+  '@context': 'https://schema.org',
+  '@type': 'Restaurant',
+  '@id': new URL('/restaurant/#restaurant', site).href,
+  name: `Restaurant du ${hotel.nom}`,
+  servesCuisine: 'Cuisine du terroir lozérien',
+  telephone: hotel.telephone.international,
+  acceptsReservations: true,
+  address: { '@type': 'PostalAddress', streetAddress: '10 place Jean Séquier', postalCode: '48150', addressLocality: 'Meyrueis', addressCountry: 'FR' },
+  containedInPlace: { '@id': new URL('/#hotel', site).href },
+};
+---
+<BaseLayout title={seo.restaurant.title} description={seo.restaurant.description}>
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(ld)} />
+  <Breadcrumbs items={[{ href: '/restaurant/', label: 'Restaurant' }]} />
+  <PageHero title="Restaurant du terroir à Meyrueis" eyebrow="Le terroir lozérien à l’honneur" lead={restaurant.intro}>
+    <div class="btn-row mt-5">
+      <a class="btn btn--primary" href={hotel.telephone.href}>Réserver une table : {hotel.telephone.affiche}</a>
+      <a class="btn btn--secondary" href="/contact/?objet=table">Réserver par écrit</a>
+    </div>
+  </PageHero>
+
+  <section class="section section--tight" aria-labelledby="titre-espaces">
+    <div class="container">
+      <h2 id="titre-espaces">Les espaces</h2>
+      <div class="grid grid--3 mt-5">
+        {restaurant.espaces.map((e) => (
+          <article class="card">
+            <div class="card__media"><PhotoPending label={e.titre} /></div>
+            <div class="card__body">
+              <h3 class="card__title">{e.titre}</h3>
+              <p>{e.texte}</p>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--alt" aria-labelledby="titre-horaires">
+    <div class="container split">
+      <div class="stack">
+        <h2 id="titre-horaires">Horaires</h2>
+        <div class="table-wrap" role="region" aria-labelledby="caption-horaires" tabindex="0">
+          <table class="table">
+            <caption id="caption-horaires">Horaires du restaurant publiés sur le site actuel</caption>
+            <thead><tr><th scope="col">Jour</th><th scope="col">Déjeuner</th><th scope="col">Dîner</th></tr></thead>
+            <tbody>
+              {restaurant.horaires.map((h) => (
+                <tr><th scope="row">{h.jour}</th><td>{h.dejeuner ?? 'Fermé'}</td><td>{h.diner ?? 'Fermé'}</td></tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <ConfirmNote items={[restaurant.horairesAConfirmer]} />
+      </div>
+      <div class="stack">
+        <h2>Réserver une table</h2>
+        <p>{restaurant.reservationTable}</p>
+        <ul class="contact-list">
+          <li><a href={hotel.telephone.href}>{hotel.telephone.affiche}</a></li>
+          <li><a href={`mailto:${hotel.email}?subject=${encodeURIComponent('Réservation de table')}`}>{hotel.email}</a></li>
+          <li><a href="/contact/?objet=table">Formulaire de réservation de table</a></li>
+        </ul>
+        <h2 class="mt-6">Groupes</h2>
+        <p>{restaurant.groupes} La salle voûtée accueille jusqu’à 70 personnes.</p>
+        <p><a href="/groupes-seminaires/">Groupes et séminaires</a></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="titre-menus" id="menus">
+    <div class="container">
+      <div class="section__head">
+        <h2 id="titre-menus">Menus</h2>
+        <p>Menus publiés sur le site actuel. Ils évoluent au fil des saisons.</p>
+      </div>
+      <ConfirmNote items={[restaurant.menusAConfirmer]} />
+      <div class="grid grid--2 mt-5">
+        {restaurant.menus.map((m) => (
+          <section class="menu-card" aria-labelledby={`menu-${m.id}`}>
+            <h3 id={`menu-${m.id}`}><span>{m.titre}</span> <span class="price">{m.prix}</span></h3>
+            <p class="muted">{m.formule}{m.note && ` — ${m.note}`}</p>
+            {m.services.map((s) => (
+              <>
+                <h4>{s.titre}</h4>
+                <ul>
+                  {s.plats.map((p) => <li>{p.nom}{p.detail && <span class="detail">{p.detail}</span>}</li>)}
+                </ul>
+              </>
+            ))}
+          </section>
+        ))}
+        <section class="menu-card" aria-labelledby="menu-desserts">
+          <h3 id="menu-desserts">{restaurant.desserts.titre}</h3>
+          <p class="muted">{restaurant.desserts.note}</p>
+          <ul>
+            {restaurant.desserts.plats.map((p) => <li>{p.nom}{p.detail && <span class="detail">{p.detail}</span>}</li>)}
+          </ul>
+        </section>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

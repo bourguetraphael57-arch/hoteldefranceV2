@@ -1,0 +1,143 @@
+---
+/**
+ * Page Contact : rendue à la demande (formulaire POST).
+ * Sécurité : vérification d'origine (security.checkOrigin), champ piège anti-robots,
+ * limitation de débit par IP, validation serveur, aucune donnée stockée.
+ */
+export const prerender = false;
+
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import PageHero from '../../components/PageHero.astro';
+import ContactForm from '../../components/ContactForm.astro';
+import Photo from '../../components/Photo.astro';
+import Icon from '../../components/Icon.astro';
+import { hotel } from '../../data/hotel';
+import { seo } from '../../data/seo';
+import { CHAMBRES_FORM, OBJETS, createRateLimiter, parseContact, resume, validateContact, type ContactData, type Erreurs } from '../../lib/contact';
+import { isDemoMode, sendContact } from '../../lib/mailer';
+
+const limiter = (globalThis as { __hdfLimiter?: ReturnType<typeof createRateLimiter> }).__hdfLimiter
+  ??= createRateLimiter(Number(process.env.CONTACT_RATE_LIMIT) || 5, 10 * 60 * 1000);
+
+const today = new Date().toISOString().slice(0, 10);
+type Etat = 'form' | 'envoye' | 'demo' | 'echec' | 'limite';
+let etat: Etat = 'form';
+let errors: Erreurs = {};
+let values: ContactData;
+
+if (Astro.request.method === 'POST') {
+  const form = await Astro.request.formData();
+  const raw = Object.fromEntries([...form.entries()].map(([k, val]) => [k, typeof val === 'string' ? val : '']));
+  values = parseContact(raw);
+  if (raw.site_web) {
+    // Robot : on simule un succès sans rien envoyer.
+    etat = isDemoMode() ? 'demo' : 'envoye';
+  } else {
+    errors = validateContact(values, today);
+    if (Object.keys(errors).length > 0) {
+      Astro.response.status = 422;
+    } else if (!limiter(Astro.clientAddress ?? 'inconnu')) {
+      etat = 'limite';
+      Astro.response.status = 429;
+    } else if (isDemoMode()) {
+      etat = 'demo';
+    } else {
+      try {
+        await sendContact(values);
+        etat = 'envoye';
+      } catch (err) {
+        console.error('Échec d’envoi du formulaire de contact', err instanceof Error ? err.message : err);
+        etat = 'echec';
+        Astro.response.status = 502;
+      }
+    }
+  }
+} else {
+  const q = Astro.url.searchParams;
+  const objet = q.get('objet') ?? 'disponibilite';
+  const chambre = q.get('chambre') ?? '';
+  const offre = q.get('offre') ?? '';
+  values = parseContact({
+    objet: objet in OBJETS ? objet : 'disponibilite',
+    arrivee: q.get('arrivee') ?? '',
+    depart: q.get('depart') ?? '',
+    adultes: q.get('adultes') ?? (objet === 'disponibilite' ? '2' : ''),
+    chambre: (CHAMBRES_FORM as readonly string[]).includes(chambre) ? chambre : '',
+    message: offre ? `Je suis intéressé(e) par l’offre « ${offre.slice(0, 80)} ».` : '',
+  });
+}
+Astro.response.headers.set('Cache-Control', 'no-store');
+const recap = etat === 'envoye' || etat === 'demo' ? resume(values) : [];
+---
+<BaseLayout title={seo.contact.title} description={seo.contact.description} noindex={Astro.request.method === 'POST'}>
+  <Breadcrumbs items={[{ href: '/contact/', label: 'Contact et accès' }]} />
+  <PageHero
+    title="Contact et accès"
+    lead="Pour une question, une demande de disponibilité ou une réservation de table, appelez l’hôtel, écrivez-lui ou utilisez le formulaire ci-dessous."
+  />
+
+  <div class="container split section--tight">
+    <div class="stack">
+      <h2 id="titre-formulaire">{etat === 'form' ? 'Écrire à l’hôtel' : 'Votre demande'}</h2>
+
+      {etat === 'envoye' && (
+        <div class="alert alert--success" role="status">
+          <h3>Votre demande a bien été transmise à l’hôtel</h3>
+          <p>L’hôtel vous répondra dès que possible, par e-mail ou par téléphone. Rien n’est réservé tant qu’il ne vous l’a pas confirmé.</p>
+        </div>
+      )}
+      {etat === 'demo' && (
+        <div class="alert alert--info" role="status">
+          <h3>Mode démonstration : votre demande n’a été transmise à personne</h3>
+          <p>Ce site est une maquette non officielle ; l’envoi d’e-mails n’est pas activé. Pour joindre réellement l’hôtel, appelez le <a href={hotel.telephone.href}>{hotel.telephone.affiche}</a> ou écrivez à <a href={`mailto:${hotel.email}`}>{hotel.email}</a>.</p>
+        </div>
+      )}
+      {recap.length > 0 && (
+        <div class="panel">
+          <h3 class="h4">Récapitulatif</h3>
+          <dl class="facts facts--lg mt-4">{recap.map((r) => <><dt>{r.label}</dt><dd style="white-space: pre-line">{r.value}</dd></>)}</dl>
+          <p class="mt-5"><a href="/contact/">Envoyer une autre demande</a></p>
+        </div>
+      )}
+      {etat === 'echec' && (
+        <div class="alert alert--error" role="alert">
+          <h3>Votre demande n’a pas pu être envoyée</h3>
+          <p>Un problème technique a empêché l’envoi. Vos informations sont conservées ci-dessous : réessayez dans quelques minutes, ou appelez le <a href={hotel.telephone.href}>{hotel.telephone.affiche}</a>.</p>
+        </div>
+      )}
+      {etat === 'limite' && (
+        <div class="alert alert--error" role="alert">
+          <h3>Trop d’envois en peu de temps</h3>
+          <p>Merci de patienter quelques minutes avant de renvoyer une demande, ou appelez le <a href={hotel.telephone.href}>{hotel.telephone.affiche}</a>.</p>
+        </div>
+      )}
+      {(etat === 'form' || etat === 'echec' || etat === 'limite') && <ContactForm values={values} errors={errors} today={today} />}
+    </div>
+
+    <aside class="stack" aria-labelledby="titre-coordonnees">
+      <div class="panel stack">
+        <h2 id="titre-coordonnees" class="h4">Coordonnées</h2>
+        <address>
+          <ul class="contact-list">
+            <li><Icon name="map" class="inline-icon" /> {hotel.nom}, {hotel.adresse.rue}, {hotel.adresse.codePostal} {hotel.adresse.ville}</li>
+            <li><Icon name="phone" class="inline-icon" /> <a href={hotel.telephone.href}>{hotel.telephone.affiche}</a></li>
+            <li><Icon name="mail" class="inline-icon" /> <a href={`mailto:${hotel.email}`}>{hotel.email}</a></li>
+          </ul>
+        </address>
+        <p>Arrivées {hotel.horaires.arrivee} · Départs {hotel.horaires.depart}</p>
+        <div class="btn-row">
+          <a class="btn btn--secondary" href={hotel.itineraire} rel="noopener">Itinéraire<span class="sr-only"> (Google Maps, site externe)</span></a>
+          <a class="btn btn--ghost" href={hotel.carte} rel="noopener">Voir sur la carte<span class="sr-only"> (Google Maps, site externe)</span></a>
+        </div>
+      </div>
+      <div class="panel stack">
+        <h2 class="h4">Accès</h2>
+        <p><strong>Voiture :</strong> {hotel.acces.voiture}</p>
+        <p><strong>Train :</strong> {hotel.acces.train}</p>
+        <p><a href="/infos-pratiques/#acces">Toutes les informations d’accès</a></p>
+      </div>
+      <Photo id="meyrueis-rue" sizes="(min-width: 56rem) 40vw, 100vw" />
+    </aside>
+  </div>
+</BaseLayout>

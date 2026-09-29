@@ -1,0 +1,17 @@
+---
+import type { Offre } from '../data/offres';
+import { categoriesOffres } from '../data/offres';
+import Price from './Price.astro';
+
+interface Props { offre: Offre; href?: string; headingLevel?: 'h2' | 'h3' }
+const { offre: o, href = `/offres/#${o.slug}`, headingLevel = 'h3' } = Astro.props;
+const H = headingLevel;
+---
+<article class="card offer-card">
+  <div class="card__body">
+    <p class="tag">{categoriesOffres[o.categorie]}</p>
+    <H class="card__title"><a href={href}>{o.titre}</a></H>
+    <p>{o.resume}</p>
+    <Price prix={o.prix} unite={o.unite} base={o.base} />
+  </div>
+</article>

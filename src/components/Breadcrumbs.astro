@@ -1,0 +1,29 @@
+---
+import type { Lien } from '../data/navigation';
+interface Props { items: Lien[] }
+const { items } = Astro.props;
+const all: Lien[] = [{ href: '/', label: 'Accueil' }, ...items];
+const site = Astro.site ?? new URL(Astro.url.origin);
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: all.map((item, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    name: item.label,
+    item: new URL(item.href, site).href,
+  })),
+};
+---
+<nav class="breadcrumbs container" aria-label="Fil d’Ariane">
+  <ol>
+    {all.map((item, i) =>
+      i === all.length - 1 ? (
+        <li><span aria-current="page">{item.label}</span></li>
+      ) : (
+        <li><a href={item.href}>{item.label}</a></li>
+      ),
+    )}
+  </ol>
+</nav>
+<script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />

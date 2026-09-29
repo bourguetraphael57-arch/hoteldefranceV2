@@ -1,0 +1,71 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import PageHero from '../components/PageHero.astro';
+import Price from '../components/Price.astro';
+import ConfirmNote from '../components/ConfirmNote.astro';
+import { offresPubliees, categoriesOffres, type CategorieOffre } from '../data/offres';
+import { hotel } from '../data/hotel';
+import { seo } from '../data/seo';
+
+const cats = Object.keys(categoriesOffres) as CategorieOffre[];
+---
+<BaseLayout title={seo.offres.title} description={seo.offres.description}>
+  <Breadcrumbs items={[{ href: '/offres/', label: 'Offres' }]} />
+  <PageHero
+    title="Offres et formules"
+    lead="Une nuit d’étape, quelques jours en demi-pension, un week-end de randonnée ou une journée de travail en équipe : les formules suivent la durée et le rythme de votre séjour. Chaque formule se réserve directement auprès de l’hôtel."
+  >
+    <nav aria-label="Catégories d’offres" class="mt-5">
+      <ul class="anchor-nav">
+        {cats.map((c) => <li><a href={`#${c}`}>{categoriesOffres[c]}</a></li>)}
+      </ul>
+    </nav>
+  </PageHero>
+
+  <div class="container">
+    <p class="note-confirm"><strong>À confirmer :</strong> les tarifs ci-dessous sont ceux publiés sur le site actuel, sans période de validité ni conditions. Ils sont indicatifs tant que l’hôtel ne les a pas validés.</p>
+  </div>
+
+  {cats.map((cat, i) => {
+    const list = offresPubliees.filter((o) => o.categorie === cat);
+    return (
+      <section class:list={['section', { 'section--alt': i % 2 === 1 }]} aria-labelledby={cat} >
+        <div class="container">
+          <h2 id={cat}>{categoriesOffres[cat]}</h2>
+          <div class="grid grid--2 mt-5">
+            {list.map((o) => (
+              <article class="panel stack" id={o.slug} aria-labelledby={`${o.slug}-titre`}>
+                <h3 id={`${o.slug}-titre`}>{o.titre}</h3>
+                <p>{o.resume}</p>
+                <Price prix={o.prix} unite={o.unite} base={o.base} />
+                {o.inclus.length > 0 ? (
+                  <>
+                    <p><strong>{o.categorie === 'circuits' ? 'Au programme' : 'Comprend'}</strong></p>
+                    <ul class="checklist">{o.inclus.map((x) => <li>{x}</li>)}</ul>
+                  </>
+                ) : (
+                  <p class="muted">Le contenu de ce forfait n’est pas détaillé sur le site actuel : demandez-le à l’hôtel.</p>
+                )}
+                <ConfirmNote items={o.aConfirmer} />
+                <div class="btn-row">
+                  <a class="btn btn--secondary" href={`/contact/?objet=${o.categorie === 'groupes' ? 'groupe' : 'disponibilite'}&offre=${encodeURIComponent(o.titre)}`}>
+                    Demander cette offre<span class="sr-only"> : {o.titre}</span>
+                  </a>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  })}
+
+  <section class="section" aria-labelledby="titre-conditions">
+    <div class="container--narrow stack">
+      <h2 id="titre-conditions">Conditions</h2>
+      <p>Le site actuel ne publie pas de conditions générales de vente. Les conditions de chaque tarif (acompte, annulation) sont indiquées sur le moteur de réservation avant le paiement ; pour une offre demandée par écrit, l’hôtel vous les précisera dans sa réponse.</p>
+      <p>Une question ? Appelez le <a href={hotel.telephone.href}>{hotel.telephone.affiche}</a>.</p>
+    </div>
+  </section>
+</BaseLayout>

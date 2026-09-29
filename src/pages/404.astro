@@ -1,0 +1,16 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { hotel } from '../data/hotel';
+---
+<BaseLayout title="Page introuvable | Grand Hôtel de France" description="Cette page n’existe pas ou a été déplacée." noindex>
+  <div class="container--narrow section stack">
+    <h1 id="titre-page">Page introuvable</h1>
+    <p class="lead">Cette page n’existe pas ou a changé d’adresse.</p>
+    <ul>
+      <li><a href="/">Accueil</a></li>
+      <li><a href="/chambres/">Chambres</a></li>
+      <li><a href="/restaurant/">Restaurant</a></li>
+      <li><a href="/contact/">Contact</a> — ou appelez le <a href={hotel.telephone.href}>{hotel.telephone.affiche}</a></li>
+    </ul>
+  </div>
+</BaseLayout>

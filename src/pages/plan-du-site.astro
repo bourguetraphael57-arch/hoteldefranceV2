@@ -1,0 +1,24 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import PageHero from '../components/PageHero.astro';
+import { navPrincipale, navPied } from '../data/navigation';
+import { chambres } from '../data/chambres';
+---
+<BaseLayout title="Plan du site | Grand Hôtel de France" description="Toutes les pages du site du Grand Hôtel de France à Meyrueis : chambres, restaurant, offres, groupes, environs, infos pratiques, FAQ et contact.">
+  <Breadcrumbs items={[{ href: '/plan-du-site/', label: 'Plan du site' }]} />
+  <PageHero title="Plan du site" />
+  <div class="container--narrow section--tight prose">
+    <ul>
+      {navPrincipale.map((l) => (
+        <li>
+          <a href={l.href}>{l.label}</a>
+          {l.href === '/chambres/' && <ul>{chambres.map((c) => <li><a href={`/chambres/${c.slug}/`}>{c.nom}</a></li>)}</ul>}
+        </li>
+      ))}
+      <li><a href="/faq/">Questions fréquentes</a></li>
+      <li><a href="/contact/">Contact et accès</a></li>
+      {navPied[2]!.liens.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+    </ul>
+  </div>
+</BaseLayout>

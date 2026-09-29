@@ -1,0 +1,144 @@
+---
+/**
+ * Bloc de réservation : ouvre le moteur officiel Reservit avec les dates choisies.
+ * Aucune disponibilité ni aucun prix n'est affiché ici : c'est Reservit qui les donne.
+ * Sans JavaScript, le formulaire ouvre quand même Reservit (sans dates présélectionnées).
+ */
+import { RESERVIT, availabilityUrl } from '../lib/reservit';
+import { hotel } from '../data/hotel';
+import Icon from './Icon.astro';
+
+interface Props {
+  roomtcode?: string;
+  chambre?: string;
+  titre?: string;
+  headingLevel?: 'h2' | 'h3';
+  wide?: boolean;
+  id?: string;
+}
+const { roomtcode, chambre, titre = 'Réserver en direct', headingLevel = 'h2', wide = false, id = 'reserver' } = Astro.props;
+const H = headingLevel;
+const uid = `${id}-${roomtcode ?? 'all'}`;
+const demande = `/contact/?objet=disponibilite${chambre ? `&chambre=${encodeURIComponent(chambre)}` : ''}`;
+---
+<section class:list={['booking', { 'booking--wide': wide }]} aria-labelledby={`${uid}-titre`} id={id} data-booking>
+  <H id={`${uid}-titre`}>{titre}{chambre && !titre.toLowerCase().includes(chambre.toLowerCase()) && <span class="sr-only"> : {chambre}</span>}</H>
+  <p class="muted mt-4">
+    Choisissez vos dates : les disponibilités et les tarifs s’affichent sur le moteur de réservation sécurisé de l’hôtel (Reservit).
+  </p>
+  <form class="booking__form mt-5" action={RESERVIT.base} method="get" novalidate data-roomtcode={roomtcode ?? ''}>
+    <input type="hidden" name="lang" value="FR" />
+    <input type="hidden" name="action" value="resa" />
+    <input type="hidden" name="redirectHOST" value={RESERVIT.redirectHOST} />
+    <input type="hidden" name="hotelid" value={RESERVIT.hotelid} />
+    <input type="hidden" name="custId" value={RESERVIT.custId} />
+    {roomtcode && <input type="hidden" name="roomtcode" value={roomtcode} />}
+    <div class="field">
+      <label for={`${uid}-arrivee`}>Arrivée</label>
+      <input type="date" id={`${uid}-arrivee`} data-arrivee autocomplete="off" aria-describedby={`${uid}-err`} />
+    </div>
+    <div class="field">
+      <label for={`${uid}-depart`}>Départ</label>
+      <input type="date" id={`${uid}-depart`} data-depart autocomplete="off" aria-describedby={`${uid}-err`} />
+    </div>
+    <div class="field">
+      <label for={`${uid}-adultes`}>Adultes</label>
+      <div class="stepper">
+        <button type="button" data-step="-1" aria-label="Retirer un adulte" aria-controls={`${uid}-adultes`}>−</button>
+        <input type="number" id={`${uid}-adultes`} name="nbadt" min={RESERVIT.adultesMin} max={RESERVIT.adultesMax} value={RESERVIT.adultesDefaut} inputmode="numeric" />
+        <button type="button" data-step="1" aria-label="Ajouter un adulte" aria-controls={`${uid}-adultes`}>+</button>
+      </div>
+    </div>
+    <div class="booking__submit">
+      <button type="submit" class="btn btn--primary btn--block">
+        <Icon name="calendar" /> Voir les disponibilités et réserver
+      </button>
+    </div>
+    <p class="error" id={`${uid}-err`} role="alert" hidden></p>
+  </form>
+  <p class="muted mt-4"><small>Vous quittez ce site pour le moteur sécurisé Reservit, où s’effectuent la réservation et le paiement.</small></p>
+  <div class="booking__alt">
+    <p><a href={availabilityUrl()}>Voir le tableau des disponibilités</a></p>
+    <p>
+      Vous préférez nous écrire ? <a href={demande} data-demande>Envoyer une demande de disponibilité</a>{' '}
+      — ou appelez le <a href={hotel.telephone.href}>{hotel.telephone.affiche}</a>.
+    </p>
+  </div>
+</section>
+
+<script>
+  import { bookingUrl, clampAdultes } from '../lib/reservit';
+
+  const today = () => {
+    const d = new Date();
+    d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+    return d.toISOString().slice(0, 10);
+  };
+  const addDay = (iso: string) => {
+    const d = new Date(`${iso}T12:00:00Z`);
+    d.setUTCDate(d.getUTCDate() + 1);
+    return d.toISOString().slice(0, 10);
+  };
+
+  for (const root of document.querySelectorAll<HTMLElement>('[data-booking]')) {
+    const form = root.querySelector('form')!;
+    const inDate = form.querySelector<HTMLInputElement>('[data-arrivee]')!;
+    const outDate = form.querySelector<HTMLInputElement>('[data-depart]')!;
+    const adults = form.querySelector<HTMLInputElement>('input[name="nbadt"]')!;
+    const err = form.querySelector<HTMLElement>('.error')!;
+    const demande = root.querySelector<HTMLAnchorElement>('[data-demande]');
+    const roomtcode = form.dataset.roomtcode || undefined;
+
+    inDate.min = today();
+    outDate.min = addDay(today());
+
+    const syncDemande = () => {
+      if (!demande) return;
+      const url = new URL(demande.href);
+      if (inDate.value) url.searchParams.set('arrivee', inDate.value); else url.searchParams.delete('arrivee');
+      if (outDate.value) url.searchParams.set('depart', outDate.value); else url.searchParams.delete('depart');
+      url.searchParams.set('adultes', String(clampAdultes(Number(adults.value))));
+      demande.href = url.pathname + url.search;
+    };
+
+    inDate.addEventListener('change', () => {
+      if (inDate.value) {
+        outDate.min = addDay(inDate.value);
+        if (!outDate.value || outDate.value <= inDate.value) outDate.value = addDay(inDate.value);
+      }
+      syncDemande();
+    });
+    outDate.addEventListener('change', syncDemande);
+    adults.addEventListener('change', () => { adults.value = String(clampAdultes(Number(adults.value))); syncDemande(); });
+
+    for (const btn of form.querySelectorAll<HTMLButtonElement>('[data-step]')) {
+      btn.addEventListener('click', () => {
+        adults.value = String(clampAdultes(Number(adults.value) + Number(btn.dataset.step)));
+        syncDemande();
+      });
+    }
+
+    const fail = (msg: string, field: HTMLInputElement) => {
+      err.textContent = msg;
+      err.hidden = false;
+      field.setAttribute('aria-invalid', 'true');
+      field.focus();
+    };
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      err.hidden = true;
+      inDate.removeAttribute('aria-invalid');
+      outDate.removeAttribute('aria-invalid');
+      const a = inDate.value;
+      const b = outDate.value;
+      if (a || b) {
+        if (!a) return fail('Indiquez la date d’arrivée.', inDate);
+        if (!b) return fail('Indiquez la date de départ.', outDate);
+        if (a < today()) return fail('La date d’arrivée est déjà passée.', inDate);
+        if (b <= a) return fail('La date de départ doit être postérieure à la date d’arrivée.', outDate);
+      }
+      window.location.assign(bookingUrl({ arrivee: a, depart: b, adultes: Number(adults.value), roomtcode }));
+    });
+  }
+</script>

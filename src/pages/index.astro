@@ -1,0 +1,158 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import BookingBlock from '../components/BookingBlock.astro';
+import RoomCard from '../components/RoomCard.astro';
+import OfferCard from '../components/OfferCard.astro';
+import Photo from '../components/Photo.astro';
+import PhotoPending from '../components/PhotoPending.astro';
+import AccessibilityNotice from '../components/AccessibilityNotice.astro';
+import ConfirmNote from '../components/ConfirmNote.astro';
+import Icon from '../components/Icon.astro';
+import { hotel } from '../data/hotel';
+import { chambres } from '../data/chambres';
+import { getOffre } from '../data/offres';
+import { restaurant } from '../data/restaurant';
+import { sitesAccueil } from '../data/environs';
+import { seo } from '../data/seo';
+
+const formules = ['demi-pension', 'petit-dejeuner', 'demi-pension-groupe'].map((s) => getOffre(s)!);
+---
+<BaseLayout title={seo.accueil.title} description={seo.accueil.description}>
+  <section class="hero" aria-labelledby="titre-page">
+    <div class="container hero__grid">
+      <div class="stack">
+        <p class="eyebrow">Hôtel restaurant · Meyrueis, Lozère</p>
+        <h1 id="titre-page">{hotel.slogan}</h1>
+        <p class="lead">
+          Sur la place du village, à l’entrée des gorges de la Jonte. Selon le site actuel, la famille {hotel.histoire.famille} accueille ses hôtes
+          depuis {hotel.histoire.depuis} dans un {hotel.histoire.batiment} (historique à confirmer).
+        </p>
+        <ul class="atouts mt-5">
+          <li><Icon name="bed" />{hotel.nombreChambres} chambres, rénovées en {hotel.renovation} selon le site actuel</li>
+          <li><Icon name="fork" />Restaurant de cuisine du terroir</li>
+          <li><Icon name="pool" />Piscine chauffée et jardin belvédère</li>
+          <li><Icon name="parking" />Parking privé et garage deux-roues</li>
+        </ul>
+        <div class="btn-row mt-5">
+          <a class="btn btn--primary" href="#reserver">Réserver une chambre</a>
+          <a class="btn btn--secondary" href="/chambres/">Comparer les chambres</a>
+        </div>
+      </div>
+      <div class="hero__media">
+        <Photo id="meyrueis-pont" eager sizes="(min-width: 56rem) 50vw, 100vw" />
+      </div>
+    </div>
+  </section>
+
+  <div class="section section--tight">
+    <div class="container">
+      <BookingBlock wide titre="Réserver en direct" />
+    </div>
+  </div>
+
+  <section class="section section--alt" aria-labelledby="titre-chambres">
+    <div class="container">
+      <div class="section__head">
+        <h2 id="titre-chambres">Les chambres</h2>
+        <p>Quatre catégories, de 2 à 4 personnes, avec wifi gratuit et télévision. Selon le site actuel, les chambres sont desservies par un ascenseur.</p>
+      </div>
+      <div class="grid grid--4">
+        {chambres.map((c) => <RoomCard chambre={c} />)}
+      </div>
+      <p class="mt-5"><a href="/chambres/#comparatif">Voir le tableau comparatif des chambres</a></p>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="titre-restaurant">
+    <div class="container split">
+      <div class="stack">
+        <h2 id="titre-restaurant">Le restaurant</h2>
+        <p>{restaurant.intro}</p>
+        <ul class="checklist">
+          {restaurant.espaces.map((e) => <li><strong>{e.titre}</strong> — {e.texte}</li>)}
+        </ul>
+        <p>Dîner tous les soirs de 19 h à 21 h ; déjeuner les mardis, mercredis, samedis et dimanches de 12 h à 13 h 30.</p>
+        <ConfirmNote items={['horaires et jours d’ouverture actuels']} />
+        <div class="btn-row">
+          <a class="btn btn--secondary" href="/restaurant/">Voir les menus</a>
+          <a class="btn btn--ghost" href="/contact/?objet=table">Réserver une table</a>
+        </div>
+      </div>
+      <PhotoPending label="Terrasse du restaurant" ratio="4 / 3" class="media-rounded" />
+    </div>
+  </section>
+
+  <section class="section section--alt" aria-labelledby="titre-formules">
+    <div class="container">
+      <div class="section__head">
+        <h2 id="titre-formules">Formules</h2>
+        <p>Demi-pension, petit-déjeuner et séjours de groupe. Les tarifs ci-dessous sont ceux du site actuel.</p>
+      </div>
+      <div class="grid grid--3">
+        {formules.map((o) => <OfferCard offre={o} />)}
+      </div>
+      <p class="mt-5"><a href="/offres/">Toutes les offres, dont les circuits moto, vélo et randonnée</a></p>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="titre-environs">
+    <div class="container">
+      <div class="section__head">
+        <h2 id="titre-environs">Meyrueis et ses environs</h2>
+        <p>Entre les causses Méjean et Noir, sous le mont Aigoual, aux portes du Parc national des Cévennes.</p>
+      </div>
+      <div class="grid grid--4">
+        {sitesAccueil.map((s) => (
+          <article class="card">
+            <div class="card__media"><Photo id={s.photo!} credit={false} sizes="(min-width: 64rem) 25vw, (min-width: 40rem) 50vw, 100vw" /></div>
+            <div class="card__body">
+              <h3 class="card__title">{s.nom}</h3>
+              <p>{s.texte}</p>
+              <p class="muted"><small>Depuis l’hôtel : {s.distanceVerifiee ?? s.distance} (indicatif, à confirmer)</small></p>
+            </div>
+          </article>
+        ))}
+      </div>
+      <p class="credit mt-4">Photos sous licence libre — auteurs et licences sur la page <a href="/credits-photos/">crédits photos</a>.</p>
+      <p class="mt-5"><a href="/meyrueis-environs/">Découvrir Meyrueis et les environs</a></p>
+    </div>
+  </section>
+
+  <section class="section section--alt" aria-labelledby="titre-infos">
+    <div class="container split">
+      <div class="stack">
+        <h2 id="titre-infos">Infos pratiques</h2>
+        <dl class="facts facts--lg">
+          <dt>Arrivées</dt><dd>{hotel.horaires.arrivee}</dd>
+          <dt>Départs</dt><dd>{hotel.horaires.depart}</dd>
+          <dt>Petit-déjeuner</dt><dd>{hotel.horaires.petitDejeuner}</dd>
+          <dt>Wifi</dt><dd>Gratuit dans tout l’hôtel</dd>
+          <dt>Stationnement</dt><dd>Parking privé sécurisé, garage motos et vélos</dd>
+          <dt>Animaux</dt><dd>Admis sous conditions</dd>
+        </dl>
+        <p><a href="/infos-pratiques/">Accès, équipements et informations utiles</a></p>
+      </div>
+      <AccessibilityNotice id="accessibilite-accueil" />
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="titre-contact">
+    <div class="container split">
+      <div class="stack">
+        <h2 id="titre-contact">Nous contacter</h2>
+        <address>
+          <ul class="contact-list">
+            <li><Icon name="map" class="inline-icon" /> {hotel.adresse.rue}, {hotel.adresse.codePostal} {hotel.adresse.ville}</li>
+            <li><Icon name="phone" class="inline-icon" /> <a href={hotel.telephone.href}>{hotel.telephone.affiche}</a></li>
+            <li><Icon name="mail" class="inline-icon" /> <a href={`mailto:${hotel.email}`}>{hotel.email}</a></li>
+          </ul>
+        </address>
+        <div class="btn-row">
+          <a class="btn btn--primary" href="/contact/?objet=disponibilite">Demande de disponibilité</a>
+          <a class="btn btn--ghost" href={hotel.itineraire} rel="noopener">Itinéraire<span class="sr-only"> (Google Maps)</span></a>
+        </div>
+      </div>
+      <Photo id="vue-chambre" sizes="(min-width: 56rem) 45vw, 100vw" class="media-rounded-figure" />
+    </div>
+  </section>
+</BaseLayout>
