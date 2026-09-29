@@ -1,6 +1,7 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import node from '@astrojs/node';
+import vercel from '@astrojs/vercel';
 import sitemap from '@astrojs/sitemap';
 
 // Site statique (pages pré-rendues) + une seule route serveur : le formulaire de contact.
@@ -14,6 +15,10 @@ const allowedDomains = [
   { hostname: new URL(SITE).hostname },
   { hostname: 'localhost' },
   { hostname: '127.0.0.1' },
+  // Domaines fournis par Vercel (production, branche, déploiement) lors d'un build sur Vercel.
+  ...[process.env.VERCEL_PROJECT_PRODUCTION_URL, process.env.VERCEL_BRANCH_URL, process.env.VERCEL_URL]
+    .filter(Boolean)
+    .map((hostname) => ({ hostname })),
   ...(process.env.ALLOWED_HOSTS ?? '').split(',').map((h) => h.trim()).filter(Boolean).map((hostname) => ({ hostname })),
 ];
 
@@ -21,7 +26,8 @@ export default defineConfig({
   site: SITE,
   trailingSlash: 'always',
   output: 'static',
-  adapter: node({ mode: 'standalone' }),
+  // Vercel définit VERCEL=1 pendant le build : adaptateur Vercel là-bas, serveur Node autonome ailleurs.
+  adapter: process.env.VERCEL ? vercel() : node({ mode: 'standalone' }),
   integrations: [
     // La page contact est rendue à la demande : on l'ajoute explicitement au sitemap.
     sitemap({ customPages: [`${SITE}/contact/`], filter: (page) => !page.includes('/404') }),
