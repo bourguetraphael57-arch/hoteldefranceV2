@@ -139,6 +139,10 @@ export const offres: Offre[] = [
   },
 ];
 
+/** Mention affichée quand le contenu d'un forfait n'est pas publié sur le site actuel. */
+export const mentionContenuNonDetaille =
+  'Le contenu de ce forfait n’est pas détaillé sur le site actuel : demandez-le à l’hôtel.';
+
 export const offresPubliees = offres.filter((o) => o.publiee);
 
 export function getOffre(slug: string): Offre | undefined {

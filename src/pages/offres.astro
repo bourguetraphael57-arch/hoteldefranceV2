@@ -2,17 +2,25 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Breadcrumbs from '../components/Breadcrumbs.astro';
 import PageHero from '../components/PageHero.astro';
+import Divider from '../components/motion/Divider.astro';
 import Price from '../components/Price.astro';
 import ConfirmNote from '../components/ConfirmNote.astro';
-import { offresPubliees, categoriesOffres, type CategorieOffre } from '../data/offres';
+import Cliche from '../components/Cliche.astro';
+import PhotoPending from '../components/PhotoPending.astro';
+import { heros, offresCategories, offresPhotos, introsCategories, surtitres, estAttendu, type Visuel, type Attendu } from '../data/visuels';
+import { offresPubliees, categoriesOffres, mentionContenuNonDetaille, type CategorieOffre } from '../data/offres';
 import { hotel } from '../data/hotel';
 import { seo } from '../data/seo';
 
 const cats = Object.keys(categoriesOffres) as CategorieOffre[];
+/** Pour les offres d'une catégorie illustrée en ouverture, pas de seconde image dans le panneau. */
+const photoOffre = (slug: string, cat: CategorieOffre): Visuel | Attendu | undefined =>
+  cat === 'circuits' ? offresPhotos[slug] : undefined;
 ---
 <BaseLayout title={seo.offres.title} description={seo.offres.description}>
   <Breadcrumbs items={[{ href: '/offres/', label: 'Offres' }]} />
   <PageHero
+    photo={heros.offres}
     title="Offres et formules"
     lead="Une nuit d’étape, quelques jours en demi-pension, un week-end de randonnée ou une journée de travail en équipe : les formules suivent la durée et le rythme de votre séjour. Chaque formule se réserve directement auprès de l’hôtel."
   >
@@ -29,37 +37,55 @@ const cats = Object.keys(categoriesOffres) as CategorieOffre[];
 
   {cats.map((cat, i) => {
     const list = offresPubliees.filter((o) => o.categorie === cat);
+    const ouverture = offresCategories[cat as keyof typeof offresCategories];
     return (
       <section class:list={['section', { 'section--alt': i % 2 === 1 }]} aria-labelledby={cat} >
         <div class="container">
-          <h2 id={cat}>{categoriesOffres[cat]}</h2>
-          <div class="grid grid--2 mt-5">
-            {list.map((o) => (
-              <article class="panel stack" id={o.slug} aria-labelledby={`${o.slug}-titre`}>
-                <h3 id={`${o.slug}-titre`}>{o.titre}</h3>
-                <p>{o.resume}</p>
-                <Price prix={o.prix} unite={o.unite} base={o.base} />
-                {o.inclus.length > 0 ? (
-                  <>
-                    <p><strong>{o.categorie === 'circuits' ? 'Au programme' : 'Comprend'}</strong></p>
-                    <ul class="checklist">{o.inclus.map((x) => <li>{x}</li>)}</ul>
-                  </>
-                ) : (
-                  <p class="muted">Le contenu de ce forfait n’est pas détaillé sur le site actuel : demandez-le à l’hôtel.</p>
-                )}
-                <ConfirmNote items={o.aConfirmer} />
-                <div class="btn-row">
-                  <a class="btn btn--secondary" href={`/contact/?objet=${o.categorie === 'groupes' ? 'groupe' : 'disponibilite'}&offre=${encodeURIComponent(o.titre)}`}>
-                    Demander cette offre<span class="sr-only"> : {o.titre}</span>
-                  </a>
-                </div>
-              </article>
-            ))}
+          <div class:list={['cat-intro', { 'cat-intro--inverse': i % 2 === 1, 'cat-intro--seule': !ouverture }]}>
+            {ouverture && <Cliche visuel={ouverture} sizes="(min-width: 72rem) 32rem, (min-width: 56rem) 45vw, 100vw" />}
+            <div class="stack">
+              <p class="eyebrow">{`${surtitres.offres} · ${String(i + 1).padStart(2, '0')}`}</p>
+              <h2 id={cat}>{categoriesOffres[cat]}</h2>
+              <p class="lead">{introsCategories[cat]}</p>
+            </div>
+          </div>
+          <div class:list={['grid', cat === 'circuits' ? 'grid--3 circuits-grid rail' : 'grid--2']}>
+            {list.map((o) => {
+              const v = photoOffre(o.slug, cat);
+              return (
+                <article class="panel offre-panel" id={o.slug} aria-labelledby={`${o.slug}-titre`}>
+                  {v && (estAttendu(v)
+                    ? <div class="offre-panel__media"><PhotoPending label={v.attendu} ratio="16 / 9" /></div>
+                    : <Cliche visuel={v} overlay class="offre-panel__media" sizes="(min-width: 72rem) 24rem, (min-width: 40rem) 50vw, 100vw" />)}
+                  <div class="offre-panel__body">
+                    <h3 id={`${o.slug}-titre`}>{o.titre}</h3>
+                    <p>{o.resume}</p>
+                    <Price prix={o.prix} unite={o.unite} base={o.base} indicatif={false} />
+                    {o.inclus.length > 0 ? (
+                      <>
+                        <p><strong>{o.categorie === 'circuits' ? 'Au programme' : 'Comprend'}</strong></p>
+                        <ul class="checklist">{o.inclus.map((x) => <li>{x}</li>)}</ul>
+                      </>
+                    ) : (
+                      <p class="muted">{mentionContenuNonDetaille}</p>
+                    )}
+                    <ConfirmNote items={o.aConfirmer} />
+                    <div class="btn-row">
+                      <a class="btn btn--secondary" href={`/contact/?objet=${o.categorie === 'groupes' ? 'groupe' : 'disponibilite'}&offre=${encodeURIComponent(o.titre)}`}>
+                        Demander cette offre<span class="sr-only"> : {o.titre}</span>
+                      </a>
+                    </div>
+                  </div>
+                </article>
+              );
+            })}
           </div>
         </div>
       </section>
     );
   })}
+
+  <Divider variant="riviere" />
 
   <section class="section" aria-labelledby="titre-conditions">
     <div class="container--narrow stack">

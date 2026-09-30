@@ -1,0 +1,52 @@
+---
+/**
+ * Itinéraire en étapes : un chemin pointillé relie les pastilles et se trace au défilement.
+ * Les étapes sont une vraie liste ordonnée (texte lisible sans CSS ni JS) ;
+ * pastilles, pictogrammes et pointillés sont décoratifs (aria-hidden).
+ * Disposition : verticale, puis en ligne quand le composant dispose d'au moins 40rem (requête de conteneur).
+ */
+
+export type IconeEtape = 'village' | 'gorge' | 'vautour' | 'grotte' | 'causse' | 'sommet' | 'viaduc';
+export interface Etape {
+  nom: string;
+  /** Distance ou temps de trajet indicatif, en toutes lettres (ex. « environ 16 km »). */
+  distance?: string;
+  texte?: string;
+  icone?: IconeEtape;
+}
+interface Props {
+  etapes: Etape[];
+  /** Nom accessible de la liste (ex. « Itinéraire d’une journée depuis l’hôtel »). */
+  label?: string;
+  class?: string;
+}
+const { etapes, label, class: className } = Astro.props;
+
+// Pictogrammes au trait, grille 24 × 24.
+const icones: Record<IconeEtape, string> = {
+  village: 'M2 19 H22 M4 19 V13 H9 V19 M4 13 L6.5 10.5 L9 13 M11 19 A5 4 0 0 1 21 19 M11 15 H21 M16 15 V8 L14.5 6 L16 3.5 L17.5 6 L16 8',
+  gorge: 'M2 5 H7 L9 10 L8.5 13 L10.5 18 H13.5 L15.5 13 L15 10 L17 5 H22 M9.5 20.5 Q12 19.5 14.5 20.5',
+  vautour: 'M12 13 C9 10 5 9 2 10 C4 11 5 12 6 13 C8 13 10 14 12 16 C14 14 16 13 18 13 C19 12 20 11 22 10 C19 9 15 10 12 13 Z',
+  grotte: 'M3 20 V12 C3 6 21 6 21 12 V20 M7 20 V14 C7 10.5 17 10.5 17 14 V20 M10 11 V13 M12 10.5 V13.5 M14 11 V12.5',
+  causse: 'M2 9 H9 L10 12 L9.5 14 L11 18 M2 18 H22 M11 18 C13 17 14 16 15 13 L14 11 L15 9 H22 M4 12 V13 M6 11 V12.5 M18 12 V13 M20 11 V12',
+  viaduc: 'M2 12 H22 M5 12 V20 M12 12 V20 M19 12 V20 M5 12 V4 M12 12 V3 M19 12 V4 M5 5 L2 12 M5 5 L8 12 M12 4 L9 12 M12 4 L15 12 M19 5 L16 12 M19 5 L22 12',
+  sommet: 'M2 20 C6 13 9 11 12 11 C15 11 18 13 22 20 M11 11 V6 H13 V11 M10.5 6 L12 4 L13.5 6',
+};
+---
+<div class:list={['m-route', className]} data-motion="scroll">
+  <ol class="m-route__list" aria-label={label}>
+    {etapes.map((e, i) => (
+      <li class="m-route__step" style={`--i: ${i}`}>
+        <span class="m-route__dot" aria-hidden="true">
+          {e.icone
+            ? <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true"><path d={icones[e.icone]} /></svg>
+            : <span>{i + 1}</span>}
+        </span>
+        <p class="m-route__name">{e.nom}</p>
+        {e.distance && <p class="m-route__dist">{e.distance}</p>}
+        {e.texte && <p class="m-route__text">{e.texte}</p>}
+      </li>
+    ))}
+  </ol>
+</div>
+

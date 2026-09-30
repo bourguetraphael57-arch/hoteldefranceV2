@@ -130,3 +130,20 @@ test('le champ piège anti-robot ne déclenche aucun envoi réel', async ({ requ
   expect(res.status()).toBe(200);
   expect(res.headers()['cache-control']).toBe('no-store');
 });
+
+for (const [path, vignettes] of [['/meyrueis-environs/', '.gallery__thumb'], ['/chambres/chambre-double/', '.room-gallery__thumbs a']] as const) {
+  test(`visionneuse ${path} : ouverture, navigation, Échap, retour du focus`, async ({ page }) => {
+    await page.goto(path);
+    const vignette = page.locator(vignettes).first();
+    await vignette.click();
+    const dialog = page.locator('dialog.lightbox[open]');
+    await expect(dialog).toBeVisible();
+    await expect(dialog.locator('.lightbox__count')).toHaveText(/^Photo 1 sur \d+$/);
+    await expect(dialog.locator('img')).not.toHaveAttribute('alt', '');
+    await page.keyboard.press('ArrowRight');
+    await expect(dialog.locator('.lightbox__count')).toHaveText(/^Photo 2 sur \d+$/);
+    await page.keyboard.press('Escape');
+    await expect(page.locator('dialog.lightbox[open]')).toHaveCount(0);
+    await expect(vignette).toBeFocused();
+  });
+}

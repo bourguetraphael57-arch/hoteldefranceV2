@@ -15,6 +15,8 @@ export interface Site {
   texte: string;
   url: string;
   photo?: string;
+  /** Mis en avant sur l'accueil. */
+  accueil?: boolean;
 }
 
 export const themesSites: Record<ThemeSite, string> = {
@@ -39,7 +41,8 @@ export const sites: Site[] = [
     distanceVerifiee: 'environ 16 km par la route',
     texte: 'Découvrir les vautours des gorges de la Jonte.',
     url: 'https://www.lozere-tourisme.com/maison-des-vautours/meyrueis/loiloz048fs0005a',
-    photo: 'vautours',
+    photo: 'maison-vautours-terrasse',
+    accueil: true,
   },
   {
     nom: 'Observatoire du mont Aigoual',
@@ -48,6 +51,7 @@ export const sites: Site[] = [
     texte: 'L’observatoire météorologique au sommet du massif de l’Aigoual.',
     url: 'https://www.sudcevennes.com/Visiter/Les-sites-a-visiter/observatoire-du-mont-aigoual/10220',
     photo: 'aigoual',
+    accueil: true,
   },
   {
     nom: 'Grotte de Dargilan',
@@ -56,6 +60,7 @@ export const sites: Site[] = [
     texte: 'Une grotte à visiter sur le causse Noir, tout près de Meyrueis.',
     url: 'https://www.grotte-dargilan-48.com/',
     photo: 'dargilan',
+    accueil: true,
   },
   {
     nom: 'Bateliers de la Malène',
@@ -64,7 +69,8 @@ export const sites: Site[] = [
     distanceVerifiee: 'environ 24 km par la route',
     texte: 'Descendre en barque les gorges du Tarn.',
     url: 'https://www.gorgesdutarn.com/',
-    photo: 'gorges-tarn',
+    photo: 'gorges-tarn-detroits',
+    accueil: true,
   },
   {
     nom: 'Ferme caussenarde d’autrefois',
@@ -72,6 +78,7 @@ export const sites: Site[] = [
     distance: '15 km',
     texte: 'La vie paysanne sur le causse Méjean.',
     url: 'https://www.ferme-caussenarde.com/',
+    photo: 'ferme-caussenarde',
   },
   {
     nom: 'Moulin à vent de la Borie',
@@ -79,6 +86,7 @@ export const sites: Site[] = [
     distance: '13 km',
     texte: 'Un moulin à vent sur le causse Méjean.',
     url: 'https://moulindelaborie.com/',
+    photo: 'moulin-borie',
   },
   {
     nom: 'Bisons des Randals',
@@ -93,6 +101,7 @@ export const sites: Site[] = [
     distance: '47 min',
     texte: 'Les voies des corniches de la Jonte et du Tarn (Vase de Chine, Vase de Sèvres).',
     url: 'https://www.altituderando.com/Corniches-de-la-Jonte-et-du-Tarn-Vase-de-Chine-et-Vase-de-Sevres',
+    photo: 'gorges-jonte-genets',
   },
   {
     nom: 'Parapente à Millau',
@@ -100,6 +109,7 @@ export const sites: Site[] = [
     distance: '1 h',
     texte: 'Survoler la vallée du Tarn et le viaduc.',
     url: 'https://www.leviaducdemillau.com/fr',
+    photo: 'viaduc-millau',
   },
   {
     nom: 'Caves de Roquefort',
@@ -107,8 +117,9 @@ export const sites: Site[] = [
     distance: '1 h 20',
     texte: 'Visiter les caves de Roquefort.',
     url: 'https://www.tourisme-aveyron.com/fr/voir-faire/decouvrir-aveyron/sites-visiter/roquefort-et-ses-caves/la-visite-caves-roquefort',
+    photo: 'caves-roquefort',
   },
 ];
 
 /** Sites mis en avant sur l'accueil. */
-export const sitesAccueil = sites.filter((s) => s.photo);
+export const sitesAccueil = sites.filter((s) => s.accueil && s.photo);

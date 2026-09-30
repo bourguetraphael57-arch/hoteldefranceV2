@@ -2,9 +2,12 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Breadcrumbs from '../components/Breadcrumbs.astro';
 import PageHero from '../components/PageHero.astro';
+import Divider from '../components/motion/Divider.astro';
 import Price from '../components/Price.astro';
 import PhotoPending from '../components/PhotoPending.astro';
 import ConfirmNote from '../components/ConfirmNote.astro';
+import Cliche from '../components/Cliche.astro';
+import { heros, groupesVisuels, offresPhotos, estAttendu, surtitres } from '../data/visuels';
 import { getOffre, offresPubliees } from '../data/offres';
 import { hotel } from '../data/hotel';
 import { seo } from '../data/seo';
@@ -16,12 +19,14 @@ const circuits = offresPubliees.filter((o) => o.categorie === 'circuits');
 <BaseLayout title={seo.groupes.title} description={seo.groupes.description}>
   <Breadcrumbs items={[{ href: '/groupes-seminaires/', label: 'Groupes & séminaires' }]} />
   <PageHero
+    photo={heros.groupes}
+    eyebrow={surtitres.groupes}
     title="Groupes et séminaires à Meyrueis"
     lead="Clubs de motards ou de voitures anciennes, associations de randonneurs, cyclistes, autocaristes ou équipes en séminaire : l’hôtel reçoit les groupes et peut organiser leurs circuits. Décrivez votre projet et votre budget, l’hôtel vous fera une proposition."
   >
     <div class="btn-row mt-5">
       <a class="btn btn--primary" href="/contact/?objet=groupe">Demander un devis</a>
-      <a class="btn btn--ghost" href={hotel.telephone.href}>Appeler le {hotel.telephone.affiche}</a>
+      <a class="btn btn--ghost" href={hotel.telephone.href}>Appeler le <span class="tel-num">{hotel.telephone.affiche}</span></a>
     </div>
   </PageHero>
 
@@ -37,12 +42,14 @@ const circuits = offresPubliees.filter((o) => o.categorie === 'circuits');
         </ul>
         <article class="panel stack" id={groupe.slug} aria-labelledby="titre-dpg">
           <h3 id="titre-dpg">{groupe.titre}</h3>
-          <Price prix={groupe.prix} unite={groupe.unite} base={groupe.base} />
+          <Price prix={groupe.prix} unite={groupe.unite} base={groupe.base} indicatif={false} />
           <ul class="checklist">{groupe.inclus.map((x) => <li>{x}</li>)}</ul>
           <ConfirmNote items={groupe.aConfirmer} />
         </article>
       </div>
-      <PhotoPending label="Salle voûtée du restaurant" ratio="4 / 3" class="media-rounded" />
+      <div class="bleed bleed--droite bleed--sticky bleed--compact">
+        <PhotoPending label={groupesVisuels.salleGroupe.attendu} ratio="4 / 3" />
+      </div>
     </div>
   </section>
 
@@ -59,22 +66,37 @@ const circuits = offresPubliees.filter((o) => o.categorie === 'circuits');
           <p class="muted">Le contenu du forfait n’est pas détaillé sur le site actuel : il est à préciser avec l’hôtel selon votre programme.</p>
         </article>
       </div>
-      <PhotoPending label="Salle de séminaires" ratio="4 / 3" class="media-rounded" />
+      <div class="bleed bleed--gauche">
+        <Cliche visuel={groupesVisuels.seminaire} sizes="(min-width: 72rem) 36rem, (min-width: 56rem) 50vw, 100vw" />
+        <PhotoPending label={groupesVisuels.vueSeminaire.attendu} ratio="3 / 2" class="bleed__encart" />
+      </div>
     </div>
   </section>
+
+  <Divider variant="crete" />
 
   <section class="section section--alt" aria-labelledby="titre-circuits" id="circuits">
     <div class="container">
       <div class="section__head">
+        <p class="eyebrow">{groupesVisuels.circuitsSurtitre}</p>
         <h2 id="titre-circuits">Circuits organisés</h2>
         <p>Des itinéraires entre gorges, causses et Aigoual, pour les groupes à moto, à vélo, en voiture, à pied ou en autocar.</p>
       </div>
-      <div class="grid grid--3">
+      <div class="grid grid--3 circuits-grid rail">
         {circuits.map((o) => (
-          <article class="panel stack" id={o.slug === 'circuit-autocaristes' ? 'autocaristes' : undefined} aria-labelledby={`g-${o.slug}`}>
-            <h3 id={`g-${o.slug}`}>{o.titre}</h3>
-            <Price prix={o.prix} unite={o.unite} />
-            <ul class="checklist">{o.inclus.map((x) => <li>{x}</li>)}</ul>
+          <article class="panel offre-panel" id={o.slug === 'circuit-autocaristes' ? 'autocaristes' : undefined} aria-labelledby={`g-${o.slug}`}>
+            {(() => {
+              const v = offresPhotos[o.slug];
+              return v && !estAttendu(v) && <Cliche visuel={v} overlay class="offre-panel__media" sizes="(min-width: 72rem) 24rem, (min-width: 40rem) 50vw, 100vw" />;
+            })()}
+            <div class="offre-panel__body">
+              <h3 id={`g-${o.slug}`}>{o.titre}</h3>
+              <Price prix={o.prix} unite={o.unite} indicatif={false} />
+              <ul class="checklist">{o.inclus.map((x) => <li>{x}</li>)}</ul>
+              <div class="btn-row">
+                <a class="btn btn--secondary" href={`/contact/?objet=groupe&offre=${encodeURIComponent(o.titre)}`}>Demander ce circuit<span class="sr-only"> : {o.titre}</span></a>
+              </div>
+            </div>
           </article>
         ))}
       </div>
@@ -86,9 +108,9 @@ const circuits = offresPubliees.filter((o) => o.categorie === 'circuits');
     <div class="container--narrow stack center">
       <h2 id="titre-devis">Préparer votre venue</h2>
       <p>Indiquez vos dates, le nombre de participants et le type de séjour : l’hôtel étudie une proposition adaptée à vos attentes et à votre budget.</p>
-      <div class="btn-row" style="justify-content:center">
+      <div class="btn-row btn-row--center">
         <a class="btn btn--primary" href="/contact/?objet=groupe">Demander un devis</a>
-        <a class="btn btn--ghost" href={`mailto:${hotel.email}`}>{hotel.email}</a>
+        <a class="btn btn--ghost" href={`mailto:${hotel.email}`}>Écrire à l’hôtel<span class="sr-only"> : {hotel.email}</span></a>
       </div>
     </div>
   </section>

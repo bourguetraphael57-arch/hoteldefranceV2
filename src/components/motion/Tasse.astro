@@ -1,0 +1,16 @@
+---
+/** Tasse de café fumante au trait (petit-déjeuner). La vapeur ondule seulement quand la tasse est visible. Décoratif. */
+interface Props { class?: string }
+const { class: className } = Astro.props;
+---
+<div class:list={['m-tasse', className]} data-motion="loop" aria-hidden="true">
+  <svg viewBox="0 0 64 64" focusable="false" aria-hidden="true">
+    <g class="m-tasse__steam">
+      <path d="M22 26 C18 21 26 17 22 11" />
+      <path d="M30 24 C26 18 34 14 30 7" />
+      <path d="M38 26 C34 21 42 17 38 11" />
+    </g>
+    <path d="M13 31 H47 V38 C47 47 40 53 30 53 C20 53 13 47 13 38 Z M47 34 C55 34 55 45 46 45 M6 57 C18 60 42 60 54 57" />
+  </svg>
+</div>
+

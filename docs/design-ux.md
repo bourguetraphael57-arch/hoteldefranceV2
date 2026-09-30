@@ -6,7 +6,7 @@ Cible : Astro 5 statique, CSS natif (custom properties, `@layer`), JS minimal (m
 
 - Chaleureux et naturel : fonds couleur calcaire, bois de teck en accent, vert des pins pour la confiance (succès, labels), bleu de l'Aigoual pour les liens d'information.
 - Sobre : pas de dorures, pas de filets ornementaux, pas de texte « luxe ». La maison est familiale (depuis 1946), l'ancien relais de poste en pierre fait le travail : de grandes photos honnêtes, beaucoup d'air, une typographie lisible.
-- Léger : aucune animation de défilement, pas de carrousel automatique. Seules transitions autorisées : 150 ms sur couleur/ombre, désactivées sous `prefers-reduced-motion`.
+- Léger : animations vectorielles légères autorisées (tracés SVG liés au défilement, apparition des blocs, vautours, annotations manuscrites), jamais de carrousel automatique. Aucune information n'est portée uniquement par une animation. Tout est désactivé sous `prefers-reduced-motion`, et l'état final (texte, tracés, photos) est visible sans JavaScript. Transitions d'interface : 150 ms sur couleur/ombre.
 - Pourquoi : les clients (familles, randonneurs, motards, groupes, étapes d'affaires) consultent surtout sur mobile, parfois sur un réseau faible en zone de gorges. Ils cherchent vite : disponibilités, prix, téléphone, accès. Le faux luxe contredirait l'offre réelle (demi-pension, terroir) et abîmerait la confiance.
 
 ## 2. Design tokens
@@ -35,12 +35,13 @@ Cible : Astro 5 statique, CSS natif (custom properties, `@layer`), JS minimal (m
 
 Règles : jamais de texte en `--c-border`. L'anneau de focus fait 3 px avec `outline-offset: 3px` : il repose sur le fond et non sur le bouton teck (focus sur teck = 1,01, à proscrire). Pas de mode sombre en v1 (tokens prêts à être surchargés plus tard).
 
-### Typographie (2 familles)
+### Typographie (2 familles + 1 manuscrite d'appoint)
 
 - Titres : Source Serif 4 (SIL OFL, variable), auto-hébergée en woff2 via `@fontsource-variable/source-serif-4` ou fichier local. Graisses 600 (titres) et 400 italique (accroches, rare). `font-display: swap`, précharger uniquement le fichier latin normal.
   Pile : `"Source Serif 4", "Iowan Old Style", "Palatino Linotype", Georgia, serif`.
 - Texte et interface : pile système, 400 / 600, sans téléchargement.
   Pile : `system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif`.
+- Manuscrite : Caveat 600 (SIL OFL 1.1, woff2 latin auto-hébergé, `public/fonts/OFL-caveat.txt`), classe `.hand`. Usage parcimonieux : quelques sur-titres et annotations, taille ≥ 1.25rem, jamais pour le texte courant, les boutons ou une information essentielle.
 - Échelle fluide (320 → 1280 px) :
 
 ```css

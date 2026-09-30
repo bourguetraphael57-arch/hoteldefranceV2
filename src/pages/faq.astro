@@ -5,6 +5,14 @@ import PageHero from '../components/PageHero.astro';
 import { faq } from '../data/faq';
 import { hotel } from '../data/hotel';
 import { seo } from '../data/seo';
+import Cliche from '../components/Cliche.astro';
+import type { Visuel } from '../data/visuels';
+
+/** Une photo réelle en tête de certains thèmes, pour rythmer la page. */
+const photosThemes: Record<string, Visuel> = {
+  restaurant: { photo: { officielle: 'facade' }, legende: 'La terrasse du restaurant, devant l’hôtel', position: '50% 90%' },
+  acces: { photo: { libre: 'gorges-jonte' }, legende: 'La route des gorges de la Jonte, près de Meyrueis' },
+};
 
 const ld = {
   '@context': 'https://schema.org',
@@ -33,6 +41,7 @@ const ld = {
     {faq.map((t) => (
       <section aria-labelledby={t.id}>
         <h2 id={t.id}>{t.titre}</h2>
+        {photosThemes[t.id] && <Cliche visuel={photosThemes[t.id]!} class="faq-photo mt-4" sizes="(min-width: 48rem) 48rem, 100vw" />}
         <div class="faq mt-4">
           {t.questions.map((q) => (
             <details id={`q-${q.id}`}>

@@ -19,6 +19,10 @@ for (const path of PAGES) {
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
     expect(overflow, 'défilement horizontal').toBeLessThanOrEqual(0);
 
+    // axe fait défiler la page pendant l'analyse, ce qui déclencherait les apparitions en cours de mesure :
+    // on affiche d'abord l'état final des animations (celui que voit le visiteur une fois l'élément à l'écran).
+    await page.evaluate(() => document.querySelectorAll('.reveal, .is-armed').forEach((el) => el.classList.add('is-visible')));
+    await page.waitForTimeout(1600);
     const axe = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']).analyze();
     const summary = axe.violations.map((v) => `${v.id} (${v.impact}) : ${v.nodes.map((n) => n.target.join(' ')).slice(0, 3).join(' | ')}`);
     expect(summary).toEqual([]);

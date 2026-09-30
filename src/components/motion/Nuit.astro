@@ -1,0 +1,14 @@
+---
+/** Croissant de lune et étoiles au trait (dîner, soirée). Les étoiles scintillent doucement quand elles sont visibles. Décoratif. */
+interface Props { class?: string }
+const { class: className } = Astro.props;
+---
+<div class:list={['m-nuit', className]} data-motion="loop" aria-hidden="true">
+  <svg viewBox="0 0 64 48" focusable="false" aria-hidden="true">
+    <path class="m-nuit__lune" d="M40 6 A18 18 0 1 0 58 30 A14 14 0 1 1 40 6 Z" />
+    <path class="m-nuit__etoile" d="M10 10 V18 M6 14 H14" />
+    <path class="m-nuit__etoile" d="M22 30 V36 M19 33 H25" style="--d: 1.1s" />
+    <path class="m-nuit__etoile" d="M8 38 V42 M6 40 H10" style="--d: 2s" />
+  </svg>
+</div>
+

@@ -12,7 +12,7 @@ const desc = (k: keyof ContactData, hint?: string) =>
   [hint, errors[k] ? `${k}-err` : undefined].filter(Boolean).join(' ') || undefined;
 const inv = (k: keyof ContactData) => (errors[k] ? 'true' : undefined);
 ---
-<form class="form" method="post" action="/contact/" novalidate data-contact-form>
+<form class="form" method="post" action="/contact/#titre-formulaire" novalidate data-contact-form>
   {errKeys.length > 0 && (
     <div class="alert alert--error" role="alert" tabindex="-1" id="erreurs" data-error-summary>
       <h2>Le formulaire contient {errKeys.length} erreur{errKeys.length > 1 ? 's' : ''}</h2>

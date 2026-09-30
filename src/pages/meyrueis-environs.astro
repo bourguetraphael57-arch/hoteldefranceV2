@@ -4,53 +4,119 @@ import Breadcrumbs from '../components/Breadcrumbs.astro';
 import PageHero from '../components/PageHero.astro';
 import Gallery from '../components/Gallery.astro';
 import ConfirmNote from '../components/ConfirmNote.astro';
+import Cliche from '../components/Cliche.astro';
+import CreditsGroupe from '../components/CreditsGroupe.astro';
+import Icon from '../components/Icon.astro';
+import Divider from '../components/motion/Divider.astro';
+import Itineraire from '../components/motion/Itineraire.astro';
+import { itineraireEnvirons } from '../data/motion';
+import { heros, villageMosaique, galeriesEnvirons, environsTextes, surtitres } from '../data/visuels';
 import { sites, themesSites, village, type ThemeSite } from '../data/environs';
 import { hotel } from '../data/hotel';
 import { seo } from '../data/seo';
 
 const themes = Object.keys(themesSites) as ThemeSite[];
+const sitesTries = themes.flatMap((t) => sites.filter((s) => s.theme === t));
+const photosSites = sitesTries.filter((s) => s.photo).map((s) => ({ libre: s.photo! }));
 ---
-<BaseLayout title={seo.environs.title} description={seo.environs.description} image="/images/libres/gorges-jonte-1600.jpg">
+<BaseLayout title={seo.environs.title} description={seo.environs.description} image="/images/libres/meyrueis-confluent-1600.jpg">
   <Breadcrumbs items={[{ href: '/meyrueis-environs/', label: 'Meyrueis & environs' }]} />
-  <PageHero title="Meyrueis et ses environs" lead={village.intro} />
+  <PageHero title="Meyrueis et ses environs" eyebrow={surtitres.environs} lead={village.intro} photo={heros.environs} />
 
-  <section class="section section--tight" aria-labelledby="titre-galerie">
+  <section class="section section--tight" aria-labelledby="titre-village">
     <div class="container">
-      <h2 id="titre-galerie">En images</h2>
-      <p class="muted mt-4">Photos sous licence libre (Wikimedia Commons). Sélectionnez une photo pour l’agrandir.</p>
-      <div class="mt-5">
-        <Gallery label="Meyrueis et ses environs" ids={['meyrueis-drone', 'meyrueis-pont', 'meyrueis-rue', 'gorges-jonte', 'causse-mejean', 'aigoual', 'gorges-tarn', 'vautours', 'dargilan', 'aven-armand']} />
+      <div class="section__head">
+        <p class="eyebrow hand">{villageMosaique.surtitre}</p>
+        <h2 id="titre-village">{villageMosaique.titre}</h2>
+        <p>{villageMosaique.texte}</p>
       </div>
+      <div class="mosaic mosaic--village">
+        {villageMosaique.photos.map((v) => <Cliche visuel={v} overlay caption="legende" sizes="(min-width: 72rem) 36rem, (min-width: 48rem) 50vw, 100vw" />)}
+      </div>
+      <CreditsGroupe photos={villageMosaique.photos.map((v) => v.photo)} class="mt-4" />
     </div>
   </section>
 
-  <section class="section section--alt" aria-labelledby="titre-sites">
+  <section class="section section--tight" aria-labelledby="titre-itineraire">
+    <div class="container">
+      <div class="section__head">
+        <h2 id="titre-itineraire">{itineraireEnvirons.titre}</h2>
+        <p>{itineraireEnvirons.intro}</p>
+      </div>
+      <Itineraire etapes={itineraireEnvirons.etapes} label={itineraireEnvirons.label} />
+      <ConfirmNote class="mt-5" items={[itineraireEnvirons.note]} />
+    </div>
+  </section>
+
+  <section class="section section--alt" aria-labelledby="titre-galerie">
+    <div class="container">
+      <div class="section__head">
+        <h2 id="titre-galerie">{environsTextes.galerieTitre}</h2>
+        <p>{environsTextes.galerieIntro}</p>
+      </div>
+      <nav aria-label={environsTextes.galerieNavLabel}>
+        <ul class="anchor-nav">
+          {galeriesEnvirons.map((g) => <li><a href={`#galerie-${g.id}`}>{g.titre}</a></li>)}
+        </ul>
+      </nav>
+      {galeriesEnvirons.map((g) => (
+        <section class="galerie-theme mt-6" aria-labelledby={`galerie-${g.id}`}>
+          <h3 id={`galerie-${g.id}`}>{g.titre} <span>{g.ids.length} photos</span></h3>
+          <div class="mt-4">
+            <Gallery label={g.titre} ids={[...g.ids]} class="gallery--theme" />
+          </div>
+        </section>
+      ))}
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="titre-sites">
     <div class="container">
       <div class="section__head">
         <h2 id="titre-sites">Que visiter autour de l’hôtel</h2>
         <p>Une sélection de sites proposée par l’hôtel. Les liens mènent vers des sites externes.</p>
       </div>
-      <div class="table-wrap" role="region" aria-labelledby="caption-sites" tabindex="0">
+      <ul class="sites" aria-label={environsTextes.sitesLabel}>
+        {sitesTries.map((s) => (
+          <li>
+            <article class="site-row" aria-labelledby={`site-${s.nom.replace(/[^a-z]/gi, '')}`}>
+              {s.photo
+                ? <Cliche visuel={{ photo: { libre: s.photo } }} caption="aucune" sizes="6rem" />
+                : <div class="site-row__vide" aria-hidden="true"><Icon name="mountain" /></div>}
+              <div>
+                <p class="site-row__meta"><small>{themesSites[s.theme]}</small></p>
+                <h3 id={`site-${s.nom.replace(/[^a-z]/gi, '')}`}>{s.nom}</h3>
+                <p>{s.texte}</p>
+                <p class="site-row__meta">Depuis l’hôtel : {s.distance}{s.distanceVerifiee && ` (${s.distanceVerifiee})`}</p>
+                <a href={s.url} rel="noopener" class="ext">En savoir plus<span class="sr-only"> : {s.nom} (site externe)</span></a>
+              </div>
+            </article>
+          </li>
+        ))}
+      </ul>
+      <CreditsGroupe photos={photosSites} class="mt-4" />
+      <div class="table-wrap mt-6" role="region" aria-labelledby="caption-sites" tabindex="0">
         <table class="table">
-          <caption id="caption-sites">Sites à visiter, par thème, avec la distance ou le temps de trajet depuis l’hôtel</caption>
-          <thead><tr><th scope="col">Site</th><th scope="col">Thème</th><th scope="col">Depuis l’hôtel</th><th scope="col">En savoir plus</th></tr></thead>
+          <caption id="caption-sites">{environsTextes.tableauCaption}</caption>
+          <thead><tr><th scope="col">Site</th><th scope="col">Thème</th><th scope="col">Depuis l’hôtel</th></tr></thead>
           <tbody>
-            {themes.flatMap((t) => sites.filter((s) => s.theme === t)).map((s) => (
+            {sitesTries.map((s) => (
               <tr>
-                <th scope="row">{s.nom}<br /><span class="muted">{s.texte}</span></th>
+                <th scope="row">{s.nom}</th>
                 <td>{themesSites[s.theme]}</td>
                 <td>{s.distance}{s.distanceVerifiee && <><br /><small class="muted">{s.distanceVerifiee}</small></>}</td>
-                <td><a href={s.url} rel="noopener" class="ext">En savoir plus<span class="sr-only"> : {s.nom} (site externe)</span></a></td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
-      <ConfirmNote class="mt-5" items={['distances et temps de trajet (repris du site actuel, avec des unités différentes) ; quand une vérification cartographique donne une autre valeur, elle est indiquée en dessous']} />
+      <ConfirmNote class="mt-5" items={['distances et temps de trajet (repris du site actuel, avec des unités différentes) ; quand une vérification cartographique donne une autre valeur, elle est indiquée entre parenthèses']} />
     </div>
   </section>
 
-  <section class="section" aria-labelledby="titre-terroir">
+  <Divider variant="vautour" />
+
+  <section class="section section--alt" aria-labelledby="titre-terroir">
     <div class="container split">
       <div class="stack">
         <h2 id="titre-terroir">Terroir et rendez-vous</h2>
@@ -61,10 +127,13 @@ const themes = Object.keys(themesSites) as ThemeSite[];
         <ConfirmNote items={['dates du marché et de la foire pour la saison en cours']} />
         <p>Besoin d’un conseil pour organiser vos journées ? L’équipe de l’hôtel connaît bien la région : <a href={hotel.telephone.href}>{hotel.telephone.affiche}</a>.</p>
       </div>
-      <div class="panel panel--info stack">
+      <div class="stack">
+        <Cliche visuel={{ photo: { libre: 'foire-saint-michel' }, legende: 'La foire de la Saint-Michel, fin septembre : l’ail rose du Tarn sur les étals (édition 2012)' }} class="terroir-foire" sizes="(min-width: 72rem) 34rem, (min-width: 56rem) 48vw, 100vw" />
+        <div class="panel panel--info stack">
         <h2 class="h4">Randonner dans le Parc national</h2>
         <p>Meyrueis est aux portes du Parc national des Cévennes. Restez sur les sentiers balisés et respectez la faune et les troupeaux.</p>
         <p><a href="/offres/#circuits">Les circuits randonnée, vélo et moto proposés par l’hôtel</a></p>
+        </div>
       </div>
     </div>
   </section>

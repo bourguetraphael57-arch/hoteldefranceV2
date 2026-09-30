@@ -1,0 +1,24 @@
+---
+/**
+ * Annotation « manuscrite » : flèche courbe au trait + texte (slot) en police manuscrite.
+ * À poser à côté d'une photo. `vers` indique où pointe la flèche.
+ * Le texte est un vrai texte (lu par les lecteurs d'écran) ; la flèche est décorative.
+ */
+
+interface Props {
+  vers?: 'haut-gauche' | 'haut-droite' | 'bas-gauche' | 'bas-droite';
+  /** accent (teck, défaut) · pin (vert) · clair (sur fond sombre). */
+  ton?: 'accent' | 'pin' | 'clair';
+  as?: 'p' | 'span' | 'figcaption';
+  class?: string;
+}
+const { vers = 'haut-gauche', ton = 'accent', as: Tag = 'p', class: className } = Astro.props;
+---
+<Tag class:list={['m-annotation', `m-annotation--${vers}`, `m-annotation--${ton}`, className]} data-motion="time">
+  <svg class="m-annotation__arrow" viewBox="0 0 64 44" focusable="false" aria-hidden="true">
+    <path class="m-draw" pathLength="1" d="M4 38 C16 42 38 36 52 10" />
+    <path class="m-draw" pathLength="1" d="M42 12 L53 8 L55 20" style="--d: .55" />
+  </svg>
+  <span class="m-annotation__text"><slot /></span>
+</Tag>
+

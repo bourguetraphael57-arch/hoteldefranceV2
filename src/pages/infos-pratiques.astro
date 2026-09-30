@@ -4,12 +4,22 @@ import Breadcrumbs from '../components/Breadcrumbs.astro';
 import PageHero from '../components/PageHero.astro';
 import AccessibilityNotice from '../components/AccessibilityNotice.astro';
 import ConfirmNote from '../components/ConfirmNote.astro';
+import Cliche from '../components/Cliche.astro';
+import PhotoPending from '../components/PhotoPending.astro';
+import Itineraire from '../components/motion/Itineraire.astro';
+import { itineraireAcces } from '../data/motion';
+import { heros, infosVisuels, estAttendu, type Visuel, type Attendu } from '../data/visuels';
+
+const equipements: (Visuel | Attendu)[] = [...infosVisuels.equipements];
+const equipementsPhotos = equipements.filter((v): v is Visuel => !estAttendu(v));
+const equipementsAttendus = equipements.filter(estAttendu);
 import { hotel } from '../data/hotel';
 import { seo } from '../data/seo';
 ---
 <BaseLayout title={seo.infos.title} description={seo.infos.description}>
   <Breadcrumbs items={[{ href: '/infos-pratiques/', label: 'Infos pratiques' }]} />
   <PageHero
+    photo={heros.infos}
     title="Infos pratiques et accessibilité"
     lead="Horaires, accès, stationnement, équipements : l’essentiel pour préparer votre séjour. Si vous avez des besoins particuliers, lisez la rubrique accessibilité et appelez l’hôtel avant de réserver."
   >
@@ -48,15 +58,16 @@ import { seo } from '../data/seo';
         <ConfirmNote items={[hotel.acces.trainAConfirmer]} />
         <h3 class="h4">En avion</h3>
         <p>{hotel.acces.avion}</p>
+        <h3 class="h4">Stationnement</h3>
+        <p>Parking privé sécurisé à l’hôtel et garage pour les motos et les vélos.</p>
+        <ConfirmNote items={['parking gratuit ou payant, nombre de places, stationnement des autocars']} />
         <p><a class="btn btn--secondary" href={hotel.itineraire} rel="noopener">Calculer l’itinéraire<span class="sr-only"> (Google Maps, site externe)</span></a></p>
       </div>
       <div class="stack">
         <h3 class="h4">À proximité</h3>
-        <ul class="checklist">{hotel.acces.proximite.map((p) => <li>{p.lieu} : {p.distance}</li>)}</ul>
+        <Itineraire etapes={itineraireAcces.etapes} label={itineraireAcces.label} />
         <ConfirmNote items={['distances reprises du site actuel ; le site actuel donne aussi 31 km pour les bateliers de la Malène']} />
-        <h3 class="h4">Stationnement</h3>
-        <p>Parking privé sécurisé à l’hôtel et garage pour les motos et les vélos.</p>
-        <ConfirmNote items={['parking gratuit ou payant, nombre de places, stationnement des autocars']} />
+        <Cliche visuel={infosVisuels.acces} class="bleed" sizes="(min-width: 72rem) 32rem, (min-width: 56rem) 45vw, 100vw" />
       </div>
     </div>
   </section>
@@ -64,7 +75,13 @@ import { seo } from '../data/seo';
   <section class="section" aria-labelledby="equipements">
     <div class="container">
       <h2 id="equipements">Équipements et services</h2>
-      <div class="table-wrap mt-5" role="region" aria-labelledby="caption-equipements" tabindex="0">
+      <ul class="vignettes vignettes--duo mt-5" aria-label={infosVisuels.equipementsLabel}>
+        {equipementsPhotos.map((v) => <li><Cliche visuel={v} sizes="(min-width: 72rem) 46rem, (min-width: 48rem) 64vw, 100vw" /></li>)}
+        {equipementsAttendus.length > 0 && (
+          <li><figure class="cliche"><PhotoPending label={equipementsAttendus.map((v) => v.attendu.toLowerCase()).join(', ')} ratio="3 / 2" /><figcaption class="cliche__caption"><span class="cliche__legende">{equipementsAttendus.map((v) => v.legende).join(' · ')}</span></figcaption></figure></li>
+        )}
+      </ul>
+      <div class="table-wrap mt-6" role="region" aria-labelledby="caption-equipements" tabindex="0">
         <table class="table">
           <caption id="caption-equipements">Équipements annoncés sur le site actuel</caption>
           <thead><tr><th scope="col">Équipement</th><th scope="col">Précision</th><th scope="col">À confirmer par l’hôtel</th></tr></thead>

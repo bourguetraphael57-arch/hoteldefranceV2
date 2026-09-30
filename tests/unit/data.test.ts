@@ -3,6 +3,7 @@ import { existsSync } from 'node:fs';
 import { chambres } from '../../src/data/chambres';
 import { offres } from '../../src/data/offres';
 import { photos } from '../../src/data/photos';
+import { photosHotel } from '../../src/data/photos-officielles';
 import { hotel } from '../../src/data/hotel';
 import { faq } from '../../src/data/faq';
 import { formatEuros, personnes } from '../../src/lib/format';
@@ -20,6 +21,19 @@ describe('données', () => {
   it('chaque photo libre a un auteur, une licence et ses 4 fichiers', () => {
     for (const p of photos) {
       expect(p.auteur && p.licence && p.licenceUrl && p.source && p.alt).toBeTruthy();
+      for (const suffix of ['-800.webp', '-1600.webp', '-800.jpg', '-1600.jpg']) {
+        expect(existsSync(`public${p.src}${suffix}`), `${p.src}${suffix}`).toBe(true);
+      }
+    }
+  });
+
+  it('identifiants de photos libres uniques', () => {
+    const ids = photos.map((p) => p.id);
+    expect(new Set(ids).size).toBe(ids.length);
+  });
+
+  it('chaque photo de l’établissement a ses 4 fichiers', () => {
+    for (const p of Object.values(photosHotel)) {
       for (const suffix of ['-800.webp', '-1600.webp', '-800.jpg', '-1600.jpg']) {
         expect(existsSync(`public${p.src}${suffix}`), `${p.src}${suffix}`).toBe(true);
       }

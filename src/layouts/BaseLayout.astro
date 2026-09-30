@@ -1,9 +1,11 @@
 ---
 import '../styles/global.css';
+import '../styles/motion.css';
 import { hotel, adresseComplete } from '../data/hotel';
 import { navPrincipale, navPied } from '../data/navigation';
 import { bookingUrl } from '../lib/reservit';
 import Icon from '../components/Icon.astro';
+import VillageSketch from '../components/motion/VillageSketch.astro';
 
 interface Props {
   title: string;
@@ -81,17 +83,19 @@ const hotelLd = {
         <nav class="site-nav" id="menu-principal" aria-label="Menu principal" data-nav>
           <ul>
             {navPrincipale.map((l) => (
-              <li><a href={l.href} aria-current={isCurrent(l.href) ? 'page' : undefined}>{l.label}</a></li>
+              <li><a href={l.href} aria-current={isCurrent(l.href) ? 'page' : undefined}>{l.court
+                ? <><span class="nav-court" aria-hidden="true">{l.court}</span><span class="nav-long">{l.label}</span></>
+                : l.label}</a></li>
             ))}
           </ul>
           <div class="site-nav__extra">
             <a class="btn btn--primary" href={resa}>Réserver en ligne</a>
-            <a class="btn btn--ghost" href={hotel.telephone.href}><Icon name="phone" /> Appeler le {hotel.telephone.affiche}</a>
+            <a class="btn btn--ghost" href={hotel.telephone.href}><Icon name="phone" /> Appeler le <span class="tel-num">{hotel.telephone.affiche}</span></a>
             <a class="btn btn--ghost" href="/contact/">Nous écrire</a>
           </div>
         </nav>
         <div class="header-actions">
-          <a class="tel" href={hotel.telephone.href}><span class="sr-only">Appeler le </span>{hotel.telephone.affiche}</a>
+          <a class="tel" href={hotel.telephone.href} title={`Appeler le ${hotel.telephone.affiche}`}><Icon name="phone" /><span class="tel__num"><span class="sr-only">Appeler le </span>{hotel.telephone.affiche}</span></a>
           <a class="btn btn--primary" href={resa}>Réserver</a>
         </div>
       </div>
@@ -103,6 +107,7 @@ const hotelLd = {
 
     <footer class="site-footer">
       <div class="container">
+        <VillageSketch ton="sombre" class="site-footer__sketch" />
         <div class="footer-grid">
           <div>
             <h2>{hotel.nom}</h2>
@@ -135,6 +140,9 @@ const hotelLd = {
     </nav>
 
     <script>
+      // Apparitions au défilement (blocs + animations vectorielles) : script unique partagé.
+      import '../scripts/motion';
+
       // En-tête : ombre après défilement (IntersectionObserver sur une sentinelle).
       const header = document.querySelector<HTMLElement>('[data-header]');
       const sentinel = document.querySelector('.header-sentinel');
@@ -173,6 +181,15 @@ const hotelLd = {
       const isField = (el: EventTarget | null) => el instanceof HTMLElement && el.matches('input, select, textarea');
       document.addEventListener('focusin', (e) => { if (isField(e.target)) bar?.classList.add('is-hidden'); });
       document.addEventListener('focusout', (e) => { if (isField(e.target)) bar?.classList.remove('is-hidden'); });
+      // Barre rentrée tant que les boutons d'action du haut de page (à défaut, l'en-tête de page) ne sont pas
+      // dépassés (à l'écran ou plus bas) : elle les masquerait sinon. Elle revient dès qu'on les dépasse.
+      // Sans JS, elle reste affichée.
+      const topActions =
+        document.querySelector('main .hero .btn-row, main .page-hero .btn-row, main h1 ~ .btn-row') ??
+        document.querySelector('main .page-hero');
+      if (bar && topActions && 'IntersectionObserver' in window) {
+        new IntersectionObserver(([e]) => e && bar.classList.toggle('is-tucked', e.isIntersecting || e.boundingClientRect.top > 0)).observe(topActions);
+      }
     </script>
   </body>
 </html>

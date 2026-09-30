@@ -4,10 +4,20 @@ import Breadcrumbs from '../components/Breadcrumbs.astro';
 import PageHero from '../components/PageHero.astro';
 import PhotoPending from '../components/PhotoPending.astro';
 import ConfirmNote from '../components/ConfirmNote.astro';
+import Cliche from '../components/Cliche.astro';
+import CreditsGroupe from '../components/CreditsGroupe.astro';
+import Divider from '../components/motion/Divider.astro';
+import Tasse from '../components/motion/Tasse.astro';
+import Nuit from '../components/motion/Nuit.astro';
+import { reperesRepas } from '../data/motion';
+import { heros, restaurantMosaique, restaurantTerroir, estAttendu, type Visuel } from '../data/visuels';
 import { restaurant } from '../data/restaurant';
 import { hotel } from '../data/hotel';
 import { seo } from '../data/seo';
 
+const photosMosaique = restaurantMosaique.filter((v): v is Visuel => !estAttendu(v));
+/** Les espaces pas encore photographiés sont regroupés en une seule tuile (pas de cases vides). */
+const espacesAttendus = restaurantMosaique.filter(estAttendu).map((v) => v.attendu.toLowerCase());
 const site = Astro.site ?? new URL(Astro.url.origin);
 const ld = {
   '@context': 'https://schema.org',
@@ -24,27 +34,45 @@ const ld = {
 <BaseLayout title={seo.restaurant.title} description={seo.restaurant.description}>
   <script slot="head" type="application/ld+json" set:html={JSON.stringify(ld)} />
   <Breadcrumbs items={[{ href: '/restaurant/', label: 'Restaurant' }]} />
-  <PageHero title="Restaurant du terroir à Meyrueis" eyebrow="Le terroir lozérien à l’honneur" lead={restaurant.intro}>
+  <PageHero title="Restaurant du terroir à Meyrueis" eyebrow="Le terroir lozérien à l’honneur" lead={restaurant.intro} photo={heros.restaurant}>
     <div class="btn-row mt-5">
-      <a class="btn btn--primary" href={hotel.telephone.href}>Réserver une table : {hotel.telephone.affiche}</a>
+      <a class="btn btn--primary" href={hotel.telephone.href}>Réserver une table : <span class="tel-num">{hotel.telephone.affiche}</span></a>
       <a class="btn btn--secondary" href="/contact/?objet=table">Réserver par écrit</a>
     </div>
   </PageHero>
 
   <section class="section section--tight" aria-labelledby="titre-espaces">
     <div class="container">
-      <h2 id="titre-espaces">Les espaces</h2>
-      <div class="grid grid--3 mt-5">
-        {restaurant.espaces.map((e) => (
-          <article class="card">
-            <div class="card__media"><PhotoPending label={e.titre} /></div>
-            <div class="card__body">
-              <h3 class="card__title">{e.titre}</h3>
-              <p>{e.texte}</p>
-            </div>
-          </article>
-        ))}
+      <div class="section__head">
+        <h2 id="titre-espaces">Les espaces</h2>
+        <ul class="checklist">
+          {restaurant.espaces.map((e) => <li><strong>{e.titre}</strong> — {e.texte}</li>)}
+        </ul>
       </div>
+      <div class="mosaic mosaic--resto">
+        {photosMosaique.map((v, i) => <Cliche visuel={v} overlay caption="legende" sizes={i === 0 ? '(min-width: 72rem) 46rem, (min-width: 48rem) 64vw, 100vw' : '(min-width: 72rem) 24rem, (min-width: 48rem) 32vw, 50vw'} />)}
+        {espacesAttendus.length > 0 && <PhotoPending label={espacesAttendus.join(', ')} ratio="auto" />}
+      </div>
+      <CreditsGroupe photos={photosMosaique.map((v) => v.photo)} class="mt-4" />
+    </div>
+  </section>
+
+  <section class="section section--surface" aria-labelledby="titre-terroir">
+    <div class="container terroir">
+      <div class="stack">
+        <p class="eyebrow hand">{restaurantTerroir.surtitre}</p>
+        <h2 id="titre-terroir">{restaurantTerroir.titre}</h2>
+        <p>{restaurantTerroir.texte}</p>
+        <ul class="terroir__produits" aria-label={restaurantTerroir.produitsLabel}>
+          {restaurantTerroir.produits.map((p) => <li>{p}</li>)}
+        </ul>
+      </div>
+      <div class="terroir__photos">
+        {restaurantTerroir.photos.map((v) => <Cliche visuel={v} caption="legende" sizes="(min-width: 56rem) 18rem, 45vw" />)}
+      </div>
+    </div>
+    <div class="container">
+      <CreditsGroupe photos={restaurantTerroir.photos.map((v) => v.photo)} class="mt-5" />
     </div>
   </section>
 
@@ -52,6 +80,9 @@ const ld = {
     <div class="container split">
       <div class="stack">
         <h2 id="titre-horaires">Horaires</h2>
+        <ul class="reperes" aria-label="Repères horaires">
+          {reperesRepas.map((r) => <li>{r.icone === 'tasse' ? <Tasse /> : <Nuit />}<span><strong>{r.label}</strong>{r.valeur}</span></li>)}
+        </ul>
         <div class="table-wrap" role="region" aria-labelledby="caption-horaires" tabindex="0">
           <table class="table">
             <caption id="caption-horaires">Horaires du restaurant publiés sur le site actuel</caption>
@@ -73,12 +104,14 @@ const ld = {
           <li><a href={`mailto:${hotel.email}?subject=${encodeURIComponent('Réservation de table')}`}>{hotel.email}</a></li>
           <li><a href="/contact/?objet=table">Formulaire de réservation de table</a></li>
         </ul>
-        <h2 class="mt-6">Groupes</h2>
+        <h3 class="mt-6">Groupes</h3>
         <p>{restaurant.groupes} La salle voûtée accueille jusqu’à 70 personnes.</p>
         <p><a href="/groupes-seminaires/">Groupes et séminaires</a></p>
       </div>
     </div>
   </section>
+
+  <Divider variant="pins" />
 
   <section class="section" aria-labelledby="titre-menus" id="menus">
     <div class="container">
@@ -87,9 +120,9 @@ const ld = {
         <p>Menus publiés sur le site actuel. Ils évoluent au fil des saisons.</p>
       </div>
       <ConfirmNote items={[restaurant.menusAConfirmer]} />
-      <div class="grid grid--2 mt-5">
-        {restaurant.menus.map((m) => (
-          <section class="menu-card" aria-labelledby={`menu-${m.id}`}>
+      <div class="menus mt-5">
+        {restaurant.menus.map((m, i) => (
+          <section class:list={['menu-card', { 'menu-card--vedette': i === 0, 'menu-card--ardoise': i === 1 }]} aria-labelledby={`menu-${m.id}`}>
             <h3 id={`menu-${m.id}`}><span>{m.titre}</span> <span class="price">{m.prix}</span></h3>
             <p class="muted">{m.formule}{m.note && ` — ${m.note}`}</p>
             {m.services.map((s) => (

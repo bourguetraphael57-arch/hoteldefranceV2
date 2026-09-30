@@ -1,6 +1,6 @@
 ---
 import type { Chambre } from '../data/chambres';
-import { bookingUrl, availabilityUrl } from '../lib/reservit';
+import { bookingUrl } from '../lib/reservit';
 import { personnes } from '../lib/format';
 import PhotoPending from './PhotoPending.astro';
 import PhotoOfficielle from './PhotoOfficielle.astro';
@@ -21,19 +21,17 @@ const photo = photosDe(c.slug)[0];
     {c.capacite && <p class="tag">{personnes(c.capacite)}</p>}
     <H class="card__title"><a href={`/chambres/${c.slug}/`}>{c.nom}</a></H>
     <p>{c.resume}</p>
-    <dl class="facts">
-      <dt>Capacité</dt><dd>{c.capacite ? `${personnes(c.capacite)} maximum` : 'Non communiquée'}</dd>
-      {c.literie && (<><dt>Literie</dt><dd>{c.literie}</dd></>)}
-      <dt>Surface</dt><dd>{c.surface ?? 'Non communiquée'}</dd>
-    </dl>
-    <p class="price-unknown">Tarif selon dates — voir disponibilités</p>
-    <div class="card__actions btn-row">
-      <a class="btn btn--primary" href={bookingUrl({ roomtcode: c.roomtcode })}>
-        Réserver<span class="sr-only"> la {c.nom.toLowerCase()} sur le site sécurisé Reservit</span>
-      </a>
-      <a class="btn btn--secondary" href={availabilityUrl()}>
-        Disponibilités<span class="sr-only"> (tableau Reservit)</span>
-      </a>
+    <div class="card__foot">
+      <dl class="facts">
+        <dt>Capacité</dt><dd>{c.capacite ? `${personnes(c.capacite)} maximum` : 'Non communiquée'}</dd>
+        {c.literie && (<><dt>Literie</dt><dd>{c.literie}</dd></>)}
+        <dt>Surface</dt><dd>{c.surface ?? 'Non communiquée'}</dd>
+      </dl>
+      <div class="card__actions">
+        <a class="btn btn--primary btn--block" href={bookingUrl({ roomtcode: c.roomtcode })}>
+          Voir les tarifs et réserver<span class="sr-only"> : {c.nom.toLowerCase()}, sur le site sécurisé Reservit</span>
+        </a>
+      </div>
     </div>
   </div>
 </article>

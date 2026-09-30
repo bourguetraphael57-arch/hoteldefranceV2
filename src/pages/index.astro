@@ -4,44 +4,70 @@ import BookingBlock from '../components/BookingBlock.astro';
 import RoomCard from '../components/RoomCard.astro';
 import OfferCard from '../components/OfferCard.astro';
 import Photo from '../components/Photo.astro';
-import PhotoPending from '../components/PhotoPending.astro';
+import Cliche from '../components/Cliche.astro';
+import CreditsGroupe from '../components/CreditsGroupe.astro';
 import AccessibilityNotice from '../components/AccessibilityNotice.astro';
 import ConfirmNote from '../components/ConfirmNote.astro';
 import Icon from '../components/Icon.astro';
+import Vautour from '../components/Vautour.astro';
+import Divider from '../components/motion/Divider.astro';
+import Annotation from '../components/motion/Annotation.astro';
+import Itineraire from '../components/motion/Itineraire.astro';
+import { annotations, itineraireAcces } from '../data/motion';
 import { hotel } from '../data/hotel';
 import { chambres } from '../data/chambres';
 import { getOffre } from '../data/offres';
 import { restaurant } from '../data/restaurant';
 import { sitesAccueil } from '../data/environs';
 import { seo } from '../data/seo';
+import { getPhoto } from '../data/photos';
+import { accueil, chiffresCles, offresPhotos, surtitres } from '../data/visuels';
 
+const photoHero = getPhoto('meyrueis-pont');
 const formules = ['demi-pension', 'petit-dejeuner', 'demi-pension-groupe'].map((s) => getOffre(s)!);
+/** Vignette réelle seulement si elle existe (sinon carte sans image, jamais une fausse photo). */
+const photoFormule = (slug: string) => offresPhotos[slug];
+const environsCredits = [accueil.environs.bandeau.photo, ...sitesAccueil.map((s) => ({ libre: s.photo! }))];
 ---
 <BaseLayout title={seo.accueil.title} description={seo.accueil.description}>
   <section class="hero" aria-labelledby="titre-page">
-    <div class="container hero__grid">
-      <div class="stack">
+    <Photo id="meyrueis-pont" eager credit={false} class="hero__bg" sizes="100vw" />
+    <div class="hero__scrim" aria-hidden="true"></div>
+    <div class="hero__sky" aria-hidden="true">
+      <Vautour class="hero__bird hero__bird--1" />
+      <Vautour class="hero__bird hero__bird--2" />
+      <Vautour class="hero__bird hero__bird--3" />
+    </div>
+    <div class="container hero__content">
+      <div class="stack hero__text">
         <p class="eyebrow">Hôtel restaurant · Meyrueis, Lozère</p>
         <h1 id="titre-page">{hotel.slogan}</h1>
         <p class="lead">
           Sur la place du village, à l’entrée des gorges de la Jonte. Selon le site actuel, la famille {hotel.histoire.famille} accueille ses hôtes
           depuis {hotel.histoire.depuis} dans un {hotel.histoire.batiment} (historique à confirmer).
         </p>
+        <div class="btn-row mt-5">
+          <a class="btn btn--primary" href="#reserver">Réserver une chambre</a>
+          <a class="btn btn--secondary" href="/chambres/">Comparer les chambres</a>
+        </div>
         <ul class="atouts mt-5">
           <li><Icon name="bed" />{hotel.nombreChambres} chambres, rénovées en {hotel.renovation} selon le site actuel</li>
           <li><Icon name="fork" />Restaurant de cuisine du terroir</li>
           <li><Icon name="pool" />Piscine chauffée et jardin belvédère</li>
           <li><Icon name="parking" />Parking privé et garage deux-roues</li>
         </ul>
-        <div class="btn-row mt-5">
-          <a class="btn btn--primary" href="#reserver">Réserver une chambre</a>
-          <a class="btn btn--secondary" href="/chambres/">Comparer les chambres</a>
-        </div>
-      </div>
-      <div class="hero__media">
-        <Photo id="meyrueis-pont" eager sizes="(min-width: 56rem) 50vw, 100vw" />
       </div>
     </div>
+    <p class="hero__credit">
+      Photo : {photoHero.auteur}, <a href={photoHero.licenceUrl} rel="license noopener">{photoHero.licence}</a>, via <a href={photoHero.source} rel="noopener">Wikimedia Commons<span class="sr-only"> (photo « {photoHero.sujet} »)</span></a>
+    </p>
+    <!-- Relief des causses qui se dessine, puis la Jonte qui coule vers la section suivante. -->
+    <svg class="hero__relief" viewBox="0 0 1440 200" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+      <path class="hero__relief-back" d="M0 110 L90 108 L130 80 L300 76 L340 100 L420 98 L470 62 L700 58 L740 92 L820 95 L880 70 L1080 66 L1120 96 L1200 94 L1250 72 L1440 70 V200 H0 Z" />
+      <path class="hero__relief-line" pathLength="1" vector-effect="non-scaling-stroke" d="M0 110 L90 108 L130 80 L300 76 L340 100 L420 98 L470 62 L700 58 L740 92 L820 95 L880 70 L1080 66 L1120 96 L1200 94 L1250 72 L1440 70" />
+      <path class="hero__relief-front" d="M0 160 C180 140 300 175 480 150 S800 120 1000 150 S1300 170 1440 140 V200 H0 Z" />
+      <path class="hero__river" vector-effect="non-scaling-stroke" d="M0 182 C200 170 360 192 560 180 S900 166 1100 182 S1340 188 1440 176" />
+    </svg>
   </section>
 
   <div class="section section--tight">
@@ -54,18 +80,46 @@ const formules = ['demi-pension', 'petit-dejeuner', 'demi-pension-groupe'].map((
     <div class="container">
       <div class="section__head">
         <h2 id="titre-chambres">Les chambres</h2>
-        <p>Quatre catégories, de 2 à 4 personnes, avec wifi gratuit et télévision. Selon le site actuel, les chambres sont desservies par un ascenseur.</p>
+        <p>Quatre catégories, de 2 à 4 personnes, avec wifi gratuit et télévision. Selon le site actuel, les chambres sont desservies par un ascenseur. Les tarifs varient selon les dates : ils s’affichent sur le moteur de réservation.</p>
       </div>
-      <div class="grid grid--4">
+      <div class="grid grid--4 rail">
         {chambres.map((c) => <RoomCard chambre={c} />)}
       </div>
       <p class="mt-5"><a href="/chambres/#comparatif">Voir le tableau comparatif des chambres</a></p>
     </div>
   </section>
 
+  <section class="section section--surface" aria-labelledby="titre-maison">
+    <div class="container maison">
+      <div class="stack">
+        <p class="eyebrow hand">{accueil.maison.surtitre}</p>
+        <h2 id="titre-maison">{accueil.maison.titre}</h2>
+        {accueil.maison.texte.map((t) => <p>{t}</p>)}
+        <ul class="chiffres mt-6" aria-label={accueil.maison.chiffresLabel}>
+          {chiffresCles.map((c) => <li><strong>{c.valeur}</strong><span>{c.label}</span></li>)}
+        </ul>
+        <ConfirmNote items={[...accueil.maison.aConfirmer]} />
+      </div>
+      <div class="maison__photos">
+        <Cliche visuel={accueil.maison.principale} class="maison__principale" caption="legende" sizes="(min-width: 72rem) 34rem, (min-width: 56rem) 48vw, 88vw" />
+        <Cliche visuel={accueil.maison.secondaire} class="maison__secondaire" caption="aucune" sizes="(min-width: 56rem) 18rem, 46vw" />
+        <Annotation vers="haut-droite">{annotations.maison}</Annotation>
+      </div>
+    </div>
+    <div class="container">
+      <CreditsGroupe photos={[accueil.maison.principale.photo, accueil.maison.secondaire.photo]} class="mt-5" />
+    </div>
+  </section>
+
   <section class="section" aria-labelledby="titre-restaurant">
     <div class="container split">
+      <div class="duo">
+        <Cliche visuel={accueil.restaurant.principale} class="duo__principale" overlay sizes="(min-width: 72rem) 38rem, (min-width: 56rem) 52vw, 100vw" />
+        <Cliche visuel={accueil.restaurant.vignette} class="duo__vignette" caption="aucune" sizes="(min-width: 56rem) 16rem, 42vw" />
+        <Annotation vers="haut-gauche" ton="pin">{annotations.terrasse}</Annotation>
+      </div>
       <div class="stack">
+        <p class="eyebrow">{surtitres.accueilRestaurant}</p>
         <h2 id="titre-restaurant">Le restaurant</h2>
         <p>{restaurant.intro}</p>
         <ul class="checklist">
@@ -77,8 +131,8 @@ const formules = ['demi-pension', 'petit-dejeuner', 'demi-pension-groupe'].map((
           <a class="btn btn--secondary" href="/restaurant/">Voir les menus</a>
           <a class="btn btn--ghost" href="/contact/?objet=table">Réserver une table</a>
         </div>
+        <CreditsGroupe photos={[accueil.restaurant.principale.photo, accueil.restaurant.vignette.photo]} />
       </div>
-      <PhotoPending label="Terrasse du restaurant" ratio="4 / 3" class="media-rounded" />
     </div>
   </section>
 
@@ -88,32 +142,38 @@ const formules = ['demi-pension', 'petit-dejeuner', 'demi-pension-groupe'].map((
         <h2 id="titre-formules">Formules</h2>
         <p>Demi-pension, petit-déjeuner et séjours de groupe. Les tarifs ci-dessous sont ceux du site actuel.</p>
       </div>
-      <div class="grid grid--3">
-        {formules.map((o) => <OfferCard offre={o} />)}
+      <div class="grid grid--3 rail">
+        {formules.map((o) => <OfferCard offre={o} photo={photoFormule(o.slug)} />)}
       </div>
       <p class="mt-5"><a href="/offres/">Toutes les offres, dont les circuits moto, vélo et randonnée</a></p>
     </div>
   </section>
 
+  <Divider variant="crete" />
+
   <section class="section" aria-labelledby="titre-environs">
     <div class="container">
       <div class="section__head">
+        <p class="eyebrow">{surtitres.accueilEnvirons}</p>
         <h2 id="titre-environs">Meyrueis et ses environs</h2>
         <p>Entre les causses Méjean et Noir, sous le mont Aigoual, aux portes du Parc national des Cévennes.</p>
       </div>
-      <div class="grid grid--4">
-        {sitesAccueil.map((s) => (
-          <article class="card">
-            <div class="card__media"><Photo id={s.photo!} credit={false} sizes="(min-width: 64rem) 25vw, (min-width: 40rem) 50vw, 100vw" /></div>
-            <div class="card__body">
-              <h3 class="card__title">{s.nom}</h3>
-              <p>{s.texte}</p>
-              <p class="muted"><small>Depuis l’hôtel : {s.distanceVerifiee ?? s.distance} (indicatif, à confirmer)</small></p>
-            </div>
-          </article>
-        ))}
+      <div class="panorama">
+        <Cliche visuel={accueil.environs.bandeau} class="panorama__img" overlay caption="legende" sizes="(min-width: 72rem) 72rem, 100vw" />
+        <div class="grid grid--4 rail panorama__cartes" tabindex="0" role="region" aria-label="Sites à découvrir autour de l’hôtel">
+          {sitesAccueil.map((s) => (
+            <article class="card site-card">
+              <div class="card__media"><Cliche visuel={{ photo: { libre: s.photo! } }} caption="aucune" sizes="(min-width: 72rem) 16rem, (min-width: 40rem) 45vw, 100vw" /></div>
+              <div class="card__body">
+                <h3 class="card__title">{s.nom}</h3>
+                <p>{s.texte}</p>
+                <p class="muted"><small>Depuis l’hôtel : {s.distanceVerifiee ?? s.distance} (indicatif, à confirmer)</small></p>
+              </div>
+            </article>
+          ))}
+        </div>
       </div>
-      <p class="credit mt-4">Photos sous licence libre — auteurs et licences sur la page <a href="/credits-photos/">crédits photos</a>.</p>
+      <CreditsGroupe photos={environsCredits} class="mt-5" />
       <p class="mt-5"><a href="/meyrueis-environs/">Découvrir Meyrueis et les environs</a></p>
     </div>
   </section>
@@ -130,6 +190,8 @@ const formules = ['demi-pension', 'petit-dejeuner', 'demi-pension-groupe'].map((
           <dt>Stationnement</dt><dd>Parking privé sécurisé, garage motos et vélos</dd>
           <dt>Animaux</dt><dd>Admis sous conditions</dd>
         </dl>
+        <h3 class="h4 mt-5">À proximité</h3>
+        <Itineraire etapes={itineraireAcces.etapes} label={itineraireAcces.label} />
         <p><a href="/infos-pratiques/">Accès, équipements et informations utiles</a></p>
       </div>
       <AccessibilityNotice id="accessibilite-accueil" />
@@ -137,8 +199,9 @@ const formules = ['demi-pension', 'petit-dejeuner', 'demi-pension-groupe'].map((
   </section>
 
   <section class="section" aria-labelledby="titre-contact">
-    <div class="container split">
-      <div class="stack">
+    <div class="container facade-contact">
+      <Cliche visuel={accueil.contact} class="facade-contact__img" overlay sizes="(min-width: 72rem) 72rem, 100vw" />
+      <div class="facade-contact__panel stack">
         <h2 id="titre-contact">Nous contacter</h2>
         <address>
           <ul class="contact-list">
@@ -152,7 +215,6 @@ const formules = ['demi-pension', 'petit-dejeuner', 'demi-pension-groupe'].map((
           <a class="btn btn--ghost" href={hotel.itineraire} rel="noopener">Itinéraire<span class="sr-only"> (Google Maps)</span></a>
         </div>
       </div>
-      <Photo id="vue-chambre" sizes="(min-width: 56rem) 45vw, 100vw" class="media-rounded-figure" />
     </div>
   </section>
 </BaseLayout>

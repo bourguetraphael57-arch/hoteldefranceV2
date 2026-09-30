@@ -1,13 +1,13 @@
-export interface Lien { href: string; label: string }
+export interface Lien { href: string; label: string; /** Libellé court affiché entre 1024 et 1279 px (contenu dans le libellé complet). */ court?: string }
 
 export const navPrincipale: Lien[] = [
   { href: '/', label: 'L’hôtel' },
   { href: '/chambres/', label: 'Chambres' },
   { href: '/restaurant/', label: 'Restaurant' },
   { href: '/offres/', label: 'Offres' },
-  { href: '/groupes-seminaires/', label: 'Groupes & séminaires' },
-  { href: '/meyrueis-environs/', label: 'Meyrueis & environs' },
-  { href: '/infos-pratiques/', label: 'Infos pratiques' },
+  { href: '/groupes-seminaires/', label: 'Groupes & séminaires', court: 'Groupes' },
+  { href: '/meyrueis-environs/', label: 'Meyrueis & environs', court: 'Environs' },
+  { href: '/infos-pratiques/', label: 'Infos pratiques', court: 'Infos' },
 ];
 
 export const navPied: { titre: string; liens: Lien[] }[] = [

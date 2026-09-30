@@ -54,3 +54,58 @@ export const photoSalleDeBain = photo(
 export function photosDe(slug: string): PhotoOfficielle[] {
   return photosChambres[slug] ?? [];
 }
+
+/**
+ * Photos de l'établissement (hors chambres) reprises du site actuel.
+ * Dimensions = celles du fichier `-1600` (sources 1900×1267 ou 1920×1280).
+ */
+const photoEtablissement = (
+  id: string, alt: string, largeur: number, hauteur: number, remarque?: string,
+): PhotoOfficielle => ({ id, alt, src: `${base}${id}`, largeur, hauteur, remarque });
+
+export const photosHotel: Record<string, PhotoOfficielle> = {
+  facade: photoEtablissement(
+    'facade',
+    'Façade en pierre aux volets rouges portant l’enseigne « Grand Hotel de France », terrasse abritée sous des auvents beiges avec tables et pots de fleurs',
+    1600, 1067,
+  ),
+  piscine: photoEtablissement(
+    'piscine',
+    'Piscine aux bords arrondis entourée d’un dallage clair, transats et parasols sur la pelouse, petite maison en pierre et barrière blanche fleurie, pente boisée en arrière-plan',
+    1600, 1067,
+  ),
+  seminaire: photoEtablissement(
+    'seminaire',
+    'Salle sous charpente apparente, tables disposées en U avec chaises noires, parquet clair, fenêtres cintrées et écran',
+    1600, 1067,
+  ),
+  cheminee: photoEtablissement(
+    'cheminee',
+    'Grande cheminée en pierre avec crémaillère et marmites en fonte, fauteuil rond et plante verte, sol carrelé',
+    1600, 1067,
+    'Photo du site actuel ; la pièce exacte (salon, restaurant) n’est pas précisée — à confirmer avec l’hôtel.',
+  ),
+  'machine-cafe': photoEtablissement(
+    'machine-cafe',
+    'Machine à expresso chromée à leviers devant un mur ocre portant l’inscription « Grand Hotel de France »',
+    1600, 1067,
+  ),
+};
+
+/** Photo de l'établissement par clé (`facade`, `piscine`, `seminaire`, `cheminee`, `machine-cafe`). */
+export function photoHotel(cle: string): PhotoOfficielle | undefined {
+  return photosHotel[cle];
+}
+
+/** Toutes les photos officielles (chambres, salle de bain, établissement), sans doublon. */
+export function toutesPhotosOfficielles(): PhotoOfficielle[] {
+  const toutes = [...Object.values(photosChambres).flat(), photoSalleDeBain, ...Object.values(photosHotel)];
+  return toutes.filter((p, i) => toutes.findIndex((q) => q.id === p.id) === i);
+}
+
+/** Photo officielle par identifiant de fichier (`facade`, `double-3`, `salle-de-bain`…). */
+export function photoOfficielleParId(id: string): PhotoOfficielle {
+  const p = toutesPhotosOfficielles().find((x) => x.id === id);
+  if (!p) throw new Error(`Photo officielle inconnue : ${id}`);
+  return p;
+}

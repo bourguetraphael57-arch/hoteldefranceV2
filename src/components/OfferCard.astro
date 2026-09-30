@@ -1,17 +1,33 @@
 ---
 import type { Offre } from '../data/offres';
 import { categoriesOffres } from '../data/offres';
+import { estAttendu, type Visuel, type Attendu } from '../data/visuels';
 import Price from './Price.astro';
+import Cliche from './Cliche.astro';
+import PhotoPending from './PhotoPending.astro';
 
-interface Props { offre: Offre; href?: string; headingLevel?: 'h2' | 'h3' }
-const { offre: o, href = `/offres/#${o.slug}`, headingLevel = 'h3' } = Astro.props;
+interface Props {
+  offre: Offre;
+  href?: string;
+  headingLevel?: 'h2' | 'h3';
+  /** Vignette 3:2, seulement si une photo réelle montre ce dont parle l'offre ;
+   *  `Attendu` : emplacement « photo à venir » compact (jamais une photo d'un autre sujet). */
+  photo?: Visuel | Attendu;
+  sizes?: string;
+}
+const { offre: o, href = `/offres/#${o.slug}`, headingLevel = 'h3', photo, sizes = '(min-width: 64rem) 24rem, (min-width: 40rem) 50vw, 100vw' } = Astro.props;
 const H = headingLevel;
 ---
-<article class="card offer-card">
+<article class:list={['card offer-card', { 'offer-card--plain': !photo, 'offer-card--attendu': photo && estAttendu(photo) }]}>
+  {photo && (estAttendu(photo)
+    ? <div class="card__media"><PhotoPending label={photo.attendu} ratio="auto" /></div>
+    : <div class="card__media"><Cliche visuel={photo} overlay sizes={sizes} /></div>)}
   <div class="card__body">
     <p class="tag">{categoriesOffres[o.categorie]}</p>
     <H class="card__title"><a href={href}>{o.titre}</a></H>
     <p>{o.resume}</p>
-    <Price prix={o.prix} unite={o.unite} base={o.base} />
+    <div class="card__foot">
+      <Price prix={o.prix} unite={o.unite} base={o.base} />
+    </div>
   </div>
 </article>

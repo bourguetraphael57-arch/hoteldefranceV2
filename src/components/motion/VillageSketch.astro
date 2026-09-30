@@ -1,0 +1,44 @@
+---
+/**
+ * Croquis au trait de Meyrueis : relief des causses, toits, tour de l'Horloge,
+ * vieux pont de pierre en arc sur la Jonte. Se dessine une fois à l'entrée dans l'écran.
+ * Décoratif (aria-hidden). ton="sombre" pour un fond foncé (pied de page).
+ */
+
+interface Props {
+  ton?: 'clair' | 'sombre';
+  class?: string;
+}
+const { ton = 'clair', class: className } = Astro.props;
+
+// Ordre de tracé : relief → maisons → tour → pont → rivière → pins. `d` = délai (s).
+const traits: { d: string; delai: number; role: 'relief' | 'bati' | 'eau' | 'vege' }[] = [
+  { role: 'relief', delai: 0, d: 'M0 104 L46 102 L64 76 L204 72 L220 96 L270 98 L410 96 L426 66 L556 62 L574 90 L640 92' },
+  { role: 'relief', delai: 0.5, d: 'M70 80 V92 M82 77 V89 M566 70 V84 M578 94 V100 M432 72 V86' },
+  // Maisons du quai gauche (toits en tuiles, fenêtres)
+  { role: 'bati', delai: 0.7, d: 'M16 176 V142 L42 124 L68 142 V176 M68 176 V134 L98 114 L128 134 V176 M128 176 V148 L150 134 L172 148 V176 M172 176 V140 L198 124 L224 140 V176' },
+  { role: 'bati', delai: 1.2, d: 'M30 152 h10 v10 h-10 z M82 142 h10 v12 h-10 z M104 142 h10 v12 h-10 z M92 164 v12 M142 158 h10 v10 h-10 z M186 150 h10 v10 h-10 z M206 154 h8 v22' },
+  // Tour de l'Horloge (corps, toit pyramidal, horloge, girouette)
+  { role: 'bati', delai: 1.3, d: 'M232 176 V96 H266 V176 M226 96 L249 60 L272 96 M249 60 V48 M249 50 L256 53 L249 55' },
+  { role: 'bati', delai: 1.8, d: 'M257 114 A8 8 0 1 1 241 114 A8 8 0 1 1 257 114 M249 114 V108.5 M249 114 H253 M246 134 h6 v12 h-6 z' },
+  // Vieux pont de pierre : tablier, parapet, arche en plein cintre, claveaux, piles
+  { role: 'bati', delai: 2, d: 'M270 150 H452 M270 158 H452 M292 158 V198 M430 158 V198 M300 198 A61 44 0 0 1 422 198' },
+  { role: 'bati', delai: 2.5, d: 'M306 176 l-6 -3 M318 164 l-5 -5 M334 157 l-3 -6 M361 154 V148 M388 157 l3 -6 M404 164 l5 -5 M416 176 l6 -3' },
+  // Maisons du quai droit
+  { role: 'bati', delai: 2.3, d: 'M452 176 V144 L478 126 L504 144 V176 M504 176 V136 L536 116 L568 136 V176 M466 152 h10 v10 h-10 z M522 144 h10 v12 h-10 z M546 144 h10 v12 h-10 z' },
+  // Quais et Jonte (ondes sous l'arche)
+  { role: 'bati', delai: 0.6, d: 'M0 198 H300 M422 198 H640' },
+  { role: 'eau', delai: 2.8, d: 'M0 214 C110 206 210 220 330 212 S540 204 640 214' },
+  { role: 'eau', delai: 3.1, d: 'M330 204 q15 -4 30 0 t30 0 M60 226 q20 -4 40 0 M500 226 q20 -4 40 0' },
+  // Pins sur la rive droite
+  { role: 'vege', delai: 2.9, d: 'M598 198 V150 M586 170 L598 156 L610 170 M582 184 L598 166 L614 184 M624 198 V164 M616 180 L624 170 L632 180' },
+];
+---
+<div class:list={['m-village', `m-village--${ton}`, className]} data-motion="time" aria-hidden="true">
+  <svg viewBox="0 0 640 236" focusable="false" aria-hidden="true">
+    {traits.map((t) => (
+      <path class:list={['m-draw', `m-village__${t.role}`]} pathLength="1" d={t.d} style={`--d: ${t.delai}`} />
+    ))}
+  </svg>
+</div>
+

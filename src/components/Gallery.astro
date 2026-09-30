@@ -4,12 +4,12 @@
  * Avec JS, une visionneuse <dialog> s'ouvre (clavier : ← →, Échap).
  */
 import { getPhoto } from '../data/photos';
-interface Props { ids: string[]; label: string }
-const { ids, label } = Astro.props;
+interface Props { ids: string[]; label: string; class?: string }
+const { ids, label, class: className } = Astro.props;
 const items = ids.map(getPhoto);
 ---
 <div class="gallery-wrap" data-gallery>
-  <ul class="gallery" aria-label={label}>
+  <ul class:list={['gallery', className]} aria-label={label}>
     {items.map((p, i) => (
       <li>
         <figure>
@@ -34,8 +34,8 @@ const items = ids.map(getPhoto);
         <p class="lightbox__count" aria-live="polite"></p>
         <button type="button" data-close>Fermer</button>
       </div>
-      <figure>
-        <img alt="" />
+      <figure class="lightbox__figure">
+        <img alt="" hidden />
         <figcaption></figcaption>
       </figure>
       <div class="lightbox__bar">
@@ -60,6 +60,7 @@ const items = ids.map(getPhoto);
     const show = (i: number) => {
       current = (i + links.length) % links.length;
       const a = links[current]!;
+      img.hidden = false;
       img.src = a.dataset.full ?? a.href;
       img.alt = a.dataset.alt ?? '';
       caption.textContent = '';
@@ -86,7 +87,20 @@ const items = ids.map(getPhoto);
       if (e.key === 'ArrowLeft') show(current - 1);
       if (e.key === 'ArrowRight') show(current + 1);
     });
-    dialog.addEventListener('click', (e) => { if (e.target === dialog) dialog.close(); });
+    // Clic sur le fond sombre (hors photo, légende et boutons) : fermeture.
+    dialog.addEventListener('click', (e) => {
+      const t = e.target as HTMLElement;
+      if (t === dialog || (!t.closest('.lightbox__figure img, figcaption, button, a') && t.closest('.lightbox__inner'))) dialog.close();
+    });
+    // Balayage horizontal au doigt : photo précédente / suivante.
+    let x0: number | null = null;
+    dialog.addEventListener('pointerdown', (e) => { if (e.pointerType !== 'mouse') x0 = e.clientX; });
+    dialog.addEventListener('pointerup', (e) => {
+      if (x0 === null) return;
+      const dx = e.clientX - x0;
+      x0 = null;
+      if (Math.abs(dx) > 50) show(current + (dx < 0 ? 1 : -1));
+    });
     dialog.addEventListener('close', () => opener?.focus());
   }
 </script>

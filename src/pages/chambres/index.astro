@@ -2,6 +2,7 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import PageHero from '../../components/PageHero.astro';
+import Tasse from '../../components/motion/Tasse.astro';
 import RoomCard from '../../components/RoomCard.astro';
 import OfferCard from '../../components/OfferCard.astro';
 import BookingBlock from '../../components/BookingBlock.astro';
@@ -11,13 +12,21 @@ import { getOffre } from '../../data/offres';
 import { hotel } from '../../data/hotel';
 import { personnes } from '../../lib/format';
 import { seo } from '../../data/seo';
+import { heros, offresPhotos, estAttendu, surtitres } from '../../data/visuels';
+
 
 const petitDej = getOffre('petit-dejeuner')!;
 const demiPension = getOffre('demi-pension')!;
+const vignette = (slug: string) => {
+  const v = offresPhotos[slug];
+  return v && !estAttendu(v) ? v : undefined;
+};
 ---
 <BaseLayout title={seo.chambres.title} description={seo.chambres.description}>
   <Breadcrumbs items={[{ href: '/chambres/', label: 'Chambres' }]} />
   <PageHero
+    photo={heros.chambres}
+    eyebrow={surtitres.chambres}
     title="Nos chambres à Meyrueis"
     lead={`Selon le site actuel, les ${hotel.nombreChambres} chambres ont été rénovées en ${hotel.renovation} et sont desservies par un ascenseur (à confirmer). ${vuesChambres}`}
   />
@@ -47,7 +56,7 @@ const demiPension = getOffre('demi-pension')!;
     <div class="container">
       <h2 id="titre-comparatif">Comparer les chambres</h2>
       <div class="table-wrap mt-5" role="region" aria-labelledby="caption-comparatif" tabindex="0">
-        <table class="table">
+        <table class="table table--fiches">
           <caption id="caption-comparatif">Comparatif des quatre catégories de chambres</caption>
           <thead>
             <tr>
@@ -63,11 +72,11 @@ const demiPension = getOffre('demi-pension')!;
             {chambres.map((c) => (
               <tr>
                 <th scope="row"><a href={`/chambres/${c.slug}/`}>{c.nom}</a></th>
-                <td>{c.capacite ? personnes(c.capacite) : 'Non communiquée'}</td>
-                <td>{c.literie ?? 'Non communiquée'}</td>
-                <td>{c.surface ?? 'Non communiquée'}</td>
-                <td>Baignoire ou douche, WC</td>
-                <td>Selon les dates</td>
+                <td data-label="Capacité">{c.capacite ? personnes(c.capacite) : 'Non communiquée'}</td>
+                <td data-label="Literie">{c.literie ?? 'Non communiquée'}</td>
+                <td data-label="Surface">{c.surface ?? 'Non communiquée'}</td>
+                <td data-label="Salle de bain">Baignoire ou douche, WC</td>
+                <td data-label="Tarif">Selon les dates</td>
               </tr>
             ))}
           </tbody>
@@ -82,17 +91,18 @@ const demiPension = getOffre('demi-pension')!;
   <section class="section section--alt" aria-labelledby="titre-repas">
     <div class="container">
       <div class="section__head">
+        <Tasse />
         <h2 id="titre-repas">Petit-déjeuner et demi-pension</h2>
         <p>Le petit-déjeuner est servi de 7 h 30 à 9 h 30, en supplément du prix de la chambre.</p>
       </div>
       <div class="grid grid--2">
-        <OfferCard offre={petitDej} />
-        <OfferCard offre={demiPension} />
+        <OfferCard offre={petitDej} photo={vignette(petitDej.slug)} sizes="(min-width: 72rem) 36rem, (min-width: 48rem) 50vw, 100vw" />
+        <OfferCard offre={demiPension} photo={vignette(demiPension.slug)} sizes="(min-width: 72rem) 36rem, (min-width: 48rem) 50vw, 100vw" />
       </div>
     </div>
   </section>
 
-  <div class="section">
+  <div class="section section--tight">
     <div class="container--narrow">
       <BookingBlock />
     </div>

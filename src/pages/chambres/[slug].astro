@@ -21,8 +21,12 @@ interface Props { chambre: Chambre }
 const { chambre: c } = Astro.props;
 const meta = seo[c.slug as keyof typeof seo];
 const autres = chambres.filter((x) => x.slug !== c.slug);
-const [principale, ...secondaires] = photosDe(c.slug);
-const vignettes = [...secondaires, photoSalleDeBain];
+const photosChambre = photosDe(c.slug);
+/** Une photo dont la correspondance est incertaine (remarque) ne sert pas de photo principale :
+ *  la place reste « photo à venir » et la photo passe en vignette, avec sa remarque. */
+const incertaine = photosChambre[0]?.remarque !== undefined;
+const principale = incertaine ? undefined : photosChambre[0];
+const vignettes = [...(incertaine ? photosChambre : photosChambre.slice(1)), photoSalleDeBain];
 ---
 <BaseLayout title={meta.title} description={meta.description}>
   <Breadcrumbs items={[{ href: '/chambres/', label: 'Chambres' }, { href: `/chambres/${c.slug}/`, label: c.nom }]} />
@@ -41,26 +45,43 @@ const vignettes = [...secondaires, photoSalleDeBain];
         <ConfirmNote items={c.aConfirmer} />
         <div class="btn-row">
           <a class="btn btn--primary" href="#reserver">Choisir mes dates</a>
-          <a class="btn btn--ghost" href={hotel.telephone.href}>Appeler le {hotel.telephone.affiche}</a>
+          <a class="btn btn--ghost" href={hotel.telephone.href}>Appeler le <span class="tel-num">{hotel.telephone.affiche}</span></a>
         </div>
       </div>
       <div class="room-gallery">
-        {principale ? (
+        {photosChambre.length > 0 ? (
           <>
-            <PhotoOfficielle photo={principale} class="room-gallery__main" legende={false} eager />
-            {principale.remarque && <p class="credit">{principale.remarque}</p>}
+            {principale
+              ? <PhotoOfficielle photo={principale} class="room-gallery__main" legende={false} eager />
+              : <PhotoPending label={`${c.nom} (photo de la chambre à prendre)`} ratio="3 / 2" class="media-rounded" />}
             <ul class="room-gallery__thumbs" aria-label={`Autres photos : ${c.nom.toLowerCase()} et salle de bain`}>
               {vignettes.map((p) => (
                 <li>
-                  <a href={`${p.src}-1600.jpg`}>
+                  <a href={`${p.src}-1600.jpg`} data-full={`${p.src}-1600.webp`} data-alt={p.alt} data-remarque={p.remarque}>
                     <PhotoOfficielle photo={p} legende={false} sizes="(min-width: 64rem) 12rem, 33vw" />
-                    <span class="sr-only"> — voir en grand format</span>
+                    <span class="sr-only"> — agrandir</span>
                   </a>
                   {p.remarque && <p class="credit">{p.remarque}</p>}
                 </li>
               ))}
             </ul>
-            <p class="credit">{creditOfficiel}. Photos du site actuel, affichées dans cette maquette non officielle en attente d’accord.</p>
+            <p class="credit">{creditOfficiel} (photos du site actuel, en attente d’accord) · <a href="/credits-photos/">crédits</a></p>
+            <dialog class="lightbox" aria-label={`Visionneuse : photos de la ${c.nom.toLowerCase()}`} data-credit={creditOfficiel}>
+              <div class="lightbox__inner">
+                <div class="lightbox__bar">
+                  <p class="lightbox__count" aria-live="polite"></p>
+                  <button type="button" data-close>Fermer</button>
+                </div>
+                <figure class="lightbox__figure">
+                  <img alt="" hidden />
+                  <figcaption></figcaption>
+                </figure>
+                <div class="lightbox__bar">
+                  <button type="button" data-prev>← Précédente</button>
+                  <button type="button" data-next>Suivante →</button>
+                </div>
+              </div>
+            </dialog>
           </>
         ) : (
           <PhotoPending label={`${c.nom} (photo officielle en attente d’autorisation)`} ratio="4 / 3" class="media-rounded" />
@@ -103,3 +124,49 @@ const vignettes = [...secondaires, photoSalleDeBain];
     </div>
   </section>
 </BaseLayout>
+
+<script>
+  // Vignettes de la chambre : visionneuse <dialog> (← →, Échap, balayage). Sans JS, lien vers l'image.
+  const root = document.querySelector<HTMLElement>('.room-gallery');
+  const dialog = root?.querySelector('dialog');
+  const links = [...(root?.querySelectorAll<HTMLAnchorElement>('.room-gallery__thumbs a') ?? [])];
+  if (root && dialog && typeof dialog.showModal === 'function' && links.length > 0) {
+    const img = dialog.querySelector('img')!;
+    const caption = dialog.querySelector('figcaption')!;
+    const count = dialog.querySelector('.lightbox__count')!;
+    let current = 0;
+    let opener: HTMLElement | null = null;
+    // Une seule photo : pas de navigation.
+    if (links.length === 1) dialog.querySelectorAll<HTMLElement>('[data-prev], [data-next]').forEach((b) => { b.hidden = true; });
+    const show = (i: number) => {
+      current = (i + links.length) % links.length;
+      const a = links[current]!;
+      img.hidden = false;
+      img.src = a.dataset.full ?? a.href;
+      img.alt = a.dataset.alt ?? '';
+      caption.textContent = [a.dataset.alt, a.dataset.remarque, dialog.dataset.credit].filter(Boolean).map((t) => t!.replace(/\.$/, '')).join('. ');
+      count.textContent = `Photo ${current + 1} sur ${links.length}`;
+    };
+    links.forEach((a, i) => a.addEventListener('click', (e) => { e.preventDefault(); opener = a; show(i); dialog.showModal(); }));
+    dialog.querySelector('[data-close]')?.addEventListener('click', () => dialog.close());
+    dialog.querySelector('[data-prev]')?.addEventListener('click', () => show(current - 1));
+    dialog.querySelector('[data-next]')?.addEventListener('click', () => show(current + 1));
+    dialog.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') show(current - 1);
+      if (e.key === 'ArrowRight') show(current + 1);
+    });
+    dialog.addEventListener('click', (e) => {
+      const t = e.target as HTMLElement;
+      if (t === dialog || (!t.closest('.lightbox__figure img, figcaption, button, a') && t.closest('.lightbox__inner'))) dialog.close();
+    });
+    let x0: number | null = null;
+    dialog.addEventListener('pointerdown', (e) => { if (e.pointerType !== 'mouse') x0 = e.clientX; });
+    dialog.addEventListener('pointerup', (e) => {
+      if (x0 === null) return;
+      const dx = e.clientX - x0;
+      x0 = null;
+      if (Math.abs(dx) > 50) show(current + (dx < 0 ? 1 : -1));
+    });
+    dialog.addEventListener('close', () => opener?.focus());
+  }
+</script>

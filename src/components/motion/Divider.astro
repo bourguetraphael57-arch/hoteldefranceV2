@@ -1,0 +1,67 @@
+---
+/**
+ * Séparateur de section au trait, qui se dessine quand il entre dans l'écran.
+ * crete : profil des causses (corniches, gorge, dôme de l'Aigoual et son observatoire)
+ * riviere : la Jonte · pins : rangée de pins · vautour : gorge de la Jonte survolée par un vautour.
+ * Entièrement décoratif (aria-hidden). Hauteur réservée en CSS : aucun décalage de mise en page.
+ */
+import Vautour from '../Vautour.astro';
+
+interface Props {
+  variant?: 'crete' | 'riviere' | 'pins' | 'vautour';
+  class?: string;
+}
+const { variant = 'crete', class: className } = Astro.props;
+
+type Trait = { d: string; delai?: number; ton?: 'ciel' | 'doux' };
+const traits: Record<NonNullable<Props['variant']>, Trait[]> = {
+  // Centré sur le viewBox pour rester lisible quand les côtés sont rognés sur mobile.
+  crete: [
+    { d: 'M0 34 H400 l7 5 l-2 6 l8 8 l4 13 L432 70 C452 75 482 75 502 70 l5 -14 l7 -8 l-2 -7 l9 -11 H600 C640 30 680 32 720 24 C760 16 790 10 820 10 C850 10 880 16 910 24 C940 32 980 34 1020 34 H1200' },
+    { d: 'M816 10 V3 H824 V10', delai: 0.7 },
+    { d: 'M440 72 q10 -3 20 0 t20 0 t20 0', delai: 0.35, ton: 'ciel' },
+    { d: 'M0 58 C140 52 280 60 396 57 M526 58 C600 52 680 56 760 50 C860 44 960 54 1060 50 C1120 48 1160 50 1200 49', delai: 0.5, ton: 'doux' },
+  ],
+  riviere: [
+    { d: 'M0 40 C100 24 200 56 300 40 S500 24 600 40 S800 56 900 40 S1100 24 1200 40', ton: 'ciel' },
+    { d: 'M150 58 q30 -6 60 0 M520 60 q30 -6 60 0 M880 58 q30 -6 60 0', delai: 0.5, ton: 'ciel' },
+    { d: 'M60 22 q20 -5 40 0 M700 20 q20 -5 40 0 M1080 22 q20 -5 40 0', delai: 0.7, ton: 'doux' },
+  ],
+  pins: [],
+  vautour: [
+    { d: 'M0 28 H300 C380 28 440 22 500 26 l6 8 l-3 6 l9 10 l5 16 L540 70 C570 75 630 75 660 70 l6 -18 l8 -9 l-3 -7 l10 -11 C740 22 820 30 900 26 H1200' },
+    { d: 'M552 70 q13 -3 26 0 t26 0 t26 0 t26 0', delai: 0.4, ton: 'ciel' },
+  ],
+};
+
+// Rangée de pins générée (sol + arbres : tronc et trois étages de branches), valeurs fixes et reproductibles.
+if (variant === 'pins') {
+  const sol = 66;
+  traits.pins.push({ d: `M0 ${sol} C200 ${sol - 4} 400 ${sol + 3} 600 ${sol} S1000 ${sol - 3} 1200 ${sol}`, ton: 'doux' });
+  const pins: [number, number][] = [
+    [70, 34], [104, 46], [188, 40], [300, 30], [338, 44], [372, 36], [470, 42], [560, 32],
+    [598, 48], [640, 38], [730, 44], [820, 30], [856, 42], [952, 36], [1040, 46], [1100, 34], [1140, 42],
+  ];
+  for (const [x, h] of pins) {
+    const top = sol - h;
+    const w = h * 0.28;
+    const etages = [0.34, 0.6, 0.86]
+      .map((f, i) => {
+        const y = top + h * f;
+        const l = w * (0.55 + i * 0.25);
+        return `M${x - l} ${y} L${x} ${top + h * (f - 0.3)} L${x + l} ${y}`;
+      })
+      .join(' ');
+    traits.pins.push({ d: `M${x} ${sol} V${top} ${etages}`, delai: (x / 1200) * 0.8 });
+  }
+}
+---
+<div class:list={['m-divider', `m-divider--${variant}`, className]} data-motion="scroll" aria-hidden="true">
+  <svg class="m-divider__svg" viewBox="0 0 1200 80" preserveAspectRatio="xMidYMid slice" focusable="false" aria-hidden="true">
+    {traits[variant].map((t) => (
+      <path class:list={['m-draw', t.ton && `m-ton-${t.ton}`]} pathLength="1" d={t.d} style={t.delai ? `--d: ${t.delai}` : undefined} />
+    ))}
+  </svg>
+  {variant === 'vautour' && <Vautour class="m-divider__bird" />}
+</div>
+

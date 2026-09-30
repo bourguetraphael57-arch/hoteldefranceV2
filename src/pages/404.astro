@@ -1,12 +1,20 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { hotel } from '../data/hotel';
+import Divider from '../components/motion/Divider.astro';
+import { page404 } from '../data/motion';
+import Cliche from '../components/Cliche.astro';
 ---
 <BaseLayout title="Page introuvable | Grand Hôtel de France" description="Cette page n’existe pas ou a été déplacée." noindex>
   <div class="container--narrow section stack">
     <h1 id="titre-page">Page introuvable</h1>
     <p class="lead">Cette page n’existe pas ou a changé d’adresse.</p>
-    <ul>
+    <div class="m-404">
+      <Divider variant="vautour" />
+      <p class="hand">{page404.clin}</p>
+    </div>
+    <Cliche visuel={{ photo: { libre: 'vautours' }, legende: 'Vautours fauves dans les gorges de la Jonte, à quelques kilomètres de l’hôtel' }} class="page404-photo" sizes="(min-width: 48rem) 48rem, 100vw" />
+    <ul class="contact-list">
       <li><a href="/">Accueil</a></li>
       <li><a href="/chambres/">Chambres</a></li>
       <li><a href="/restaurant/">Restaurant</a></li>

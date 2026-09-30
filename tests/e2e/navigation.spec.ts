@@ -42,7 +42,11 @@ test('barre mobile : appeler et réserver toujours accessibles', async ({ page }
   test.skip(info.project.name !== 'mobile-375');
   await page.goto('/restaurant/');
   const bar = page.locator('[data-mobile-bar]');
-  await page.mouse.wheel(0, 1500);
+  // En haut de page, la barre s'efface derrière les boutons d'action du hero (qui restent visibles)…
+  const topActions = page.locator('main .btn-row').first();
+  await expect(topActions.getByRole('link').first()).toBeVisible();
+  // …et revient dès qu'on les a dépassés.
+  await page.evaluate(() => scrollTo(0, 2500));
   await expect(bar).toBeVisible();
   await expect(bar.getByRole('link', { name: /Appeler/ })).toHaveAttribute('href', 'tel:+33466456007');
   await expect(bar.getByRole('link', { name: /Réserver/ })).toBeVisible();

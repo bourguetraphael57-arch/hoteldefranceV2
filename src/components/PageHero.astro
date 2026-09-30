@@ -1,10 +1,39 @@
 ---
-interface Props { title: string; eyebrow?: string; lead?: string }
-const { title, eyebrow, lead } = Astro.props;
+/**
+ * En-tête de page intérieure.
+ * Sans `photo` : titre sur fond calcaire, décor SVG (ligne de crête + vautour).
+ * Avec `photo` : bandeau d'image (4:3 sur mobile, 21:9 sur bureau) chargé en priorité,
+ * crédit visible sur l'image, et titre dans une carte claire qui chevauche le bas du bandeau
+ * (texte hors image : contraste garanti).
+ */
+import Vautour from './Vautour.astro';
+import Cliche from './Cliche.astro';
+import type { Visuel } from '../data/visuels';
+
+interface Props { title: string; eyebrow?: string; lead?: string; photo?: Visuel }
+const { title, eyebrow, lead, photo } = Astro.props;
 ---
-<header class="page-hero container">
-  {eyebrow && <p class="eyebrow">{eyebrow}</p>}
-  <h1 id="titre-page">{title}</h1>
-  {lead && <p class="lead">{lead}</p>}
-  <slot />
-</header>
+{photo ? (
+  <header class="page-hero page-hero--photo">
+    <Cliche visuel={photo} eager caption="credit" overlay sizes="100vw" class="page-hero__media" />
+    <div class="container">
+      <div class="page-hero__card">
+        {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+        <h1 id="titre-page">{title}</h1>
+        {lead && <p class="lead">{lead}</p>}
+        <slot />
+      </div>
+    </div>
+  </header>
+) : (
+  <header class="page-hero container">
+    <div class="page-hero__decor" aria-hidden="true">
+      <svg class="page-hero__relief" viewBox="0 0 240 40" focusable="false"><path pathLength="1" d="M2 34 L40 33 L52 18 L110 16 L122 30 L150 30 L164 12 L238 10" /></svg>
+      <Vautour class="page-hero__bird" />
+    </div>
+    {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+    <h1 id="titre-page">{title}</h1>
+    {lead && <p class="lead">{lead}</p>}
+    <slot />
+  </header>
+)}

@@ -9,7 +9,7 @@ const { title, description, h1, href, maj, sommaire } = Astro.props;
   <article class="container--narrow section--tight prose">
     <h1 id="titre-page">{h1}</h1>
     <p class="muted">Dernière mise à jour : {maj}</p>
-    <nav aria-label="Sommaire" class="panel">
+    <nav aria-label="Sommaire" class="panel sommaire">
       <p><strong>Sommaire</strong></p>
       <ol>{sommaire.map((s) => <li><a href={`#${s.id}`}>{s.label}</a></li>)}</ol>
     </nav>
