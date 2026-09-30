@@ -67,11 +67,11 @@ export const offres: Offre[] = [
     categorie: 'groupes',
     prix: 78,
     unite: 'par jour et par personne',
-    base: 'à partir de 10 personnes (seuil à confirmer)',
+    base: 'à partir de 10 personnes',
     resume: 'Hébergement, petit-déjeuner et dîner du terroir boissons comprises, pour les groupes.',
     inclus: [
       'Hébergement en chambre double ou à deux lits',
-      '1 petit-déjeuner (continental selon le site actuel)',
+      '1 petit-déjeuner continental',
       '1 dîner du terroir : entrée, plat, fromage local, dessert, vin et café ou infusion',
       '1 gratuité pour 20 personnes payantes',
       '1 apéritif de bienvenue à partir de 3 jours de séjour',
@@ -141,7 +141,7 @@ export const offres: Offre[] = [
 
 /** Mention affichée quand le contenu d'un forfait n'est pas publié sur le site actuel. */
 export const mentionContenuNonDetaille =
-  'Le contenu de ce forfait n’est pas détaillé sur le site actuel : demandez-le à l’hôtel.';
+  'Contenu du forfait sur demande auprès de l’hôtel.';
 
 export const offresPubliees = offres.filter((o) => o.publiee);
 

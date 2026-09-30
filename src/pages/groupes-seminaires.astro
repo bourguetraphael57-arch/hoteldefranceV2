@@ -5,7 +5,6 @@ import PageHero from '../components/PageHero.astro';
 import Divider from '../components/motion/Divider.astro';
 import Price from '../components/Price.astro';
 import PhotoPending from '../components/PhotoPending.astro';
-import ConfirmNote from '../components/ConfirmNote.astro';
 import Cliche from '../components/Cliche.astro';
 import { heros, groupesVisuels, offresPhotos, estAttendu, surtitres } from '../data/visuels';
 import { getOffre, offresPubliees } from '../data/offres';
@@ -44,7 +43,6 @@ const circuits = offresPubliees.filter((o) => o.categorie === 'circuits');
           <h3 id="titre-dpg">{groupe.titre}</h3>
           <Price prix={groupe.prix} unite={groupe.unite} base={groupe.base} indicatif={false} />
           <ul class="checklist">{groupe.inclus.map((x) => <li>{x}</li>)}</ul>
-          <ConfirmNote items={groupe.aConfirmer} />
         </article>
       </div>
       <div class="bleed bleed--droite bleed--sticky bleed--compact">
@@ -59,11 +57,10 @@ const circuits = offresPubliees.filter((o) => o.categorie === 'circuits');
         <h2 id="titre-seminaires">Réunions et séminaires</h2>
         <p>Pour vos réunions, journées d’étude et séminaires, l’hôtel met à disposition une salle climatisée et équipée, avec vue sur le massif de l’Aigoual et le causse Méjean. Le wifi est gratuit.</p>
         <p>Des activités (saut à l’élastique, canyoning, via ferrata) et des dégustations chez des producteurs locaux (Brasseurs de la Jonte, fromagerie du Fédou) peuvent compléter le programme.</p>
-        <ConfirmNote items={['capacité, surface et équipements de la salle de séminaires', 'activités et partenaires proposés actuellement']} />
         <article class="panel stack" id={etude.slug} aria-labelledby="titre-etude">
           <h3 id="titre-etude">{etude.titre}</h3>
           <Price prix={etude.prix} unite={etude.unite} />
-          <p class="muted">Le contenu du forfait n’est pas détaillé sur le site actuel : il est à préciser avec l’hôtel selon votre programme.</p>
+          <p class="muted">Contenu du forfait sur demande, selon votre programme.</p>
         </article>
       </div>
       <div class="bleed bleed--gauche">
@@ -100,7 +97,6 @@ const circuits = offresPubliees.filter((o) => o.categorie === 'circuits');
           </article>
         ))}
       </div>
-      <ConfirmNote class="mt-5" items={['les circuits affichent tous le même tarif de 78 € sur le site actuel ; ce que comprend ce prix n’est pas précisé']} />
     </div>
   </section>
 

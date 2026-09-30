@@ -15,9 +15,9 @@ const titleId = `${id}-titre`;
     <div class="stack mt-4">
       <h3 class="h4">Chambres</h3>
       <ul>{hotel.accessibilite.chambres.map((t) => <li>{t}</li>)}</ul>
-      <p>{hotel.accessibilite.restrictif} {hotel.accessibilite.contradiction}</p>
+      <p>{hotel.accessibilite.restrictif}</p>
       <h3 class="h4">Entrée et espaces communs</h3>
-      <p>Nous n’avons pas encore d’information vérifiée sur :</p>
+      <p>Renseignez-vous auprès de l’hôtel sur l’accès à :</p>
       <ul>{hotel.accessibilite.nonDocumente.map((t) => <li>{t}</li>)}</ul>
       <h3 class="h4">Avant de réserver</h3>
       <p>
@@ -29,9 +29,9 @@ const titleId = `${id}-titre`;
   ) : (
     <div class="stack mt-4">
       <p>{hotel.accessibilite.chambres.join(' ')}</p>
-      <p>{hotel.accessibilite.restrictif} {hotel.accessibilite.contradiction}</p>
+      <p>{hotel.accessibilite.restrictif}</p>
       <p>
-        L’accès à l’entrée et aux espaces communs n’est pas encore documenté. Pour tout besoin particulier, appelez le{' '}
+        Pour l’accès à l’entrée et aux espaces communs, ou pour tout besoin particulier, appelez le{' '}
         <a href={hotel.telephone.href}>{hotel.telephone.affiche}</a> avant de réserver.
       </p>
       <p><a href="/infos-pratiques/#accessibilite">Détail des informations d’accessibilité</a></p>

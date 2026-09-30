@@ -3,7 +3,6 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Breadcrumbs from '../components/Breadcrumbs.astro';
 import PageHero from '../components/PageHero.astro';
 import Gallery from '../components/Gallery.astro';
-import ConfirmNote from '../components/ConfirmNote.astro';
 import Cliche from '../components/Cliche.astro';
 import CreditsGroupe from '../components/CreditsGroupe.astro';
 import Icon from '../components/Icon.astro';
@@ -44,7 +43,6 @@ const photosSites = sitesTries.filter((s) => s.photo).map((s) => ({ libre: s.pho
         <p>{itineraireEnvirons.intro}</p>
       </div>
       <Itineraire etapes={itineraireEnvirons.etapes} label={itineraireEnvirons.label} />
-      <ConfirmNote class="mt-5" items={[itineraireEnvirons.note]} />
     </div>
   </section>
 
@@ -110,7 +108,6 @@ const photosSites = sitesTries.filter((s) => s.photo).map((s) => ({ libre: s.pho
           </tbody>
         </table>
       </div>
-      <ConfirmNote class="mt-5" items={['distances et temps de trajet (repris du site actuel, avec des unités différentes) ; quand une vérification cartographique donne une autre valeur, elle est indiquée entre parenthèses']} />
     </div>
   </section>
 
@@ -124,7 +121,6 @@ const photosSites = sitesTries.filter((s) => s.photo).map((s) => ({ libre: s.pho
         <ul class="checklist">
           {hotel.evenements.map((e) => <li><strong>{e.nom}</strong> — {e.quand}</li>)}
         </ul>
-        <ConfirmNote items={['dates du marché et de la foire pour la saison en cours']} />
         <p>Besoin d’un conseil pour organiser vos journées ? L’équipe de l’hôtel connaît bien la région : <a href={hotel.telephone.href}>{hotel.telephone.affiche}</a>.</p>
       </div>
       <div class="stack">

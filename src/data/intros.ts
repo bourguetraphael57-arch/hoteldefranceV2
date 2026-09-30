@@ -1,6 +1,6 @@
 /**
  * Textes d'introduction des fiches (d'après docs/contenus-seo.md §1, réécrits à partir des faits du site actuel).
- * Les points non publiés par l'hôtel sont signalés à part, par le composant ConfirmNote.
+ * Textes d'introduction des fiches chambres.
  */
 export const intros = {
   'chambre-double':

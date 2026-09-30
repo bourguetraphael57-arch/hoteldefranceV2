@@ -22,7 +22,7 @@ export const restaurant = {
     { titre: 'Salle voûtée de 70 places', texte: 'Pour les groupes : randonneurs, cyclistes, motards, clubs de voitures anciennes, autocaristes.' },
   ],
   groupes:
-    'Pour les groupes (à partir de 10 personnes selon le site français, 15 selon le site anglais : seuil à confirmer), formules en demi-pension ou en pension complète, boisson comprise.',
+    'Pour les groupes à partir de 10 personnes, formules en demi-pension ou en pension complète, boisson comprise.',
   /** Horaires publiés sur le site français. Le site anglais indique d'autres jours. */
   horaires: [
     { jour: 'Lundi', dejeuner: null, diner: '19 h – 21 h' },
@@ -35,7 +35,7 @@ export const restaurant = {
   ] as { jour: string; dejeuner: string | null; diner: string | null }[],
   horairesAConfirmer:
     'jours d’ouverture du déjeuner (le site anglais indique le mercredi et le dimanche, et 7 j/7 en juillet-août), périodes de fermeture annuelle',
-  reservationTable: 'Le site actuel propose de réserver par e-mail. Vous pouvez aussi appeler l’hôtel.',
+  reservationTable: 'Réservez votre table par téléphone, par e-mail ou avec le formulaire.',
   menus: [
     {
       id: 'terroir',

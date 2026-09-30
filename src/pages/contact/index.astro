@@ -92,7 +92,7 @@ const recap = etat === 'envoye' || etat === 'demo' ? resume(values) : [];
       {etat === 'demo' && (
         <div class="alert alert--info" role="status">
           <h3>Mode démonstration : votre demande n’a été transmise à personne</h3>
-          <p>Ce site est une maquette non officielle ; l’envoi d’e-mails n’est pas activé. Pour joindre réellement l’hôtel, appelez le <a href={hotel.telephone.href}>{hotel.telephone.affiche}</a> ou écrivez à <a href={`mailto:${hotel.email}`}>{hotel.email}</a>.</p>
+          <p>L’envoi d’e-mails n’est pas encore configuré sur ce site. Pour joindre l’hôtel, appelez le <a href={hotel.telephone.href}>{hotel.telephone.affiche}</a> ou écrivez à <a href={`mailto:${hotel.email}`}>{hotel.email}</a>.</p>
         </div>
       )}
       {recap.length > 0 && (

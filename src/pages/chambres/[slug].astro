@@ -6,7 +6,6 @@ import RoomCard from '../../components/RoomCard.astro';
 import PhotoPending from '../../components/PhotoPending.astro';
 import PhotoOfficielle from '../../components/PhotoOfficielle.astro';
 import { photosDe, photoSalleDeBain, creditOfficiel } from '../../data/photos-officielles';
-import ConfirmNote from '../../components/ConfirmNote.astro';
 import AccessibilityNotice from '../../components/AccessibilityNotice.astro';
 import { chambres, equipementsCommuns, vuesChambres, type Chambre } from '../../data/chambres';
 import { hotel } from '../../data/hotel';
@@ -42,7 +41,6 @@ const vignettes = [...(incertaine ? photosChambre : photosChambre.slice(1)), pho
           <dt>Tarif</dt><dd>Selon les dates, affiché sur le moteur de réservation</dd>
         </dl>
         <p>{intros[c.slug as keyof typeof intros] ?? c.resume}</p>
-        <ConfirmNote items={c.aConfirmer} />
         <div class="btn-row">
           <a class="btn btn--primary" href="#reserver">Choisir mes dates</a>
           <a class="btn btn--ghost" href={hotel.telephone.href}>Appeler le <span class="tel-num">{hotel.telephone.affiche}</span></a>
@@ -65,7 +63,7 @@ const vignettes = [...(incertaine ? photosChambre : photosChambre.slice(1)), pho
                 </li>
               ))}
             </ul>
-            <p class="credit">{creditOfficiel} (photos du site actuel, en attente d’accord) · <a href="/credits-photos/">crédits</a></p>
+            <p class="credit">{creditOfficiel} · <a href="/credits-photos/">crédits</a></p>
             <dialog class="lightbox" aria-label={`Visionneuse : photos de la ${c.nom.toLowerCase()}`} data-credit={creditOfficiel}>
               <div class="lightbox__inner">
                 <div class="lightbox__bar">
@@ -84,7 +82,7 @@ const vignettes = [...(incertaine ? photosChambre : photosChambre.slice(1)), pho
             </dialog>
           </>
         ) : (
-          <PhotoPending label={`${c.nom} (photo officielle en attente d’autorisation)`} ratio="4 / 3" class="media-rounded" />
+          <PhotoPending label={c.nom} ratio="4 / 3" class="media-rounded" />
         )}
       </div>
     </div>
@@ -98,7 +96,7 @@ const vignettes = [...(incertaine ? photosChambre : photosChambre.slice(1)), pho
         <h2 id="titre-equipements">Équipements</h2>
         <ul class="checklist">
           {equipementsCommuns.map((e) => <li>{e}</li>)}
-          <li>Ascenseur (étages desservis à confirmer)</li>
+          <li>Ascenseur</li>
         </ul>
         <p class="muted">{vuesChambres}</p>
       </section>

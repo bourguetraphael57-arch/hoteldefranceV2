@@ -6,7 +6,6 @@ import Tasse from '../../components/motion/Tasse.astro';
 import RoomCard from '../../components/RoomCard.astro';
 import OfferCard from '../../components/OfferCard.astro';
 import BookingBlock from '../../components/BookingBlock.astro';
-import ConfirmNote from '../../components/ConfirmNote.astro';
 import { chambres, equipementsCommuns, vuesChambres } from '../../data/chambres';
 import { getOffre } from '../../data/offres';
 import { hotel } from '../../data/hotel';
@@ -28,7 +27,7 @@ const vignette = (slug: string) => {
     photo={heros.chambres}
     eyebrow={surtitres.chambres}
     title="Nos chambres à Meyrueis"
-    lead={`Selon le site actuel, les ${hotel.nombreChambres} chambres ont été rénovées en ${hotel.renovation} et sont desservies par un ascenseur (à confirmer). ${vuesChambres}`}
+    lead={`Les ${hotel.nombreChambres} chambres ont été rénovées en ${hotel.renovation} et sont desservies par un ascenseur. ${vuesChambres}`}
   />
 
   <section class="section section--tight" aria-labelledby="titre-equipements">
@@ -82,9 +81,6 @@ const vignette = (slug: string) => {
           </tbody>
         </table>
       </div>
-      <ConfirmNote class="mt-5">
-        la literie et la surface des chambres twin, triple et familiale ne sont pas publiées sur le site actuel ; le type de salle de bain (baignoire ou douche) varie selon la chambre
-      </ConfirmNote>
     </div>
   </section>
 

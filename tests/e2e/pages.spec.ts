@@ -14,7 +14,6 @@ for (const path of PAGES) {
     expect(res?.status()).toBe(200);
     await expect(page).toHaveTitle(/Grand Hôtel de France|Meyrueis/);
     await expect(page.locator('h1')).toHaveCount(1);
-    await expect(page.getByText('Maquette non officielle').first()).toBeVisible();
 
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
     expect(overflow, 'défilement horizontal').toBeLessThanOrEqual(0);

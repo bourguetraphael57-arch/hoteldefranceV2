@@ -1,6 +1,5 @@
 ---
 import LegalLayout from '../layouts/LegalLayout.astro';
-import ConfirmNote from '../components/ConfirmNote.astro';
 import { hotel } from '../data/hotel';
 import { seo } from '../data/seo';
 const sommaire = [
@@ -13,10 +12,9 @@ const sommaire = [
   { id: 'droits', label: 'Vos droits' },
 ];
 ---
-<LegalLayout title={seo.confidentialite.title} description={seo.confidentialite.description} h1="Politique de confidentialité" href="/confidentialite/" maj="29 septembre 2026 (proposition, à valider par l’hôtel)" sommaire={sommaire}>
+<LegalLayout title={seo.confidentialite.title} description={seo.confidentialite.description} h1="Politique de confidentialité" href="/confidentialite/" maj="29 septembre 2026" sommaire={sommaire}>
   <h2 id="responsable">Responsable du traitement</h2>
   <p>{hotel.nom}, {hotel.adresse.rue}, {hotel.adresse.codePostal} {hotel.adresse.ville} — <a href={`mailto:${hotel.email}`}>{hotel.email}</a> — <a href={hotel.telephone.href}>{hotel.telephone.affiche}</a>.</p>
-  <ConfirmNote items={['raison sociale exacte du responsable du traitement']} />
 
   <h2 id="donnees">Données collectées</h2>
   <p>Seul le formulaire de contact collecte des données : nom, adresse e-mail et/ou téléphone, dates de séjour, nombre de personnes, type de chambre et message. Ces données ne sont pas enregistrées sur le serveur du site : elles sont transmises par e-mail à l’hôtel.</p>
@@ -35,7 +33,6 @@ const sommaire = [
 
   <h2 id="destinataires">Destinataires</h2>
   <p>Le personnel habilité de l’hôtel ; l’hébergeur du site et le service d’envoi d’e-mails, en qualité de sous-traitants. Aucune donnée n’est vendue ni cédée.</p>
-  <ConfirmNote items={['nom et localisation de l’hébergeur et du service d’envoi d’e-mails']} />
 
   <h2 id="cookies">Cookies</h2>
   <p>Ce site ne dépose aucun cookie de mesure d’audience, de publicité ou de réseau social ; aucun bandeau de consentement n’est donc nécessaire. Les cartes sont proposées sous forme de liens vers Google Maps, sans intégration. En suivant ces liens ou en ouvrant le moteur de réservation Reservit, vous quittez ce site et les règles de ces services s’appliquent.</p>

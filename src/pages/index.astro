@@ -7,7 +7,6 @@ import Photo from '../components/Photo.astro';
 import Cliche from '../components/Cliche.astro';
 import CreditsGroupe from '../components/CreditsGroupe.astro';
 import AccessibilityNotice from '../components/AccessibilityNotice.astro';
-import ConfirmNote from '../components/ConfirmNote.astro';
 import Icon from '../components/Icon.astro';
 import Vautour from '../components/Vautour.astro';
 import Divider from '../components/motion/Divider.astro';
@@ -43,15 +42,15 @@ const environsCredits = [accueil.environs.bandeau.photo, ...sitesAccueil.map((s)
         <p class="eyebrow">Hôtel restaurant · Meyrueis, Lozère</p>
         <h1 id="titre-page">{hotel.slogan}</h1>
         <p class="lead">
-          Sur la place du village, à l’entrée des gorges de la Jonte. Selon le site actuel, la famille {hotel.histoire.famille} accueille ses hôtes
-          depuis {hotel.histoire.depuis} dans un {hotel.histoire.batiment} (historique à confirmer).
+          Sur la place du village, à l’entrée des gorges de la Jonte. La famille {hotel.histoire.famille} accueille ses hôtes
+          depuis {hotel.histoire.depuis} dans un {hotel.histoire.batiment}.
         </p>
         <div class="btn-row mt-5">
           <a class="btn btn--primary" href="#reserver">Réserver une chambre</a>
           <a class="btn btn--secondary" href="/chambres/">Comparer les chambres</a>
         </div>
         <ul class="atouts mt-5">
-          <li><Icon name="bed" />{hotel.nombreChambres} chambres, rénovées en {hotel.renovation} selon le site actuel</li>
+          <li><Icon name="bed" />{hotel.nombreChambres} chambres, rénovées en {hotel.renovation}</li>
           <li><Icon name="fork" />Restaurant de cuisine du terroir</li>
           <li><Icon name="pool" />Piscine chauffée et jardin belvédère</li>
           <li><Icon name="parking" />Parking privé et garage deux-roues</li>
@@ -80,7 +79,7 @@ const environsCredits = [accueil.environs.bandeau.photo, ...sitesAccueil.map((s)
     <div class="container">
       <div class="section__head">
         <h2 id="titre-chambres">Les chambres</h2>
-        <p>Quatre catégories, de 2 à 4 personnes, avec wifi gratuit et télévision. Selon le site actuel, les chambres sont desservies par un ascenseur. Les tarifs varient selon les dates : ils s’affichent sur le moteur de réservation.</p>
+        <p>Quatre catégories, de 2 à 4 personnes, avec wifi gratuit et télévision. Les chambres sont desservies par un ascenseur. Les tarifs varient selon les dates : ils s’affichent sur le moteur de réservation.</p>
       </div>
       <div class="grid grid--4 rail">
         {chambres.map((c) => <RoomCard chambre={c} />)}
@@ -98,7 +97,6 @@ const environsCredits = [accueil.environs.bandeau.photo, ...sitesAccueil.map((s)
         <ul class="chiffres mt-6" aria-label={accueil.maison.chiffresLabel}>
           {chiffresCles.map((c) => <li><strong>{c.valeur}</strong><span>{c.label}</span></li>)}
         </ul>
-        <ConfirmNote items={[...accueil.maison.aConfirmer]} />
       </div>
       <div class="maison__photos">
         <Cliche visuel={accueil.maison.principale} class="maison__principale" caption="legende" sizes="(min-width: 72rem) 34rem, (min-width: 56rem) 48vw, 88vw" />
@@ -126,7 +124,6 @@ const environsCredits = [accueil.environs.bandeau.photo, ...sitesAccueil.map((s)
           {restaurant.espaces.map((e) => <li><strong>{e.titre}</strong> — {e.texte}</li>)}
         </ul>
         <p>Dîner tous les soirs de 19 h à 21 h ; déjeuner les mardis, mercredis, samedis et dimanches de 12 h à 13 h 30.</p>
-        <ConfirmNote items={['horaires et jours d’ouverture actuels']} />
         <div class="btn-row">
           <a class="btn btn--secondary" href="/restaurant/">Voir les menus</a>
           <a class="btn btn--ghost" href="/contact/?objet=table">Réserver une table</a>
@@ -140,7 +137,7 @@ const environsCredits = [accueil.environs.bandeau.photo, ...sitesAccueil.map((s)
     <div class="container">
       <div class="section__head">
         <h2 id="titre-formules">Formules</h2>
-        <p>Demi-pension, petit-déjeuner et séjours de groupe. Les tarifs ci-dessous sont ceux du site actuel.</p>
+        <p>Demi-pension, petit-déjeuner et séjours de groupe.</p>
       </div>
       <div class="grid grid--3 rail">
         {formules.map((o) => <OfferCard offre={o} photo={photoFormule(o.slug)} />)}
@@ -167,7 +164,7 @@ const environsCredits = [accueil.environs.bandeau.photo, ...sitesAccueil.map((s)
               <div class="card__body">
                 <h3 class="card__title">{s.nom}</h3>
                 <p>{s.texte}</p>
-                <p class="muted"><small>Depuis l’hôtel : {s.distanceVerifiee ?? s.distance} (indicatif, à confirmer)</small></p>
+                <p class="muted"><small>Depuis l’hôtel : {s.distanceVerifiee ?? s.distance}</small></p>
               </div>
             </article>
           ))}

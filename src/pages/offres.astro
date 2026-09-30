@@ -4,7 +4,6 @@ import Breadcrumbs from '../components/Breadcrumbs.astro';
 import PageHero from '../components/PageHero.astro';
 import Divider from '../components/motion/Divider.astro';
 import Price from '../components/Price.astro';
-import ConfirmNote from '../components/ConfirmNote.astro';
 import Cliche from '../components/Cliche.astro';
 import PhotoPending from '../components/PhotoPending.astro';
 import { heros, offresCategories, offresPhotos, introsCategories, surtitres, estAttendu, type Visuel, type Attendu } from '../data/visuels';
@@ -31,9 +30,6 @@ const photoOffre = (slug: string, cat: CategorieOffre): Visuel | Attendu | undef
     </nav>
   </PageHero>
 
-  <div class="container">
-    <p class="note-confirm"><strong>À confirmer :</strong> les tarifs ci-dessous sont ceux publiés sur le site actuel, sans période de validité ni conditions. Ils sont indicatifs tant que l’hôtel ne les a pas validés.</p>
-  </div>
 
   {cats.map((cat, i) => {
     const list = offresPubliees.filter((o) => o.categorie === cat);
@@ -69,7 +65,6 @@ const photoOffre = (slug: string, cat: CategorieOffre): Visuel | Attendu | undef
                     ) : (
                       <p class="muted">{mentionContenuNonDetaille}</p>
                     )}
-                    <ConfirmNote items={o.aConfirmer} />
                     <div class="btn-row">
                       <a class="btn btn--secondary" href={`/contact/?objet=${o.categorie === 'groupes' ? 'groupe' : 'disponibilite'}&offre=${encodeURIComponent(o.titre)}`}>
                         Demander cette offre<span class="sr-only"> : {o.titre}</span>
@@ -90,7 +85,7 @@ const photoOffre = (slug: string, cat: CategorieOffre): Visuel | Attendu | undef
   <section class="section" aria-labelledby="titre-conditions">
     <div class="container--narrow stack">
       <h2 id="titre-conditions">Conditions</h2>
-      <p>Le site actuel ne publie pas de conditions générales de vente. Les conditions de chaque tarif (acompte, annulation) sont indiquées sur le moteur de réservation avant le paiement ; pour une offre demandée par écrit, l’hôtel vous les précisera dans sa réponse.</p>
+      <p>Les conditions de chaque tarif (acompte, annulation) sont indiquées sur le moteur de réservation avant le paiement ; pour une offre demandée par écrit, l’hôtel vous les précisera dans sa réponse.</p>
       <p>Une question ? Appelez le <a href={hotel.telephone.href}>{hotel.telephone.affiche}</a>.</p>
     </div>
   </section>

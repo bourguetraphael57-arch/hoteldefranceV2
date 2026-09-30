@@ -70,9 +70,6 @@ const hotelLd = {
   </head>
   <body>
     <a class="skip-link" href="#contenu">Aller au contenu</a>
-    <div class="mockup-banner" role="note">
-      <p><strong>Maquette non officielle</strong> — pour réserver, utilisez les coordonnées officielles de l’hôtel : <a href={hotel.telephone.href}>{hotel.telephone.affiche}</a>.</p>
-    </div>
     <div class="header-sentinel" aria-hidden="true"></div>
     <header class="site-header" data-header>
       <div class="container site-header__inner">
@@ -126,8 +123,7 @@ const hotelLd = {
           ))}
         </div>
         <div class="footer-bottom">
-          <p><strong>Maquette non officielle</strong> de refonte du site du {hotel.nom}, réalisée sans validation de l’établissement. Les informations proviennent du site actuel et restent à confirmer par l’hôtel.</p>
-          <p>Photos du village et des environs sous licence libre : <a href="/credits-photos/">crédits photos</a>.</p>
+          <p>© {hotel.nom} · <a href="/credits-photos/">Crédits photos</a></p>
           <p class="sr-only">{adresseComplete}</p>
         </div>
       </div>

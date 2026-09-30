@@ -16,7 +16,7 @@ export interface PhotoOfficielle {
 }
 
 export const creditOfficiel =
-  'Photo : © Grand Hôtel de France (site actuel de l’hôtel) — réutilisation soumise à autorisation écrite';
+  'Photo : © Grand Hôtel de France';
 
 const base = '/images/officielles/';
 const photo = (id: string, alt: string, remarque?: string): PhotoOfficielle => ({
@@ -40,7 +40,6 @@ export const photosChambres: Record<string, PhotoOfficielle[]> = {
     photo(
       'familiale-1',
       'Chambre aux tons beiges avec lit double',
-      'Photo utilisée par le site actuel pour cette catégorie ; elle ne montre qu’un lit double — correspondance à confirmer avec l’hôtel.',
     ),
   ],
 };
@@ -48,7 +47,6 @@ export const photosChambres: Record<string, PhotoOfficielle[]> = {
 export const photoSalleDeBain = photo(
   'salle-de-bain',
   'Salle de bain d’une chambre : douche, lavabo et sèche-cheveux mural',
-  'Salle de bain type ; l’équipement exact peut varier selon la chambre — à confirmer.',
 );
 
 export function photosDe(slug: string): PhotoOfficielle[] {
@@ -83,7 +81,6 @@ export const photosHotel: Record<string, PhotoOfficielle> = {
     'cheminee',
     'Grande cheminée en pierre avec crémaillère et marmites en fonte, fauteuil rond et plante verte, sol carrelé',
     1600, 1067,
-    'Photo du site actuel ; la pièce exacte (salon, restaurant) n’est pas précisée — à confirmer avec l’hôtel.',
   ),
   'machine-cafe': photoEtablissement(
     'machine-cafe',

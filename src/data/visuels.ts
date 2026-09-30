@@ -92,17 +92,17 @@ export const accueil = {
     surtitre: `Depuis ${hotel.histoire.depuis}`,
     titre: 'La maison, sur la place du village',
     texte: [
-      `Selon le site actuel, la famille ${hotel.histoire.famille} accueille ses hôtes depuis ${hotel.histoire.depuis} dans un ${hotel.histoire.batiment}, sur la place Jean Séquier, au cœur de Meyrueis (historique à confirmer).`,
+      `La famille ${hotel.histoire.famille} accueille ses hôtes depuis ${hotel.histoire.depuis} dans un ${hotel.histoire.batiment}, sur la place Jean Séquier, au cœur de Meyrueis.`,
       'Devant la façade, le monument aux morts du village ; depuis les fenêtres, les toits, le clocher et les pentes boisées.',
     ],
     principale: { photo: libre('hotel-monument'), legende: 'Le monument aux morts, devant la façade de l’hôtel', position: '50% 55%' },
     secondaire: { photo: libre('vue-chambre'), legende: 'Vue depuis une fenêtre de l’hôtel' },
-    chiffresLabel: 'L’hôtel en chiffres (selon le site actuel)',
+    chiffresLabel: 'L’hôtel en chiffres',
     aConfirmer: ['historique de la maison et capacité de la salle voûtée'],
   },
   restaurant: {
     principale: { photo: officielle('facade'), legende: 'La terrasse abritée, devant la façade', position: '50% 100%' },
-    vignette: { photo: officielle('cheminee'), legende: 'Cheminée en pierre (pièce à confirmer)' },
+    vignette: { photo: officielle('cheminee'), legende: 'La cheminée en pierre' },
   },
   environs: {
     bandeau: { photo: libre('gorges-tarn'), legende: 'Les gorges du Tarn depuis le Point Sublime', position: '50% 55%' },
@@ -112,7 +112,7 @@ export const accueil = {
 
 /** Chiffres clés (accueil, bloc « la maison »). Chaque valeur vient de src/data/hotel.ts. */
 export const chiffresCles = [
-  { valeur: String(hotel.histoire.depuis), label: 'la même famille, selon le site actuel' },
+  { valeur: String(hotel.histoire.depuis), label: 'la même famille depuis' },
   { valeur: String(hotel.nombreChambres), label: 'chambres, de 2 à 4 personnes' },
   { valeur: String(hotel.renovation), label: 'année de rénovation des chambres' },
   { valeur: '70', label: 'places dans la salle voûtée' },
@@ -131,7 +131,7 @@ export const restaurantTerroir = {
   surtitre: 'Fromages de pays',
   titre: 'Du causse à l’assiette',
   texte:
-    'Les menus publiés sur le site actuel citent des produits de la région, du fromage de chèvre des Cévennes au bleu affiné sous le causse.',
+    'Les menus mettent à l’honneur les produits de la région, du fromage de chèvre des Cévennes au bleu affiné sous le causse.',
   produitsLabel: 'Produits cités sur les menus publiés',
   produits: [
     'Pélardon AOP des Oubrets',
@@ -149,7 +149,7 @@ export const restaurantTerroir = {
 /** Page offres : image d'ouverture de chaque catégorie (circuits : une image par offre, voir offres.ts). */
 export const offresCategories: Partial<Record<'sejour' | 'restauration' | 'groupes', Visuel>> = {
   sejour: { photo: officielle('facade'), legende: 'La terrasse abritée du restaurant, devant la façade', position: '50% 80%' },
-  restauration: { photo: officielle('machine-cafe'), legende: 'La machine à expresso de la maison. Le buffet du petit-déjeuner n’est pas encore photographié.' },
+  restauration: { photo: officielle('machine-cafe'), legende: 'La machine à expresso de la maison' },
   groupes: { photo: officielle('seminaire'), legende: 'La salle de séminaires, sous charpente, tables en U' },
 };
 
@@ -230,7 +230,7 @@ export const offresPhotos: Record<string, Visuel | Attendu> = {
 /** Page crédits : textes, liste des photos officielles (avec leur usage) et polices. */
 export const creditsPage = {
   titre: 'Crédits photos',
-  lead: 'Les photos du village et des environs proviennent de Wikimedia Commons et sont publiées sous licence libre ; elles ont été redimensionnées pour le web. Les photos des chambres et de l’établissement proviennent du site actuel de l’hôtel : elles lui appartiennent et ne figurent ici que dans une maquette, en attente de son autorisation écrite.',
+  lead: 'Les photos du village et des environs proviennent de Wikimedia Commons et sont publiées sous licence libre ; elles ont été redimensionnées pour le web. Les photos des chambres et de l’établissement sont la propriété du Grand Hôtel de France.',
   libres: {
     titre: 'Photos sous licence libre',
     caption: (n: number) => `${n} photos libres, avec auteur, licence et source`,
@@ -238,9 +238,9 @@ export const creditsPage = {
   },
   officielles: {
     titre: 'Photos de l’hôtel',
-    texte: 'Ces photos sont reprises du site actuel du Grand Hôtel de France (hotel-meyrueis-lozere.fr) et redimensionnées pour le web. Elles restent la propriété de l’hôtel. Aucune licence de réutilisation n’a été accordée : elles ne doivent pas être publiées en ligne sans l’autorisation écrite de l’établissement.',
+    texte: 'Ces photos sont la propriété du Grand Hôtel de France, qui en autorise l’usage sur ce site. Toute autre réutilisation nécessite son accord.',
     caption: (n: number) => `${n} photos de l’hôtel, avec leur usage sur le site`,
-    mention: '© Grand Hôtel de France — usage soumis à autorisation',
+    mention: '© Grand Hôtel de France',
   },
   polices: {
     titre: 'Polices',

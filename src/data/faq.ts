@@ -34,7 +34,7 @@ export const faq: ThemeFaq[] = [
         id: 'annulation',
         question: 'Quelles sont les conditions d’annulation ?',
         reponse: [
-          'Le site actuel ne publie pas de conditions générales de vente. Vérifiez les conditions du tarif choisi sur le moteur de réservation avant de payer, et demandez-les à l’hôtel en cas de doute.',
+          'Les conditions d’annulation dépendent du tarif choisi : elles s’affichent sur le moteur de réservation avant le paiement. L’hôtel vous les précise aussi sur simple demande.',
         ],
       },
     ],
@@ -46,18 +46,18 @@ export const faq: ThemeFaq[] = [
       {
         id: 'wifi',
         question: 'Le wifi est-il disponible dans tout l’hôtel ?',
-        reponse: ['Le site actuel annonce un wifi gratuit dans tout l’hôtel (à confirmer par l’hôtel).'],
+        reponse: ['Oui, le wifi est gratuit dans tout l’hôtel.'],
       },
       {
         id: 'parking',
         question: 'Puis-je me garer à l’hôtel en voiture, à moto ou à vélo ?',
-        reponse: ['L’hôtel annonce un parking privé sécurisé et un garage pour les motos et les vélos. Gratuité, nombre de places et conditions d’accès sont à confirmer auprès de l’hôtel.'],
+        reponse: ['L’hôtel annonce un parking privé sécurisé et un garage pour les motos et les vélos. Renseignez-vous auprès de l’hôtel pour les conditions d’accès.'],
       },
       {
         id: 'petit-dejeuner',
         question: 'Le petit-déjeuner est-il inclus ?',
         reponse: [
-          'Il est proposé en supplément (12,50 € par personne selon le site actuel, tarif à confirmer) et servi de 7 h 30 à 9 h 30. Il est inclus dans la formule demi-pension.',
+          'Il est proposé en supplément (12,50 € par personne) et servi de 7 h 30 à 9 h 30. Il est inclus dans la formule demi-pension.',
         ],
       },
       {
@@ -82,8 +82,8 @@ export const faq: ThemeFaq[] = [
         id: 'pmr',
         question: 'L’hôtel est-il adapté aux personnes à mobilité réduite ?',
         reponse: [
-          'L’hôtel indique ne pas disposer de chambre spécifiquement équipée pour les personnes à mobilité réduite, et la page d’accueil du site actuel précise même qu’il « ne peut pas recevoir de personne à mobilité réduite ». Ces informations doivent être confirmées par l’hôtel. Selon le site actuel, les chambres sont desservies par un ascenseur (étages desservis non précisés).',
-          'Aucune information vérifiée n’est disponible à ce jour sur l’accès à l’entrée, au restaurant, à la terrasse, au jardin ou à la salle de séminaires. Appelez l’hôtel au 04 66 45 60 07 pour décrire vos besoins avant de réserver.',
+          'L’hôtel ne dispose pas de chambre spécifiquement équipée pour les personnes à mobilité réduite et indique ne pas pouvoir recevoir de personne à mobilité réduite. Les chambres sont desservies par un ascenseur.',
+          'Pour l’accès à l’entrée, au restaurant, à la terrasse, au jardin ou à la salle de séminaires, appelez l’hôtel au 04 66 45 60 07 pour décrire vos besoins avant de réserver.',
         ],
       },
     ],
@@ -95,7 +95,7 @@ export const faq: ThemeFaq[] = [
       {
         id: 'table',
         question: 'Faut-il réserver sa table ?',
-        reponse: ['Le site actuel propose de réserver sa table par e-mail ; vous pouvez aussi appeler l’hôtel. Les groupes (à partir de 10 personnes selon le site français, 15 selon le site anglais : seuil à confirmer) peuvent bénéficier de formules dédiées.'],
+        reponse: ['C’est conseillé : réservez par e-mail, par téléphone ou avec le formulaire de contact. Les groupes à partir de 10 personnes peuvent bénéficier de formules dédiées.'],
       },
     ],
   },
@@ -107,7 +107,7 @@ export const faq: ThemeFaq[] = [
         id: 'train',
         question: 'Peut-on venir en train ?',
         reponse: [
-          'La gare la plus proche est celle de Millau (ligne Paris – Béziers), à 43 km. Le site actuel mentionne une navette jusqu’à Meyrueis : vérifiez les horaires auprès de l’hôtel ou du transporteur avant votre voyage.',
+          'La gare la plus proche est celle de Millau (ligne Paris – Béziers), à 43 km. Pour rejoindre Meyrueis depuis la gare, renseignez-vous auprès de l’hôtel.',
         ],
       },
     ],

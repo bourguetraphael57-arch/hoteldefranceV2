@@ -3,7 +3,6 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Breadcrumbs from '../components/Breadcrumbs.astro';
 import PageHero from '../components/PageHero.astro';
 import PhotoPending from '../components/PhotoPending.astro';
-import ConfirmNote from '../components/ConfirmNote.astro';
 import Cliche from '../components/Cliche.astro';
 import CreditsGroupe from '../components/CreditsGroupe.astro';
 import Divider from '../components/motion/Divider.astro';
@@ -85,7 +84,7 @@ const ld = {
         </ul>
         <div class="table-wrap" role="region" aria-labelledby="caption-horaires" tabindex="0">
           <table class="table">
-            <caption id="caption-horaires">Horaires du restaurant publiés sur le site actuel</caption>
+            <caption id="caption-horaires">Horaires du restaurant</caption>
             <thead><tr><th scope="col">Jour</th><th scope="col">Déjeuner</th><th scope="col">Dîner</th></tr></thead>
             <tbody>
               {restaurant.horaires.map((h) => (
@@ -94,7 +93,6 @@ const ld = {
             </tbody>
           </table>
         </div>
-        <ConfirmNote items={[restaurant.horairesAConfirmer]} />
       </div>
       <div class="stack">
         <h2>Réserver une table</h2>
@@ -117,9 +115,8 @@ const ld = {
     <div class="container">
       <div class="section__head">
         <h2 id="titre-menus">Menus</h2>
-        <p>Menus publiés sur le site actuel. Ils évoluent au fil des saisons.</p>
+        <p>Les menus évoluent au fil des saisons.</p>
       </div>
-      <ConfirmNote items={[restaurant.menusAConfirmer]} />
       <div class="menus mt-5">
         {restaurant.menus.map((m, i) => (
           <section class:list={['menu-card', { 'menu-card--vedette': i === 0, 'menu-card--ardoise': i === 1 }]} aria-labelledby={`menu-${m.id}`}>

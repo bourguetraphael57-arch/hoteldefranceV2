@@ -3,7 +3,6 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Breadcrumbs from '../components/Breadcrumbs.astro';
 import PageHero from '../components/PageHero.astro';
 import AccessibilityNotice from '../components/AccessibilityNotice.astro';
-import ConfirmNote from '../components/ConfirmNote.astro';
 import Cliche from '../components/Cliche.astro';
 import PhotoPending from '../components/PhotoPending.astro';
 import Itineraire from '../components/motion/Itineraire.astro';
@@ -40,7 +39,7 @@ import { seo } from '../data/seo';
         <dt>Arrivées</dt><dd>{hotel.horaires.arrivee}</dd>
         <dt>Départs</dt><dd>{hotel.horaires.depart}</dd>
         <dt>Petit-déjeuner</dt><dd>{hotel.horaires.petitDejeuner}</dd>
-        <dt>Restaurant</dt><dd>Dîner de 19 h à 21 h selon le site actuel (à confirmer) — <a href="/restaurant/#titre-horaires">horaires détaillés</a></dd>
+        <dt>Restaurant</dt><dd>Dîner de 19 h à 21 h — <a href="/restaurant/#titre-horaires">horaires détaillés</a></dd>
       </dl>
       <p class="mt-4 muted">Vous arrivez après 20 h ? Prévenez l’hôtel.</p>
     </div>
@@ -55,18 +54,15 @@ import { seo } from '../data/seo';
         <p>{hotel.acces.voiture}</p>
         <h3 class="h4">En train</h3>
         <p>{hotel.acces.train}</p>
-        <ConfirmNote items={[hotel.acces.trainAConfirmer]} />
         <h3 class="h4">En avion</h3>
         <p>{hotel.acces.avion}</p>
         <h3 class="h4">Stationnement</h3>
         <p>Parking privé sécurisé à l’hôtel et garage pour les motos et les vélos.</p>
-        <ConfirmNote items={['parking gratuit ou payant, nombre de places, stationnement des autocars']} />
         <p><a class="btn btn--secondary" href={hotel.itineraire} rel="noopener">Calculer l’itinéraire<span class="sr-only"> (Google Maps, site externe)</span></a></p>
       </div>
       <div class="stack">
         <h3 class="h4">À proximité</h3>
         <Itineraire etapes={itineraireAcces.etapes} label={itineraireAcces.label} />
-        <ConfirmNote items={['distances reprises du site actuel ; le site actuel donne aussi 31 km pour les bateliers de la Malène']} />
         <Cliche visuel={infosVisuels.acces} class="bleed" sizes="(min-width: 72rem) 32rem, (min-width: 56rem) 45vw, 100vw" />
       </div>
     </div>
@@ -83,13 +79,13 @@ import { seo } from '../data/seo';
       </ul>
       <div class="table-wrap mt-6" role="region" aria-labelledby="caption-equipements" tabindex="0">
         <table class="table">
-          <caption id="caption-equipements">Équipements annoncés sur le site actuel</caption>
-          <thead><tr><th scope="col">Équipement</th><th scope="col">Précision</th><th scope="col">À confirmer par l’hôtel</th></tr></thead>
+          <caption id="caption-equipements">Équipements de l’hôtel</caption>
+          <thead><tr><th scope="col">Équipement</th><th scope="col">Précision</th></tr></thead>
           <tbody>
             {hotel.equipements.map((e) => (
-              <tr><th scope="row">{e.label}</th><td>{'detail' in e ? e.detail : '—'}</td><td>{'aConfirmer' in e ? e.aConfirmer : '—'}</td></tr>
+              <tr><th scope="row">{e.label}</th><td>{'detail' in e ? e.detail : '—'}</td></tr>
             ))}
-            <tr><th scope="row">Animaux</th><td>{hotel.animaux.texte}</td><td>{hotel.animaux.aConfirmer}</td></tr>
+            <tr><th scope="row">Animaux</th><td>{hotel.animaux.texte}</td></tr>
           </tbody>
         </table>
       </div>

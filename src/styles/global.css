@@ -363,18 +363,6 @@
   .photo-pending svg { width: 2rem; height: 2rem; }
 
 
-  /* Bandeau maquette */
-  .mockup-banner {
-    background: var(--c-surface-2);
-    color: var(--c-text);
-    font-size: var(--fs-sm);
-    text-align: center;
-    padding: var(--sp-1) var(--gutter);
-    min-height: 32px;
-    display: flex; align-items: center; justify-content: center;
-    border-bottom: 1px solid var(--c-border);
-  }
-  .mockup-banner p { max-width: none; }
 
   /* Lien d'évitement */
   .skip-link {
