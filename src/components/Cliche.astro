@@ -8,7 +8,7 @@
  * overlay : légende posée sur l'image, sur un bandeau sombre (contraste AA). La remarque éventuelle
  *   d'une photo officielle n'y figure pas : elle est reprise par <CreditsGroupe>.
  */
-import { resoudre, creditOfficielCourt, type Visuel } from '../data/visuels';
+import { resoudre, type Visuel } from '../data/visuels';
 
 interface Props {
   visuel: Visuel;
@@ -22,9 +22,8 @@ interface Props {
 const { visuel, sizes, eager = false, caption = 'complet', overlay = false, class: className, alt } = Astro.props;
 const p = resoudre(visuel.photo);
 const h800 = Math.round((p.hauteur * 800) / p.largeur);
-const legende = caption === 'credit' || caption === 'aucune' ? undefined : visuel.legende;
-const avecCredit = caption === 'complet' || caption === 'credit';
-/** La remarque d'une photo officielle (correspondance incertaine) reste visible sauf en mode « aucune ». */
+const legende = overlay || caption === 'credit' || caption === 'aucune' ? undefined : visuel.legende;
+/** La remarque d'une photo officielle reste visible hors mode overlay. */
 const remarque = caption === 'aucune' || overlay ? undefined : p.remarque;
 ---
 <figure class:list={['cliche', { 'cliche--overlay': overlay }, className]} style={visuel.position ? `--pos: ${visuel.position}` : undefined}>
@@ -42,15 +41,8 @@ const remarque = caption === 'aucune' || overlay ? undefined : p.remarque;
       fetchpriority={eager ? 'high' : 'auto'}
     />
   </picture>
-  {(legende || avecCredit || remarque) && <figcaption class="cliche__caption">
+  {(legende || remarque) && <figcaption class="cliche__caption">
     {legende && <span class="cliche__legende">{legende}</span>}
     {remarque && <span class="cliche__remarque">{remarque}</span>}
-    {!avecCredit ? null : p.officielle ? (
-      <span class="cliche__credit">Photo {creditOfficielCourt}</span>
-    ) : (
-      <span class="cliche__credit">
-        Photo : {p.auteur}, <a href={p.licenceUrl} rel="license noopener">{p.licence}</a>, <a href={p.source} rel="noopener">Wikimedia Commons<span class="sr-only"> (photo « {p.sujet} »)</span></a>
-      </span>
-    )}
   </figcaption>}
 </figure>

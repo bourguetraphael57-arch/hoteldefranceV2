@@ -3,6 +3,8 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import PageHero from '../../components/PageHero.astro';
 import Tasse from '../../components/motion/Tasse.astro';
+import Cle from '../../components/motion/Cle.astro';
+import Divider from '../../components/motion/Divider.astro';
 import RoomCard from '../../components/RoomCard.astro';
 import OfferCard from '../../components/OfferCard.astro';
 import BookingBlock from '../../components/BookingBlock.astro';
@@ -32,12 +34,20 @@ const vignette = (slug: string) => {
 
   <section class="section section--tight" aria-labelledby="titre-equipements">
     <div class="container">
-      <h2 id="titre-equipements">Dans toutes les chambres</h2>
+      <div class="inline-flex">
+        <Cle />
+        <div>
+          <h2 id="titre-equipements" style="margin: 0;">Dans toutes les chambres</h2>
+          <p class="muted" style="margin: 0;">Confort, calme et équipements soignés</p>
+        </div>
+      </div>
       <ul class="checklist grid grid--3 mt-5">
         {equipementsCommuns.map((e) => <li>{e}</li>)}
       </ul>
     </div>
   </section>
+
+  <Divider variant="riviere" />
 
   <section class="section section--alt" aria-labelledby="titre-categories">
     <div class="container">

@@ -12,6 +12,8 @@ import PageHero from '../../components/PageHero.astro';
 import ContactForm from '../../components/ContactForm.astro';
 import Cliche from '../../components/Cliche.astro';
 import Icon from '../../components/Icon.astro';
+import TamponVoyage from '../../components/motion/TamponVoyage.astro';
+import Divider from '../../components/motion/Divider.astro';
 import { hotel } from '../../data/hotel';
 import { seo } from '../../data/seo';
 import { heros, contactVisuel } from '../../data/visuels';
@@ -119,7 +121,10 @@ const recap = etat === 'envoye' || etat === 'demo' ? resume(values) : [];
 
     <aside class="stack" aria-labelledby="titre-coordonnees">
       <div class="panel stack">
-        <h2 id="titre-coordonnees" class="h4">Coordonnées</h2>
+        <div class="inline-flex">
+          <TamponVoyage />
+          <h2 id="titre-coordonnees" class="h4" style="margin: 0;">Coordonnées</h2>
+        </div>
         <address>
           <ul class="contact-list">
             <li><Icon name="map" class="inline-icon" /> {hotel.nom}, {hotel.adresse.rue}, {hotel.adresse.codePostal} {hotel.adresse.ville}</li>
@@ -142,4 +147,6 @@ const recap = etat === 'envoye' || etat === 'demo' ? resume(values) : [];
       <Cliche visuel={contactVisuel} class="bleed" sizes="(min-width: 72rem) 32rem, (min-width: 56rem) 45vw, 100vw" />
     </aside>
   </div>
+
+  <Divider variant="crete" />
 </BaseLayout>

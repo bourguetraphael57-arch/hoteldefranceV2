@@ -1,0 +1,32 @@
+---
+/**
+ * Cachet postal d'époque / tampon de voyage (Grand Hôtel de France, Meyrueis).
+ * Décor vectoriel rétro façon carnet de voyage ou carte postale ancienne.
+ * Tracé au trait animé.
+ */
+interface Props {
+  class?: string;
+  annee?: string;
+}
+const { class: className, annee = '1946' } = Astro.props;
+---
+<div class:list={['m-tampon', className]} data-motion="time" aria-hidden="true">
+  <svg viewBox="0 0 110 110" focusable="false" aria-hidden="true">
+    <!-- Cercles concentriques du cachet -->
+    <circle class="m-draw m-tampon__outer" pathLength="1" cx="55" cy="55" r="48" style="--d: 0s" />
+    <circle class="m-draw m-tampon__inner" pathLength="1" cx="55" cy="55" r="42" style="--d: 0.2s" />
+    <!-- Barres horizontales de date -->
+    <path class="m-draw" pathLength="1" d="M22 44 H88 M22 66 H88" style="--d: 0.4s" />
+    <!-- Textes dans le tampon -->
+    <text x="55" y="32" class="m-tampon__text-arc" text-anchor="middle">MEYRUEIS · LOZÈRE</text>
+    <text x="55" y="58" class="m-tampon__year" text-anchor="middle">DEPUIS {annee}</text>
+    <text x="55" y="80" class="m-tampon__sub" text-anchor="middle">HÔTEL DE FRANCE</text>
+    <!-- Petites étoiles décoratives -->
+    <path class="m-draw" pathLength="1" d="M34 55 L35 52 L37 54 L40 55 L37 56 L35 58 Z" style="--d: 0.6s" />
+    <path class="m-draw" pathLength="1" d="M76 55 L75 52 L73 54 L70 55 L73 56 L75 58 Z" style="--d: 0.6s" />
+    <!-- Ondes postales d'oblitération à droite -->
+    <path class="m-draw m-tampon__waves" pathLength="1" d="M96 35 C102 38 102 42 108 45" style="--d: 0.7s" />
+    <path class="m-draw m-tampon__waves" pathLength="1" d="M96 52 C102 55 102 59 108 62" style="--d: 0.8s" />
+    <path class="m-draw m-tampon__waves" pathLength="1" d="M96 69 C102 72 102 76 108 79" style="--d: 0.9s" />
+  </svg>
+</div>

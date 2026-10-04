@@ -531,15 +531,7 @@
   .hero .btn--secondary { border-color: #fff; color: #fff; }
   .hero .btn--secondary:hover { background: rgb(255 255 255 / .16); color: #fff; }
   .hero :focus-visible { outline-color: #9CC7E6; }
-  .hero__credit {
-    position: absolute; bottom: calc(clamp(4.5rem, 10vw, 9.5rem) + var(--sp-2)); right: var(--gutter); z-index: 1;
-    max-width: min(34rem, calc(100% - 2 * var(--gutter)));
-    padding: var(--sp-1) var(--sp-3); border-radius: var(--radius-md);
-    background: rgb(22 18 14 / .72); color: #fff; font-size: .75rem;
-  }
-  .hero__credit a { color: inherit; }
-  /* Après la règle de base, sinon son `bottom` l'emporte et le crédit couvre tout le hero. */
-  @media (max-width: 40rem) { .hero .lead { font-size: 1rem; } .hero .atouts { display: none; } .hero__credit { top: var(--sp-2); bottom: auto; left: var(--gutter); font-size: .75rem; } }
+  .hero__credit { display: none; }
 
   /* Vautours qui planent au-dessus des gorges */
   .hero__sky { position: absolute; inset: 0 0 50% 0; z-index: -1; overflow: hidden; pointer-events: none; }
@@ -722,17 +714,9 @@
   /* Remplissage d'un cadre à ratio imposé (mosaïques, cartes) */
   .cliche--fill, .cliche--fill picture { height: 100%; }
   .cliche--fill img { height: 100%; }
-  /* Légende posée sur l'image : bandeau sombre en bas (blanc sur #16120E à .78 : > 12:1) */
+  /* En mode overlay, la photo reste nette et pure sans filigrane superposé */
   .cliche--overlay { overflow: hidden; }
-  .cliche--overlay .cliche__caption {
-    position: absolute; inset: auto 0 0 0; margin: 0;
-    padding: var(--sp-5) var(--sp-3) var(--sp-2);
-    background: linear-gradient(to top, rgb(22 18 14 / .86), rgb(22 18 14 / .72) 60%, rgb(22 18 14 / 0));
-    color: #fff; font-size: .75rem; line-height: 1.35;
-  }
-  .cliche--overlay .cliche__legende { color: #fff; font-size: .875rem; }
-  .cliche--overlay :focus-visible { outline-color: #9CC7E6; }
-  .cliche--overlay .cliche__caption a { display: inline-block; padding-block: 4px; }
+  .cliche--overlay .cliche__caption { display: none; }
   .credits-groupe { max-width: none; }
   .credits-groupe__liste { margin: 0; }
   .credits-groupe > summary {
@@ -774,7 +758,7 @@
   .page-hero__media picture, .page-hero__media img { width: 100%; }
   .page-hero__media img { aspect-ratio: 4 / 3; max-height: 62svh; }
   @media (min-width: 48rem) { .page-hero__media img { aspect-ratio: 21 / 9; max-height: 34rem; } }
-  .page-hero__media .cliche__caption { inset: 0 0 auto auto; padding: var(--sp-1) var(--sp-3); background: rgb(22 18 14 / .72); border-radius: 0 0 0 var(--radius-md); max-width: min(26rem, 100%); }
+  .page-hero__media .cliche__caption { display: none; }
   .page-hero__card {
     position: relative; z-index: 1;
     margin-top: calc(-1 * clamp(2.5rem, 7vw, 6rem));
@@ -904,7 +888,7 @@
   @media (min-width: 64rem) {
     .menus { grid-template-columns: 1fr 1fr; align-items: stretch; }
     .menus > :first-child { grid-column: 1 / -1; columns: 2; column-gap: var(--sp-7); }
-    .menus > :first-child > h3, .menus > :first-child > p { column-span: all; }
+    .menus > :first-child > h3, .menus > :first-child > p, .menus > :first-child > .menu-card__head { column-span: all; }
     .menus > :first-child h4 { break-after: avoid; }
     .menus > :first-child ul { break-inside: avoid; }
     .menus > :first-child > h4:first-of-type { margin-top: var(--sp-5); }
@@ -921,6 +905,56 @@
   .menu-card--ardoise h4::after { border-color: #8A7E70; }
   .menu-card--ardoise .muted, .menu-card--ardoise .detail { color: #D9CFBF; }
   .menu-card--ardoise .price { color: #F3C9A0; }
+
+  /* En-tête de carte avec annotation manuscrite */
+  .menu-card__head { display: flex; flex-direction: column; gap: var(--sp-3); }
+  @media (min-width: 56rem) {
+    .menu-card__head { flex-direction: row; justify-content: space-between; align-items: flex-start; gap: var(--sp-4); }
+    .menu-card__head > :first-child { flex: 1; min-width: 0; }
+  }
+  .menus > :first-child > .menu-card__head { margin-bottom: var(--sp-4); }
+  .menus__annotation { flex: none; max-width: 100%; align-self: flex-start; }
+
+  /* Bandeau photos des plats du terroir */
+  .menus-bandeau {
+    grid-column: 1 / -1;
+    background: var(--c-surface);
+    border: 1px solid var(--c-border);
+    border-radius: var(--radius-md);
+    padding: var(--sp-5);
+    box-shadow: var(--shadow-1);
+    display: grid;
+    gap: var(--sp-4);
+  }
+  @media (min-width: 48rem) {
+    .menus-bandeau { padding: var(--sp-6); gap: var(--sp-5); }
+  }
+  .menus-bandeau__head { display: grid; gap: var(--sp-1); }
+  .menus-bandeau__titre {
+    font-family: var(--ff-title);
+    font-size: var(--fs-lg);
+    line-height: var(--lh-snug);
+    color: var(--c-text);
+    margin: 0;
+  }
+  .menus-bandeau__grid {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: var(--sp-4);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+  }
+  .menus-bandeau__item {
+    display: grid;
+    gap: var(--sp-2);
+    min-width: 0;
+    max-width: none;
+  }
+  .menus-bandeau__item .cliche { margin: 0; width: 100%; max-width: 100%; min-width: 0; }
+  .menus-bandeau__photo { border-radius: var(--radius-md); height: auto; width: 100%; max-width: 100%; }
+  .menus-bandeau__item .cliche__caption { min-width: 0; }
+  .menus-bandeau__item .cliche__detail { display: block; font-size: var(--fs-sm); color: var(--c-text-muted); margin-top: 2px; }
 
   /* ---------- Image qui déborde de sa colonne (groupes, offres) ---------- */
   .bleed { position: relative; }
@@ -979,7 +1013,17 @@
   .sites { list-style: none; padding: 0; display: grid; gap: var(--sp-4); grid-template-columns: repeat(auto-fill, minmax(min(100%, 26rem), 1fr)); }
   .sites > li { max-width: none; }
   .site-row { display: grid; grid-template-columns: 6rem 1fr; gap: var(--sp-4); align-items: start; background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--radius-md); padding: var(--sp-3); height: 100%; }
-  .site-row .cliche img, .site-row__vide { aspect-ratio: 1; width: 6rem; border-radius: var(--radius-sm); }
+  .site-row .cliche img, .site-row__vide, .site-row .photo-pending { aspect-ratio: 1; width: 6rem; border-radius: var(--radius-sm); }
+  .site-row .photo-pending {
+    min-height: 0;
+    height: 6rem;
+    padding: var(--sp-2) var(--sp-1);
+    font-size: .6875rem;
+    line-height: 1.2;
+    gap: 4px;
+    align-content: center;
+  }
+  .site-row .photo-pending svg { width: 1.25rem; height: 1.25rem; flex-shrink: 0; }
   .site-row__vide { display: grid; place-items: center; background: var(--c-surface-2); color: var(--c-pin); }
   .site-row__vide svg { width: 2rem; height: 2rem; }
   .site-row h3 { font-size: var(--fs-lg); }
@@ -1006,6 +1050,20 @@
     .rail:focus-visible { outline-offset: -3px; }
   }
 
+  /* ---------- Tableaux de crédits photos ---------- */
+  .table--credits .table-credits__col-thumb { width: 96px; }
+  .table--credits .table-credits__thumb { width: 96px; vertical-align: middle; }
+  .table--credits .table-credits__thumb img {
+    width: 80px;
+    height: 53px;
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--c-border);
+    box-shadow: 0 1px 2px rgb(0 0 0 / .08);
+    display: block;
+  }
+
   /* ---------- Tableaux en fiches sur mobile ---------- */
   @media (max-width: 47.99rem) {
     .table--fiches thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
@@ -1016,6 +1074,9 @@
     .table--fiches tbody th { font-size: var(--fs-base); padding-bottom: var(--sp-1); }
     .table--fiches td[data-label]::before { content: attr(data-label) ' : '; color: var(--c-text-muted); }
     .table--credits tr { padding-block: var(--sp-2); }
+    .table--credits .table-credits__thumb { display: block; width: auto; margin-bottom: var(--sp-2); }
+    .table--credits .table-credits__thumb::before { display: none; }
+    .table--credits .table-credits__thumb img { width: 72px; height: 48px; }
     .table--credits td { display: inline-block; margin-right: var(--sp-4); font-size: var(--fs-sm); }
     .table--credits td a { display: inline-block; padding-block: 6px; }
   }

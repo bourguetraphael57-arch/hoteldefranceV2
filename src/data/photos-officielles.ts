@@ -34,12 +34,15 @@ export const photosChambres: Record<string, PhotoOfficielle[]> = {
     photo('twin-2', 'Chambre twin aux murs verts, deux lits simples'),
   ],
   'chambre-triple': [
+    // Actuellement une seule vue officielle disponible (triple-1).
+    // Une seconde vue (autre angle / disposition des 3 couchages) est requise (audit P1).
     photo('triple-1', 'Chambre triple aux murs verts, plusieurs couchages'),
   ],
   'chambre-familiale': [
     photo(
       'familiale-1',
       'Chambre aux tons beiges avec lit double',
+      'Photo utilisée par le site actuel pour cette catégorie ; elle ne montre qu’un lit double — correspondance à confirmer avec l’hôtel.',
     ),
   ],
 };
@@ -86,6 +89,31 @@ export const photosHotel: Record<string, PhotoOfficielle> = {
     'machine-cafe',
     'Machine à expresso chromée à leviers devant un mur ocre portant l’inscription « Grand Hotel de France »',
     1600, 1067,
+  ),
+  'plat-terroir': photoEtablissement(
+    'plat-terroir',
+    'Assiette de viande rôtie et légumes cuisinés au restaurant du Grand Hôtel de France',
+    1600, 1200,
+  ),
+  'dessert-maison': photoEtablissement(
+    'dessert-maison',
+    'Mousse au chocolat maison et douceurs de saison servies au restaurant',
+    1600, 1066,
+  ),
+  'seminaire-vue': photoEtablissement(
+    'seminaire-vue',
+    'Salle de réunion sous charpente avec grandes baies vitrées donnant sur la nature boisée',
+    1600, 1067,
+  ),
+  'bisons-randals': photoEtablissement(
+    'bisons-randals',
+    'Troupeau de bisons et cavaliers aux Randals sur le causse Noir',
+    1600, 560,
+  ),
+  'petit-dejeuner-croissant': photoEtablissement(
+    'petit-dejeuner-croissant',
+    'Croissant doré et tasse de café sur la table du petit-déjeuner',
+    1600, 1066,
   ),
 };
 

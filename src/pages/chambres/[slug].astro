@@ -7,6 +7,8 @@ import PhotoPending from '../../components/PhotoPending.astro';
 import PhotoOfficielle from '../../components/PhotoOfficielle.astro';
 import { photosDe, photoSalleDeBain, creditOfficiel } from '../../data/photos-officielles';
 import AccessibilityNotice from '../../components/AccessibilityNotice.astro';
+import Cle from '../../components/motion/Cle.astro';
+import Divider from '../../components/motion/Divider.astro';
 import { chambres, equipementsCommuns, vuesChambres, type Chambre } from '../../data/chambres';
 import { hotel } from '../../data/hotel';
 import { personnes } from '../../lib/format';
@@ -21,11 +23,8 @@ const { chambre: c } = Astro.props;
 const meta = seo[c.slug as keyof typeof seo];
 const autres = chambres.filter((x) => x.slug !== c.slug);
 const photosChambre = photosDe(c.slug);
-/** Une photo dont la correspondance est incertaine (remarque) ne sert pas de photo principale :
- *  la place reste « photo à venir » et la photo passe en vignette, avec sa remarque. */
-const incertaine = photosChambre[0]?.remarque !== undefined;
-const principale = incertaine ? undefined : photosChambre[0];
-const vignettes = [...(incertaine ? photosChambre : photosChambre.slice(1)), photoSalleDeBain];
+const principale = photosChambre[0];
+const vignettes = [...photosChambre.slice(1), photoSalleDeBain];
 ---
 <BaseLayout title={meta.title} description={meta.description}>
   <Breadcrumbs items={[{ href: '/chambres/', label: 'Chambres' }, { href: `/chambres/${c.slug}/`, label: c.nom }]} />
@@ -33,7 +32,10 @@ const vignettes = [...(incertaine ? photosChambre : photosChambre.slice(1)), pho
   <article>
     <div class="container split section--tight">
       <div class="stack">
-        <h1 id="titre-page">{c.nom}</h1>
+        <div class="inline-flex">
+          <Cle numero={c.capacite ? `${c.capacite}P` : '1946'} />
+          <h1 id="titre-page" style="margin: 0;">{c.nom}</h1>
+        </div>
         <dl class="facts facts--lg">
           <dt>Capacité</dt><dd>{c.capacite ? `${personnes(c.capacite)} maximum` : 'Non communiquée'}</dd>
           <dt>Literie</dt><dd>{c.literie ?? 'Non communiquée'}</dd>
@@ -51,7 +53,7 @@ const vignettes = [...(incertaine ? photosChambre : photosChambre.slice(1)), pho
           <>
             {principale
               ? <PhotoOfficielle photo={principale} class="room-gallery__main" legende={false} eager />
-              : <PhotoPending label={`${c.nom} (photo de la chambre à prendre)`} ratio="3 / 2" class="media-rounded" />}
+              : <PhotoPending label={c.nom} ratio="3 / 2" class="media-rounded" />}
             <ul class="room-gallery__thumbs" aria-label={`Autres photos : ${c.nom.toLowerCase()} et salle de bain`}>
               {vignettes.map((p) => (
                 <li>
@@ -63,7 +65,6 @@ const vignettes = [...(incertaine ? photosChambre : photosChambre.slice(1)), pho
                 </li>
               ))}
             </ul>
-            <p class="credit">{creditOfficiel} · <a href="/credits-photos/">crédits</a></p>
             <dialog class="lightbox" aria-label={`Visionneuse : photos de la ${c.nom.toLowerCase()}`} data-credit={creditOfficiel}>
               <div class="lightbox__inner">
                 <div class="lightbox__bar">
@@ -112,6 +113,8 @@ const vignettes = [...(incertaine ? photosChambre : photosChambre.slice(1)), pho
       </section>
     </div>
   </article>
+
+  <Divider variant="crete" />
 
   <section class="section section--alt" aria-labelledby="titre-autres">
     <div class="container">

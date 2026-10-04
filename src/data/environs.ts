@@ -15,6 +15,8 @@ export interface Site {
   texte: string;
   url: string;
   photo?: string;
+  /** Sujet en attente de photo libre. */
+  attendu?: string;
   /** Mis en avant sur l'accueil. */
   accueil?: boolean;
 }
@@ -94,6 +96,7 @@ export const sites: Site[] = [
     distance: '16 km',
     texte: 'Des bisons sur le causse Noir.',
     url: 'https://www.randals-bison.com/',
+    photo: 'bisons-causse',
   },
   {
     nom: 'Escalade dans les corniches',

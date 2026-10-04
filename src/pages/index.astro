@@ -5,12 +5,12 @@ import RoomCard from '../components/RoomCard.astro';
 import OfferCard from '../components/OfferCard.astro';
 import Photo from '../components/Photo.astro';
 import Cliche from '../components/Cliche.astro';
-import CreditsGroupe from '../components/CreditsGroupe.astro';
 import AccessibilityNotice from '../components/AccessibilityNotice.astro';
 import Icon from '../components/Icon.astro';
 import Vautour from '../components/Vautour.astro';
 import Divider from '../components/motion/Divider.astro';
 import Annotation from '../components/motion/Annotation.astro';
+import TamponVoyage from '../components/motion/TamponVoyage.astro';
 import Itineraire from '../components/motion/Itineraire.astro';
 import { annotations, itineraireAcces } from '../data/motion';
 import { hotel } from '../data/hotel';
@@ -19,14 +19,11 @@ import { getOffre } from '../data/offres';
 import { restaurant } from '../data/restaurant';
 import { sitesAccueil } from '../data/environs';
 import { seo } from '../data/seo';
-import { getPhoto } from '../data/photos';
 import { accueil, chiffresCles, offresPhotos, surtitres } from '../data/visuels';
 
-const photoHero = getPhoto('meyrueis-pont');
 const formules = ['demi-pension', 'petit-dejeuner', 'demi-pension-groupe'].map((s) => getOffre(s)!);
 /** Vignette réelle seulement si elle existe (sinon carte sans image, jamais une fausse photo). */
 const photoFormule = (slug: string) => offresPhotos[slug];
-const environsCredits = [accueil.environs.bandeau.photo, ...sitesAccueil.map((s) => ({ libre: s.photo! }))];
 ---
 <BaseLayout title={seo.accueil.title} description={seo.accueil.description}>
   <section class="hero" aria-labelledby="titre-page">
@@ -57,9 +54,6 @@ const environsCredits = [accueil.environs.bandeau.photo, ...sitesAccueil.map((s)
         </ul>
       </div>
     </div>
-    <p class="hero__credit">
-      Photo : {photoHero.auteur}, <a href={photoHero.licenceUrl} rel="license noopener">{photoHero.licence}</a>, via <a href={photoHero.source} rel="noopener">Wikimedia Commons<span class="sr-only"> (photo « {photoHero.sujet} »)</span></a>
-    </p>
     <!-- Relief des causses qui se dessine, puis la Jonte qui coule vers la section suivante. -->
     <svg class="hero__relief" viewBox="0 0 1440 200" preserveAspectRatio="none" aria-hidden="true" focusable="false">
       <path class="hero__relief-back" d="M0 110 L90 108 L130 80 L300 76 L340 100 L420 98 L470 62 L700 58 L740 92 L820 95 L880 70 L1080 66 L1120 96 L1200 94 L1250 72 L1440 70 V200 H0 Z" />
@@ -91,7 +85,10 @@ const environsCredits = [accueil.environs.bandeau.photo, ...sitesAccueil.map((s)
   <section class="section section--surface" aria-labelledby="titre-maison">
     <div class="container maison">
       <div class="stack">
-        <p class="eyebrow hand">{accueil.maison.surtitre}</p>
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap;">
+          <p class="eyebrow hand" style="margin: 0;">{accueil.maison.surtitre}</p>
+          <TamponVoyage />
+        </div>
         <h2 id="titre-maison">{accueil.maison.titre}</h2>
         {accueil.maison.texte.map((t) => <p>{t}</p>)}
         <ul class="chiffres mt-6" aria-label={accueil.maison.chiffresLabel}>
@@ -103,9 +100,6 @@ const environsCredits = [accueil.environs.bandeau.photo, ...sitesAccueil.map((s)
         <Cliche visuel={accueil.maison.secondaire} class="maison__secondaire" caption="aucune" sizes="(min-width: 56rem) 18rem, 46vw" />
         <Annotation vers="haut-droite">{annotations.maison}</Annotation>
       </div>
-    </div>
-    <div class="container">
-      <CreditsGroupe photos={[accueil.maison.principale.photo, accueil.maison.secondaire.photo]} class="mt-5" />
     </div>
   </section>
 
@@ -128,7 +122,6 @@ const environsCredits = [accueil.environs.bandeau.photo, ...sitesAccueil.map((s)
           <a class="btn btn--secondary" href="/restaurant/">Voir les menus</a>
           <a class="btn btn--ghost" href="/contact/?objet=table">Réserver une table</a>
         </div>
-        <CreditsGroupe photos={[accueil.restaurant.principale.photo, accueil.restaurant.vignette.photo]} />
       </div>
     </div>
   </section>
@@ -170,7 +163,6 @@ const environsCredits = [accueil.environs.bandeau.photo, ...sitesAccueil.map((s)
           ))}
         </div>
       </div>
-      <CreditsGroupe photos={environsCredits} class="mt-5" />
       <p class="mt-5"><a href="/meyrueis-environs/">Découvrir Meyrueis et les environs</a></p>
     </div>
   </section>

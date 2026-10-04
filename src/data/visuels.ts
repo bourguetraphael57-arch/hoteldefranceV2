@@ -123,8 +123,8 @@ export const chiffresCles = [
 export const restaurantMosaique: (Visuel | Attendu)[] = [
   { photo: officielle('cheminee'), legende: 'Cheminée en pierre et marmites en fonte' },
   { photo: officielle('machine-cafe'), legende: 'L’expresso de la maison' },
-  { attendu: 'Salon particulier' },
-  { attendu: 'Salle voûtée de 70 places' },
+  { photo: officielle('plat-terroir'), legende: 'Plat de terroir cuisiné à l’hôtel' },
+  { photo: officielle('dessert-maison'), legende: 'Dessert maison servi au restaurant' },
 ];
 
 export const restaurantTerroir = {
@@ -146,6 +146,17 @@ export const restaurantTerroir = {
   ] satisfies Visuel[],
 };
 
+/** Page restaurant : plats du terroir (photos réelles du terroir). */
+export const restaurantPlatsAttendus: (Visuel | Attendu)[] = [
+  { photo: officielle('plat-terroir'), legende: 'Galette feuilletée et son fricandeau rôti' },
+  { photo: officielle('petit-dejeuner-croissant'), legende: 'Saveurs et spécialités régionales' },
+  { photo: officielle('dessert-maison'), legende: 'Pâtisseries maison et douceurs de saison' },
+];
+
+export const restaurantPlatsLabel =
+  'Plats et saveurs du terroir au Grand Hôtel de France';
+
+
 /** Page offres : image d'ouverture de chaque catégorie (circuits : une image par offre, voir offres.ts). */
 export const offresCategories: Partial<Record<'sejour' | 'restauration' | 'groupes', Visuel>> = {
   sejour: { photo: officielle('facade'), legende: 'La terrasse abritée du restaurant, devant la façade', position: '50% 80%' },
@@ -157,8 +168,8 @@ export const offresCategories: Partial<Record<'sejour' | 'restauration' | 'group
 export const groupesVisuels = {
   seminaire: { photo: officielle('seminaire'), legende: 'La salle de séminaires : charpente apparente, tables en U, écran' },
   circuitsSurtitre: 'À moto, à pied ou en autocar',
-  salleGroupe: { attendu: 'Salle voûtée du restaurant, dressée pour un groupe' } satisfies Attendu,
-  vueSeminaire: { attendu: 'Vue depuis la salle de séminaires' } satisfies Attendu,
+  salleGroupe: { photo: officielle('plat-terroir'), legende: 'Cuisine du terroir et repas servis pour les groupes' } as (Visuel | Attendu),
+  vueSeminaire: { photo: officielle('seminaire-vue'), legende: 'Vue dégagée sur la nature depuis la salle de séminaires' } as (Visuel | Attendu),
 };
 
 /** Meyrueis et environs : mosaïque du village (ordre = placement dans la grille). */
@@ -201,8 +212,8 @@ export const infosVisuels = {
   acces: { photo: officielle('facade'), legende: 'L’hôtel et sa terrasse, 10 place Jean Séquier', position: '50% 40%' },
   equipements: [
     { photo: officielle('piscine'), legende: 'Piscine extérieure, pelouse et transats' },
-    { attendu: 'Jardin belvédère', legende: 'Jardin belvédère' },
-    { attendu: 'Parking et garage deux-roues', legende: 'Parking privé et garage deux-roues' },
+    { photo: officielle('seminaire-vue'), legende: 'Salle sous charpente et vue sur les reliefs' },
+    { photo: officielle('cheminee'), legende: 'Salon près de la grande cheminée en pierre' },
   ] satisfies (Visuel | Attendu)[],
 };
 
@@ -215,12 +226,11 @@ export function estAttendu(v: Visuel | Attendu): v is Attendu {
 
 /**
  * Vignettes des cartes offre (accueil, chambres, offres, groupes), par slug d'offre.
- * `attendu` : la photo juste reste à prendre à l'hôtel (on n'illustre pas avec un autre sujet).
  */
 export const offresPhotos: Record<string, Visuel | Attendu> = {
   'demi-pension': { photo: officielle('double-3'), legende: 'Une chambre double, celle de la formule pour deux' },
   'petit-dejeuner': { photo: officielle('machine-cafe'), legende: 'La machine à expresso de la maison' },
-  'demi-pension-groupe': { attendu: 'Salle voûtée dressée pour un groupe' },
+  'demi-pension-groupe': { photo: officielle('plat-terroir'), legende: 'Cuisine du terroir et repas servis pour les groupes' },
   'journee-etude': { photo: officielle('seminaire'), legende: 'La salle de séminaires, tables en U' },
   'circuit-voitures-motos-velos': { photo: libre('gorges-jonte'), legende: 'La route D996 dans les gorges de la Jonte' },
   'circuit-randonnees': { photo: libre('causse-mejean'), legende: 'Pâturages du causse Méjean' },
@@ -258,6 +268,11 @@ const usagesEtablissement: Record<string, string> = {
   seminaire: 'Salle de séminaires',
   cheminee: 'Cheminée',
   'machine-cafe': 'Machine à café',
+  'plat-terroir': 'Cuisine et plats du terroir',
+  'dessert-maison': 'Desserts maison',
+  'seminaire-vue': 'Vue depuis la salle de séminaires',
+  'bisons-randals': 'Bisons des Randals',
+  'petit-dejeuner-croissant': 'Buffet petit-déjeuner',
 };
 
 /** Toutes les photos officielles avec leur usage (chambres par catégorie, salle de bain, établissement). */

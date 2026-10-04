@@ -62,7 +62,7 @@ export const chambres: Chambre[] = [
     capacite: 3,
     resume: 'Pour trois personnes : une famille avec un enfant ou un petit groupe d’amis.',
     roomtcode: '439122',
-    aConfirmer: ['composition de la literie', 'surface'],
+    aConfirmer: ['composition de la literie', 'surface', 'seconde vue de la chambre (une seule photo actuellement disponible)'],
   },
   {
     slug: 'chambre-familiale',
@@ -71,7 +71,7 @@ export const chambres: Chambre[] = [
     capacite: 4,
     resume: 'Pour quatre personnes, pensée pour les familles en vacances en Lozère.',
     roomtcode: '439123',
-    aConfirmer: ['composition de la literie', 'surface', 'existence d’un duplex (cité une fois sur le site actuel)'],
+    aConfirmer: ['composition de la literie', 'surface', 'existence d’un duplex (cité une fois sur le site actuel)', 'photo réelle montrant les 4 couchages'],
   },
 ];
 

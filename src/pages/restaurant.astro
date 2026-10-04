@@ -4,12 +4,13 @@ import Breadcrumbs from '../components/Breadcrumbs.astro';
 import PageHero from '../components/PageHero.astro';
 import PhotoPending from '../components/PhotoPending.astro';
 import Cliche from '../components/Cliche.astro';
-import CreditsGroupe from '../components/CreditsGroupe.astro';
 import Divider from '../components/motion/Divider.astro';
 import Tasse from '../components/motion/Tasse.astro';
 import Nuit from '../components/motion/Nuit.astro';
-import { reperesRepas } from '../data/motion';
-import { heros, restaurantMosaique, restaurantTerroir, estAttendu, type Visuel } from '../data/visuels';
+import Annotation from '../components/motion/Annotation.astro';
+import Couverts from '../components/motion/Couverts.astro';
+import { reperesRepas, annotationsRestaurant } from '../data/motion';
+import { heros, restaurantMosaique, restaurantTerroir, restaurantPlatsAttendus, restaurantPlatsLabel, estAttendu, type Visuel } from '../data/visuels';
 import { restaurant } from '../data/restaurant';
 import { hotel } from '../data/hotel';
 import { seo } from '../data/seo';
@@ -52,7 +53,6 @@ const ld = {
         {photosMosaique.map((v, i) => <Cliche visuel={v} overlay caption="legende" sizes={i === 0 ? '(min-width: 72rem) 46rem, (min-width: 48rem) 64vw, 100vw' : '(min-width: 72rem) 24rem, (min-width: 48rem) 32vw, 50vw'} />)}
         {espacesAttendus.length > 0 && <PhotoPending label={espacesAttendus.join(', ')} ratio="auto" />}
       </div>
-      <CreditsGroupe photos={photosMosaique.map((v) => v.photo)} class="mt-4" />
     </div>
   </section>
 
@@ -69,9 +69,6 @@ const ld = {
       <div class="terroir__photos">
         {restaurantTerroir.photos.map((v) => <Cliche visuel={v} caption="legende" sizes="(min-width: 56rem) 18rem, 45vw" />)}
       </div>
-    </div>
-    <div class="container">
-      <CreditsGroupe photos={restaurantTerroir.photos.map((v) => v.photo)} class="mt-5" />
     </div>
   </section>
 
@@ -109,17 +106,66 @@ const ld = {
     </div>
   </section>
 
-  <Divider variant="pins" />
+  <Divider variant="causses" />
 
   <section class="section" aria-labelledby="titre-menus" id="menus">
     <div class="container">
       <div class="section__head">
-        <h2 id="titre-menus">Menus</h2>
+        <div style="display: inline-flex; align-items: center; gap: 0.75rem;">
+          <Couverts class="m-couverts" />
+          <h2 id="titre-menus" style="margin: 0;">Menus</h2>
+        </div>
         <p>Les menus évoluent au fil des saisons.</p>
       </div>
       <div class="menus mt-5">
-        {restaurant.menus.map((m, i) => (
-          <section class:list={['menu-card', { 'menu-card--vedette': i === 0, 'menu-card--ardoise': i === 1 }]} aria-labelledby={`menu-${m.id}`}>
+        {restaurant.menus.slice(0, 1).map((m) => (
+          <section class="menu-card menu-card--vedette" aria-labelledby={`menu-${m.id}`}>
+            <div class="menu-card__head">
+              <div>
+                <h3 id={`menu-${m.id}`}><span>{m.titre}</span> <span class="price">{m.prix}</span></h3>
+                <p class="muted">{m.formule}{m.note && ` — ${m.note}`}</p>
+              </div>
+              <Annotation vers="bas-gauche" ton="pin" class="menus__annotation">{annotationsRestaurant.terroir}</Annotation>
+            </div>
+            {m.services.map((s) => (
+              <>
+                <h4>{s.titre}</h4>
+                <ul>
+                  {s.plats.map((p) => <li>{p.nom}{p.detail && <span class="detail">{p.detail}</span>}</li>)}
+                </ul>
+              </>
+            ))}
+          </section>
+        ))}
+
+        <aside class="menus-bandeau" aria-labelledby="titre-plats-bandeau">
+          <div class="menus-bandeau__head">
+            <p class="eyebrow hand">Cuisine du terroir</p>
+            <h3 id="titre-plats-bandeau" class="menus-bandeau__titre">{restaurantPlatsLabel}</h3>
+          </div>
+          <ul class="menus-bandeau__grid" aria-label="Plats et spécialités du terroir">
+            {restaurantPlatsAttendus.map((plat) => (
+              <li class="menus-bandeau__item">
+                {estAttendu(plat) ? (
+                  <figure class="cliche">
+                    <PhotoPending label={plat.attendu} ratio="16 / 10" class="menus-bandeau__photo" />
+                    {plat.legende && (
+                      <figcaption class="cliche__caption">
+                        <span class="cliche__legende">{plat.attendu}</span>
+                        <span class="cliche__detail">{plat.legende}</span>
+                      </figcaption>
+                    )}
+                  </figure>
+                ) : (
+                  <Cliche visuel={plat} caption="legende" class="menus-bandeau__photo" sizes="(min-width: 60rem) 22rem, 90vw" />
+                )}
+              </li>
+            ))}
+          </ul>
+        </aside>
+
+        {restaurant.menus.slice(1).map((m) => (
+          <section class="menu-card menu-card--ardoise" aria-labelledby={`menu-${m.id}`}>
             <h3 id={`menu-${m.id}`}><span>{m.titre}</span> <span class="price">{m.prix}</span></h3>
             <p class="muted">{m.formule}{m.note && ` — ${m.note}`}</p>
             {m.services.map((s) => (
@@ -132,9 +178,15 @@ const ld = {
             ))}
           </section>
         ))}
-        <section class="menu-card" aria-labelledby="menu-desserts">
-          <h3 id="menu-desserts">{restaurant.desserts.titre}</h3>
-          <p class="muted">{restaurant.desserts.note}</p>
+
+        <section class="menu-card menu-card--desserts" aria-labelledby="menu-desserts">
+          <div class="menu-card__head">
+            <div>
+              <h3 id="menu-desserts"><span>{restaurant.desserts.titre}</span></h3>
+              <p class="muted">{restaurant.desserts.note}</p>
+            </div>
+            <Annotation vers="haut-gauche" ton="accent" class="menus__annotation">{annotationsRestaurant.desserts}</Annotation>
+          </div>
           <ul>
             {restaurant.desserts.plats.map((p) => <li>{p.nom}{p.detail && <span class="detail">{p.detail}</span>}</li>)}
           </ul>
@@ -142,4 +194,5 @@ const ld = {
       </div>
     </div>
   </section>
+
 </BaseLayout>

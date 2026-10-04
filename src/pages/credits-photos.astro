@@ -17,10 +17,16 @@ const officielles = photosOfficiellesAvecUsage(Object.fromEntries(chambres.map((
       <div class="table-wrap" role="region" aria-labelledby="caption-credits" tabindex="0">
         <table class="table table--fiches table--credits">
           <caption id="caption-credits">{t.libres.caption(photos.length)}</caption>
-          <thead><tr><th scope="col">Sujet</th><th scope="col">Auteur</th><th scope="col">Licence</th><th scope="col">Source</th></tr></thead>
+          <thead><tr><th scope="col" class="table-credits__col-thumb">Aperçu</th><th scope="col">Sujet</th><th scope="col">Auteur</th><th scope="col">Licence</th><th scope="col">Source</th></tr></thead>
           <tbody>
             {photos.map((p) => (
               <tr>
+                <td class="table-credits__thumb" data-label="Aperçu">
+                  <picture>
+                    <source type="image/webp" srcset={`${p.src}-800.webp`} />
+                    <img src={`${p.src}-800.jpg`} alt="" width="80" height="53" loading="lazy" decoding="async" />
+                  </picture>
+                </td>
                 <th scope="row">{p.sujet}</th>
                 <td data-label="Auteur">{p.auteur}</td>
                 <td data-label="Licence"><a href={p.licenceUrl} rel="license noopener">{p.licence}</a></td>
@@ -39,10 +45,16 @@ const officielles = photosOfficiellesAvecUsage(Object.fromEntries(chambres.map((
       <div class="table-wrap" role="region" aria-labelledby="caption-officielles" tabindex="0">
         <table class="table table--fiches table--credits">
           <caption id="caption-officielles">{t.officielles.caption(officielles.length)}</caption>
-          <thead><tr><th scope="col">Photo</th><th scope="col">Usage</th><th scope="col">Droits</th></tr></thead>
+          <thead><tr><th scope="col" class="table-credits__col-thumb">Aperçu</th><th scope="col">Photo</th><th scope="col">Usage</th><th scope="col">Droits</th></tr></thead>
           <tbody>
             {officielles.map(({ photo, usage }) => (
               <tr>
+                <td class="table-credits__thumb" data-label="Aperçu">
+                  <picture>
+                    <source type="image/webp" srcset={`${photo.src}-800.webp`} />
+                    <img src={`${photo.src}-800.jpg`} alt="" width="80" height="53" loading="lazy" decoding="async" />
+                  </picture>
+                </td>
                 <th scope="row">{photo.alt}{photo.remarque && <><br /><small class="muted">{photo.remarque}</small></>}</th>
                 <td data-label="Usage">{usage}</td>
                 <td data-label="Droits">{t.officielles.mention}</td>

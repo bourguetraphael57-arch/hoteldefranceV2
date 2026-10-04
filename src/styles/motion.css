@@ -188,6 +188,59 @@
   }
   @keyframes m-twinkle { from { opacity: 1; } to { opacity: .3; } }
 
+  /* Clé de chambre ancienne */
+  .m-cle { display: inline-block; width: 4.5rem; aspect-ratio: 1; color: var(--c-accent); flex: none; }
+  .m-cle svg { width: 100%; height: 100%; }
+  .m-cle__num { font-family: var(--ff-hand); font-size: 11px; font-weight: 600; fill: currentColor; }
+  .m-cle.is-playing svg, .m-cle:hover svg { animation: m-key-swing 3.2s ease-in-out infinite; transform-origin: 24px 24px; }
+  @keyframes m-key-swing {
+    0%, 100% { rotate: 0deg; }
+    30% { rotate: 6deg; }
+    70% { rotate: -4deg; }
+  }
+
+  /* Boussole / Rose des vents */
+  .m-boussole { display: inline-block; width: 5.5rem; aspect-ratio: 1; color: var(--c-pin); flex: none; }
+  .m-boussole--sm { width: 3.5rem; }
+  .m-boussole--lg { width: 7.5rem; }
+  .m-boussole svg { width: 100%; height: 100%; }
+  .m-boussole__ring { stroke-width: 1.8; }
+  .m-boussole__ring-inner { stroke-width: 1; stroke-dasharray: 2 3; }
+  .m-boussole__cardinal { font-family: var(--ff-title); font-size: 8px; font-weight: 700; fill: currentColor; }
+  .m-boussole__needle-n { fill: var(--c-accent); stroke: var(--c-accent); stroke-width: 1; }
+  .m-boussole__needle-s { fill: var(--c-border-strong); stroke: var(--c-border-strong); stroke-width: 1; }
+  .m-boussole__pivot { fill: var(--c-surface); stroke: currentColor; stroke-width: 1.5; }
+  .m-boussole.is-visible .m-boussole__needle {
+    animation: m-needle-settle 2.4s cubic-bezier(.34, 1.56, .64, 1) both;
+    transform-origin: 42px 42px;
+  }
+  @keyframes m-needle-settle {
+    0% { rotate: -70deg; opacity: 0; }
+    40% { rotate: 22deg; opacity: 1; }
+    70% { rotate: -8deg; }
+    88% { rotate: 3deg; }
+    100% { rotate: 0deg; opacity: 1; }
+  }
+
+  /* Tampon postal / Sceau d'époque */
+  .m-tampon { display: inline-block; width: 6.5rem; aspect-ratio: 1; color: var(--c-accent); opacity: .88; rotate: -6deg; flex: none; }
+  .m-tampon svg { width: 100%; height: 100%; }
+  .m-tampon__outer { stroke-width: 2.2; }
+  .m-tampon__inner { stroke-width: 1.2; stroke-dasharray: 4 2; }
+  .m-tampon__text-arc { font-family: var(--ff-title); font-size: 7px; font-weight: 700; letter-spacing: .06em; fill: currentColor; }
+  .m-tampon__year { font-family: var(--ff-hand); font-size: 13px; font-weight: 700; fill: currentColor; }
+  .m-tampon__sub { font-family: var(--ff-title); font-size: 6px; font-weight: 600; letter-spacing: .1em; fill: currentColor; }
+  .m-tampon.is-visible { animation: m-stamp-press .6s cubic-bezier(.17, .89, .32, 1.28) both; }
+  @keyframes m-stamp-press {
+    0% { scale: 1.25; opacity: 0; }
+    100% { scale: 1; opacity: .88; }
+  }
+
+  /* Couverts de table */
+  .m-couverts { display: inline-block; width: 3.5rem; aspect-ratio: 1; color: var(--c-pin); flex: none; }
+  .m-couverts svg { width: 100%; height: 100%; }
+  .m-couverts__base { stroke-dasharray: 2 4; opacity: .6; }
+
   /* ---------- Tracé lié au défilement (CSS seul, navigateurs compatibles) ---------- */
   @supports (animation-timeline: view()) {
     @media (prefers-reduced-motion: no-preference) {

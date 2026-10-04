@@ -136,7 +136,7 @@ Traité : les pistes transversales ci-dessus (PageHero avec image, mosaïques, c
 
 Reste ouvert :
 - Tous les sujets de la liste « À photographier à l'hôtel » : les emplacements affichent un bloc « photo à venir ». Aucune photo générique ne les remplace.
-- Les bisons des Randals, faute de photo libre exploitable.
+- Les bisons des Randals, faute de photo libre exploitable : emplacement PhotoPending adapté (« Photo à venir — Bisons sur le causse Noir »).
 - P2 : la page `/chambres/` reste assez répétitive (quatre cartes, puis le tableau). Les repères horaires du restaurant, au-dessus du tableau, sont gardés volontairement : ils ajoutent le petit-déjeuner et résument le dîner (« tous les soirs »).
 - P3 : la signature manuscrite (`.hand`) revient souvent ; un vide subsiste dans le hero de `/offres/` sur grand écran.
 - Les photos officielles de l'hôtel ne peuvent pas être mises en ligne sans l'autorisation écrite de l'établissement.

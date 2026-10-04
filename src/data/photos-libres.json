@@ -430,5 +430,17 @@
     "licence": "CC BY-SA 3.0",
     "licenceUrl": "https://creativecommons.org/licenses/by-sa/3.0/deed.fr",
     "source": "https://commons.wikimedia.org/wiki/File:FR48_Meyrueis_Foire_de_la_Saint-Michel_2012_10.JPG"
+  },
+  {
+    "id": "bisons-causse",
+    "sujet": "Bisons en Lozère",
+    "alt": "Troupeau de bisons évoluant dans un espace naturel en Lozère",
+    "src": "/images/libres/bisons-causse",
+    "largeur": 1554,
+    "hauteur": 880,
+    "auteur": "F Lamiot",
+    "licence": "CC BY 2.5",
+    "licenceUrl": "https://creativecommons.org/licenses/by/2.5/deed.fr",
+    "source": "https://commons.wikimedia.org/wiki/File:Bisons_groupeFrance.jpg"
   }
 ]

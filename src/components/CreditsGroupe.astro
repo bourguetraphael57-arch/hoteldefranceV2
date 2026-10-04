@@ -1,35 +1,8 @@
 ---
 /**
- * Légende de groupe pour les compositions serrées (mosaïques, bandeaux, vignettes) :
- * auteur, licence et source de chaque photo libre, et mention © hôtel pour les photos officielles.
- * Repliée sur mobile (résumé « Crédits des N photos »), dépliée ailleurs.
+ * Les crédits photos complets sont centralisés sur la page /credits-photos/
  */
-import { resoudre, creditOfficielCourt, type RefPhoto } from '../data/visuels';
+import type { RefPhoto } from '../data/visuels';
 
-interface Props { photos: RefPhoto[]; class?: string }
-const { photos, class: className } = Astro.props;
-const vues = new Set<string>();
-const items = photos.map(resoudre).filter((p) => (vues.has(p.src) ? false : (vues.add(p.src), true)));
-const libres = items.filter((p) => !p.officielle);
-const officielles = items.filter((p) => p.officielle);
+interface Props { photos?: RefPhoto[]; class?: string }
 ---
-<details class:list={['credit credits-groupe', className]} open data-credits-groupe>
-  <summary>Crédits des {items.length > 1 ? `${items.length} photos` : 'photos'}</summary>
-  <p class="credit credits-groupe__liste">
-  <span>Photos : </span>
-  {libres.map((p, i) => (
-    <span>{p.sujet} — {p.auteur}, <a href={p.licenceUrl} rel="license noopener">{p.licence}</a>, <a href={p.source} rel="noopener">source<span class="sr-only"> de la photo « {p.sujet} »</span></a>{i < libres.length - 1 || officielles.length > 0 ? ' · ' : '. '}</span>
-  ))}
-  {officielles.length > 0 && <span>{officielles.length > 1 ? 'photos de l’établissement' : 'photo de l’établissement'} {creditOfficielCourt}. </span>}
-  {officielles.filter((p) => p.remarque).map((p) => <span>{p.remarque} </span>)}
-  <a href="/credits-photos/">Tous les crédits photos</a>
-  </p>
-</details>
-<script>
-  // Sur mobile, les crédits des compositions serrées sont repliés (ils restent à un toucher) ;
-  // sans JS ou sur grand écran, ils sont affichés en entier.
-  const mq = matchMedia('(max-width: 47.99rem)');
-  const sync = () => document.querySelectorAll<HTMLDetailsElement>('[data-credits-groupe]').forEach((d) => { d.open = !mq.matches; });
-  sync();
-  mq.addEventListener('change', sync);
-</script>

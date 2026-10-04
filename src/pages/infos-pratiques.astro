@@ -6,6 +6,8 @@ import AccessibilityNotice from '../components/AccessibilityNotice.astro';
 import Cliche from '../components/Cliche.astro';
 import PhotoPending from '../components/PhotoPending.astro';
 import Itineraire from '../components/motion/Itineraire.astro';
+import Boussole from '../components/motion/Boussole.astro';
+import Divider from '../components/motion/Divider.astro';
 import { itineraireAcces } from '../data/motion';
 import { heros, infosVisuels, estAttendu, type Visuel, type Attendu } from '../data/visuels';
 
@@ -61,12 +63,17 @@ import { seo } from '../data/seo';
         <p><a class="btn btn--secondary" href={hotel.itineraire} rel="noopener">Calculer l’itinéraire<span class="sr-only"> (Google Maps, site externe)</span></a></p>
       </div>
       <div class="stack">
-        <h3 class="h4">À proximité</h3>
+        <div class="inline-flex">
+          <Boussole taille="sm" />
+          <h3 class="h4" style="margin: 0;">À proximité</h3>
+        </div>
         <Itineraire etapes={itineraireAcces.etapes} label={itineraireAcces.label} />
         <Cliche visuel={infosVisuels.acces} class="bleed" sizes="(min-width: 72rem) 32rem, (min-width: 56rem) 45vw, 100vw" />
       </div>
     </div>
   </section>
+
+  <Divider variant="riviere" />
 
   <section class="section" aria-labelledby="equipements">
     <div class="container">

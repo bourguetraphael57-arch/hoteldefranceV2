@@ -50,6 +50,12 @@ export const annotations = {
   terrasse: 'la terrasse aux beaux jours',
 };
 
+/** Annotations manuscrites du restaurant. */
+export const annotationsRestaurant = {
+  terroir: 'Bleu des Causses des caves de Peyrelade',
+  desserts: 'Fait maison',
+};
+
 /** Repères horaires du restaurant (tasse / lune). Le dîner n'est affiché que s'il est identique tous les jours. */
 const diners = new Set(restaurant.horaires.map((h) => h.diner));
 const dinerUnique = diners.size === 1 ? [...diners][0] : null;

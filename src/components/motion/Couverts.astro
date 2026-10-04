@@ -1,0 +1,23 @@
+---
+/**
+ * Couverts du terroir et cloche de restaurant au trait (cuisine de bistrot cévenol).
+ * Décor vectoriel élégant pour la table et le restaurant.
+ */
+interface Props {
+  class?: string;
+}
+const { class: className } = Astro.props;
+---
+<div class:list={['m-couverts', className]} data-motion="time" aria-hidden="true">
+  <svg viewBox="0 0 64 64" focusable="false" aria-hidden="true">
+    <!-- Fourchette gauche -->
+    <path class="m-draw" pathLength="1" d="M18 10 V26 C18 30 22 32 24 34 V54" style="--d: 0s" />
+    <path class="m-draw" pathLength="1" d="M22 10 V25" style="--d: 0.15s" />
+    <path class="m-draw" pathLength="1" d="M26 10 V25" style="--d: 0.25s" />
+    <path class="m-draw" pathLength="1" d="M30 10 V26 C30 30 26 32 24 34" style="--d: 0.35s" />
+    <!-- Couteau droit -->
+    <path class="m-draw" pathLength="1" d="M42 54 V30 C42 22 46 12 48 10 C48 20 48 26 48 30 V54 Z" style="--d: 0.45s" />
+    <!-- Ligne de table d'assiette -->
+    <path class="m-draw m-couverts__base" pathLength="1" d="M8 58 H56" style="--d: 0.6s" />
+  </svg>
+</div>

@@ -1,0 +1,32 @@
+---
+/**
+ * Clé de chambre d'hôtel ancienne au trait (Grand Hôtel de France).
+ * Décor vectoriel avec anneau ciselé, tige, panneton et porte-clé numéroté.
+ * Tracé au trait animé à l'entrée dans l'écran, balancement doux au repos.
+ */
+interface Props {
+  class?: string;
+  numero?: string;
+}
+const { class: className, numero = '1946' } = Astro.props;
+---
+<div class:list={['m-cle', className]} data-motion="time" aria-hidden="true">
+  <svg viewBox="0 0 72 72" focusable="false" aria-hidden="true">
+    <!-- Anneau ciselé de la clé -->
+    <circle class="m-draw" pathLength="1" cx="24" cy="24" r="14" style="--d: 0s" />
+    <circle class="m-draw" pathLength="1" cx="24" cy="24" r="9" style="--d: 0.2s" />
+    <path class="m-draw" pathLength="1" d="M24 10 V15 M24 33 V38 M10 24 H15 M33 24 H38" style="--d: 0.3s" />
+    <!-- Tige de la clé -->
+    <path class="m-draw" pathLength="1" d="M38 24 H62" style="--d: 0.4s" />
+    <!-- Bague de tige -->
+    <path class="m-draw" pathLength="1" d="M42 20 V28 M45 20 V28" style="--d: 0.5s" />
+    <!-- Panneton / dents de la clé -->
+    <path class="m-draw" pathLength="1" d="M54 24 V34 H58 V28 H62 V24" style="--d: 0.6s" />
+    <!-- Anneau du porte-clé -->
+    <path class="m-draw" pathLength="1" d="M24 38 C24 44 28 48 34 50" style="--d: 0.7s" />
+    <!-- Médaillon / étiquette numérotée -->
+    <ellipse class="m-draw" pathLength="1" cx="44" cy="54" rx="16" ry="11" style="--d: 0.8s" />
+    <!-- Texte sur l'étiquette -->
+    <text x="44" y="58" class="m-cle__num" text-anchor="middle">{numero}</text>
+  </svg>
+</div>

@@ -15,7 +15,7 @@ const { title, eyebrow, lead, photo } = Astro.props;
 ---
 {photo ? (
   <header class="page-hero page-hero--photo">
-    <Cliche visuel={photo} eager caption="credit" overlay sizes="100vw" class="page-hero__media" />
+    <Cliche visuel={photo} eager caption="aucune" sizes="100vw" class="page-hero__media" />
     <div class="container">
       <div class="page-hero__card">
         {eyebrow && <p class="eyebrow">{eyebrow}</p>}

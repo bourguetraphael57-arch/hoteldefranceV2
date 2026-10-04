@@ -43,13 +43,22 @@ const circuits = offresPubliees.filter((o) => o.categorie === 'circuits');
           <h3 id="titre-dpg">{groupe.titre}</h3>
           <Price prix={groupe.prix} unite={groupe.unite} base={groupe.base} indicatif={false} />
           <ul class="checklist">{groupe.inclus.map((x) => <li>{x}</li>)}</ul>
+          <div class="btn-row">
+            <a class="btn btn--secondary" href={`/contact/?objet=groupe&offre=${encodeURIComponent(groupe.titre)}`}>
+              Demander cette formule<span class="sr-only"> : {groupe.titre}</span>
+            </a>
+          </div>
         </article>
       </div>
       <div class="bleed bleed--droite bleed--sticky bleed--compact">
-        <PhotoPending label={groupesVisuels.salleGroupe.attendu} ratio="4 / 3" />
+        {estAttendu(groupesVisuels.salleGroupe)
+          ? <PhotoPending label={groupesVisuels.salleGroupe.attendu} ratio="4 / 3" />
+          : <Cliche visuel={groupesVisuels.salleGroupe} sizes="(min-width: 72rem) 36rem, (min-width: 56rem) 45vw, 100vw" />}
       </div>
     </div>
   </section>
+
+  <Divider variant="causses" />
 
   <section class="section" aria-labelledby="titre-seminaires">
     <div class="container split split--reverse">
@@ -57,20 +66,34 @@ const circuits = offresPubliees.filter((o) => o.categorie === 'circuits');
         <h2 id="titre-seminaires">Réunions et séminaires</h2>
         <p>Pour vos réunions, journées d’étude et séminaires, l’hôtel met à disposition une salle climatisée et équipée, avec vue sur le massif de l’Aigoual et le causse Méjean. Le wifi est gratuit.</p>
         <p>Des activités (saut à l’élastique, canyoning, via ferrata) et des dégustations chez des producteurs locaux (Brasseurs de la Jonte, fromagerie du Fédou) peuvent compléter le programme.</p>
+        <ul class="checklist">
+          <li>Salle de travail climatisée avec vue dégagée sur les reliefs</li>
+          <li>Disposition modulable (tables en U ou conférence), écran et wifi gratuit</li>
+          <li>Restauration sur place : cuisine du terroir et pauses gourmandes</li>
+          <li>Activités et découvertes locales sur mesure (producteurs, plein air)</li>
+        </ul>
         <article class="panel stack" id={etude.slug} aria-labelledby="titre-etude">
           <h3 id="titre-etude">{etude.titre}</h3>
-          <Price prix={etude.prix} unite={etude.unite} />
+          <p>{etude.resume}</p>
+          <Price prix={etude.prix} unite={etude.unite} indicatif={false} />
           <p class="muted">Contenu du forfait sur demande, selon votre programme.</p>
+          <div class="btn-row">
+            <a class="btn btn--secondary" href={`/contact/?objet=groupe&offre=${encodeURIComponent(etude.titre)}`}>
+              Demander un devis séminaire<span class="sr-only"> : {etude.titre}</span>
+            </a>
+          </div>
         </article>
       </div>
       <div class="bleed bleed--gauche">
         <Cliche visuel={groupesVisuels.seminaire} sizes="(min-width: 72rem) 36rem, (min-width: 56rem) 50vw, 100vw" />
-        <PhotoPending label={groupesVisuels.vueSeminaire.attendu} ratio="3 / 2" class="bleed__encart" />
+        {estAttendu(groupesVisuels.vueSeminaire)
+          ? <PhotoPending label={groupesVisuels.vueSeminaire.attendu} ratio="3 / 2" class="bleed__encart" />
+          : <Cliche visuel={groupesVisuels.vueSeminaire} sizes="(min-width: 56rem) 22rem, 40vw" class="bleed__encart" />}
       </div>
     </div>
   </section>
 
-  <Divider variant="crete" />
+  <Divider variant="gorges" />
 
   <section class="section section--alt" aria-labelledby="titre-circuits" id="circuits">
     <div class="container">
@@ -81,14 +104,19 @@ const circuits = offresPubliees.filter((o) => o.categorie === 'circuits');
       </div>
       <div class="grid grid--3 circuits-grid rail">
         {circuits.map((o) => (
-          <article class="panel offre-panel" id={o.slug === 'circuit-autocaristes' ? 'autocaristes' : undefined} aria-labelledby={`g-${o.slug}`}>
+          <article class="panel offre-panel" id={o.slug === 'circuit-autocaristes' ? 'autocaristes' : o.slug} aria-labelledby={`g-${o.slug}`}>
+            {o.slug === 'circuit-autocaristes' && <span id="circuit-autocaristes" class="sr-only" />}
             {(() => {
               const v = offresPhotos[o.slug];
-              return v && !estAttendu(v) && <Cliche visuel={v} overlay class="offre-panel__media" sizes="(min-width: 72rem) 24rem, (min-width: 40rem) 50vw, 100vw" />;
+              if (!v) return null;
+              if (estAttendu(v)) return <div class="offre-panel__media"><PhotoPending label={v.attendu} ratio="3 / 2" /></div>;
+              return <Cliche visuel={v} overlay class="offre-panel__media" sizes="(min-width: 72rem) 24rem, (min-width: 40rem) 50vw, 100vw" />;
             })()}
             <div class="offre-panel__body">
               <h3 id={`g-${o.slug}`}>{o.titre}</h3>
+              <p>{o.resume}</p>
               <Price prix={o.prix} unite={o.unite} indicatif={false} />
+              <p><strong>Au programme</strong></p>
               <ul class="checklist">{o.inclus.map((x) => <li>{x}</li>)}</ul>
               <div class="btn-row">
                 <a class="btn btn--secondary" href={`/contact/?objet=groupe&offre=${encodeURIComponent(o.titre)}`}>Demander ce circuit<span class="sr-only"> : {o.titre}</span></a>
