@@ -18,10 +18,10 @@ if ('IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: re
   });
   const below = (el: Element) => el.getBoundingClientRect().top >= innerHeight;
 
-  document.querySelectorAll<HTMLElement>('main .section__head, main .grid > *, main .split > *').forEach((el) => {
+  document.querySelectorAll<HTMLElement>('main .section__head, main .grid > *, main .split > *, main .trust-bar, main .avis-section, main .panel, main .mosaic > *').forEach((el) => {
     if (!below(el)) return;
     const i = Array.prototype.indexOf.call(el.parentElement?.children ?? [], el);
-    el.style.setProperty('--reveal-delay', `${Math.min(i, 3) * 90}ms`);
+    el.style.setProperty('--reveal-delay', `${Math.min(i, 4) * 90}ms`);
     el.classList.add('reveal');
     once.observe(el);
   });

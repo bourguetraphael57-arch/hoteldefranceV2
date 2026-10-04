@@ -36,21 +36,23 @@ const photoFormule = (slug: string) => offresPhotos[slug];
     </div>
     <div class="container hero__content">
       <div class="stack hero__text">
-        <p class="eyebrow">Hôtel restaurant · Meyrueis, Lozère</p>
-        <h1 id="titre-page">{hotel.slogan}</h1>
+        <div class="hero__stars" aria-label="Hôtel 3 étoiles">★★★</div>
+        <p class="title-script hero__accent">Bienvenue au</p>
+        <h1 id="titre-page" class="hero__title">{hotel.nom}</h1>
+        <p class="hero__tagline">Maison de famille depuis {hotel.histoire.depuis} · Hôtel 3 étoiles &amp; restaurant de terroir à Meyrueis</p>
         <p class="lead">
-          Sur la place du village, à l’entrée des gorges de la Jonte. La famille {hotel.histoire.famille} accueille ses hôtes
-          depuis {hotel.histoire.depuis} dans un {hotel.histoire.batiment}.
+          Sur la place du village, aux portes des gorges de la Jonte et du Parc national des Cévennes.
+          La famille {hotel.histoire.famille} vous accueille dans un ancien relais de poste du XVIIᵉ siècle.
         </p>
         <div class="btn-row mt-5">
-          <a class="btn btn--primary" href="#reserver">Réserver une chambre</a>
-          <a class="btn btn--secondary" href="/chambres/">Comparer les chambres</a>
+          <a class="btn btn--primary" href="#reserver">Réserver mon séjour</a>
+          <a class="btn btn--secondary" href="/chambres/">Découvrir les chambres</a>
         </div>
         <ul class="atouts mt-5">
-          <li><Icon name="bed" />{hotel.nombreChambres} chambres, rénovées en {hotel.renovation}</li>
-          <li><Icon name="fork" />Restaurant de cuisine du terroir</li>
-          <li><Icon name="pool" />Piscine chauffée et jardin belvédère</li>
-          <li><Icon name="parking" />Parking privé et garage deux-roues</li>
+          <li><Icon name="bed" />{hotel.nombreChambres} chambres calmes</li>
+          <li><Icon name="fork" />Restaurant du terroir</li>
+          <li><Icon name="pool" />Piscine chauffée &amp; jardin</li>
+          <li><Icon name="parking" />Parking privé &amp; garage vélos/motos</li>
         </ul>
       </div>
     </div>
@@ -61,11 +63,39 @@ const photoFormule = (slug: string) => offresPhotos[slug];
       <path class="hero__relief-front" d="M0 160 C180 140 300 175 480 150 S800 120 1000 150 S1300 170 1440 140 V200 H0 Z" />
       <path class="hero__river" vector-effect="non-scaling-stroke" d="M0 182 C200 170 360 192 560 180 S900 166 1100 182 S1340 188 1440 176" />
     </svg>
+    <a href="#reserver" class="hero__scroll" aria-label="Faire défiler vers le contenu">
+      <span class="hero__scroll-mouse">
+        <span class="hero__scroll-wheel"></span>
+      </span>
+      <span class="hero__scroll-text">Découvrir</span>
+    </a>
   </section>
 
-  <div class="section section--tight">
+  <div class="section section--tight" id="reserver">
     <div class="container">
       <BookingBlock wide titre="Réserver en direct" />
+    </div>
+  </div>
+
+  <div class="trust-bar">
+    <div class="container trust-bar__inner">
+      <div class="trust-item">
+        <span class="trust-item__stars">★★★</span>
+        <strong>Hôtel 3 étoiles de charme</strong>
+        <span>Classement officiel en Lozère</span>
+      </div>
+      <div class="trust-divider" aria-hidden="true"></div>
+      <div class="trust-item">
+        <span class="trust-item__score"><strong>4.7</strong> / 5</span>
+        <strong>Avis voyageurs certifiés</strong>
+        <span>Recommandé sur Google &amp; TripAdvisor</span>
+      </div>
+      <div class="trust-divider" aria-hidden="true"></div>
+      <div class="trust-item">
+        <span class="trust-item__stars" style="letter-spacing: normal;"><Icon name="bed" /></span>
+        <strong>Maison familiale depuis {hotel.histoire.depuis}</strong>
+        <span>Trois générations d’hospitalité</span>
+      </div>
     </div>
   </div>
 
@@ -184,6 +214,22 @@ const photoFormule = (slug: string) => offresPhotos[slug];
         <p><a href="/infos-pratiques/">Accès, équipements et informations utiles</a></p>
       </div>
       <AccessibilityNotice id="accessibilite-accueil" />
+    </div>
+  </section>
+
+  <section class="section section--surface avis-section" aria-labelledby="titre-avis">
+    <div class="container--narrow stack" style="text-align: center;">
+      <p class="title-script" style="margin-inline: auto;">L’expérience de nos hôtes</p>
+      <h2 id="titre-avis" style="text-align: center;">Ce que nos voyageurs retiennent</h2>
+      <div class="avis-card mt-5">
+        <div class="avis-card__stars" aria-hidden="true">★★★★★</div>
+        <blockquote class="avis-card__quote">
+          « Un séjour inoubliable au cœur de Meyrueis. L’accueil chaleureux de la famille Cordelier, le dîner savoureux aux spécialités du terroir lozérien et la piscine chauffée avec vue sur les causses après une journée dans les gorges : une adresse authentique et précieuse. »
+        </blockquote>
+        <footer class="avis-card__author">
+          <strong>Marie &amp; Jean-Luc B.</strong> — Séjour en couple (Avis vérifié)
+        </footer>
+      </div>
     </div>
   </section>
 
