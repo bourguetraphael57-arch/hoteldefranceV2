@@ -42,6 +42,13 @@ const hotelLd = {
   checkinTime: '15:00',
   checkoutTime: '11:00',
   numberOfRooms: hotel.nombreChambres,
+  priceRange: '€€',
+  currenciesAccepted: 'EUR',
+  starRating: {
+    '@type': 'Rating',
+    ratingValue: '3',
+    bestRating: '5',
+  },
 };
 ---
 <!doctype html>
@@ -64,6 +71,10 @@ const hotelLd = {
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={new URL(image, site).href} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={new URL(image, site).href} />
     <script is:inline>document.documentElement.classList.add('js');</script>
     {!noindex && <script type="application/ld+json" set:html={JSON.stringify(hotelLd)} />}
     <slot name="head" />

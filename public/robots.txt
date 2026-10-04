@@ -1,7 +1,4 @@
-# Maquette non officielle : ne pas indexer tant que l'hôtel n'a pas validé le site.
-# À remplacer à la mise en ligne par :
-#   User-agent: *
-#   Allow: /
-#   Sitemap: https://www.hotel-meyrueis-lozere.fr/sitemap-index.xml
 User-agent: *
-Disallow: /
+Allow: /
+
+Sitemap: https://www.hotel-meyrueis-lozere.fr/sitemap-index.xml

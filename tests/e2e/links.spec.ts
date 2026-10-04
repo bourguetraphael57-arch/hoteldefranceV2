@@ -45,7 +45,8 @@ test('tous les liens internes et ancres répondent', async ({ page, request }, i
 test('sitemap et robots', async ({ request }, info) => {
   test.skip(info.project.name !== 'bureau-1280');
   const robots = await (await request.get('/robots.txt')).text();
-  expect(robots).toMatch(/Disallow: \//);
+  expect(robots).toMatch(/Allow: \//);
+  expect(robots).toMatch(/Sitemap: /);
   const sm = await request.get('/sitemap-index.xml');
   expect(sm.status()).toBe(200);
 });
