@@ -1,0 +1,178 @@
+---
+interface Props {
+  class?: string;
+  style?: string;
+  width?: number | string;
+  height?: number | string;
+  variant?: 'color' | 'dark' | 'monochrome';
+}
+
+const {
+  class: className = '',
+  style: inlineStyle,
+  width = '100%',
+  height = 'auto',
+  variant = 'color',
+} = Astro.props;
+
+const navy = variant === 'dark' ? '#FFFFFF' : (variant === 'monochrome' ? 'currentColor' : '#1A2B49');
+const gold = variant === 'monochrome' ? 'currentColor' : '#C5A059';
+const divider = variant === 'dark' ? 'rgba(255,255,255,0.25)' : (variant === 'monochrome' ? 'currentColor' : '#E2D9CC');
+---
+
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 920 230"
+  width={width}
+  height={height}
+  fill="none"
+  class:list={['hotel-logo', className]}
+  style={inlineStyle}
+  role="img"
+  aria-label="Logo Grand Hôtel de France Meyrueis"
+>
+  <defs>
+    <g id={`logo-star-${variant}`}>
+      <polygon points="0,-7 2.16,-2.16 7.36,-1.85 3.42,1.67 4.62,6.79 0,4.05 -4.62,6.79 -3.42,1.67 -7.36,-1.85 -2.16,-2.16" fill={gold} />
+    </g>
+  </defs>
+
+  <style>
+    .hotel-logo__title {
+      font-family: 'Source Serif 4', 'Cinzel', 'Playfair Display', 'Didot', 'Baskerville', 'Georgia', serif;
+      font-size: 32px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-anchor: middle;
+    }
+    .hotel-logo__tagline {
+      font-family: -apple-system, BlinkMacSystemFont, 'Montserrat', 'Inter', 'Segoe UI', sans-serif;
+      font-size: 11.5px;
+      font-weight: 600;
+      letter-spacing: 0.36em;
+      text-anchor: middle;
+      text-transform: uppercase;
+    }
+  </style>
+
+  <!-- Left: Building facade -->
+  <g transform="translate(10, 0)">
+    <line x1="30" y1="192" x2="226" y2="192" stroke={navy} stroke-width="2.2" stroke-linecap="round" />
+    <line x1="40" y1="188" x2="216" y2="188" stroke={navy} stroke-width="1.2" stroke-linecap="round" />
+
+    <rect x="46" y="94" width="164" height="94" stroke={navy} stroke-width="2" fill="none" />
+
+    <!-- Roof -->
+    <path d="M 64 56 L 192 56 L 214 94 L 42 94 Z" stroke={navy} stroke-width="2" fill="none" stroke-linejoin="round" />
+    <line x1="60" y1="56" x2="196" y2="56" stroke={gold} stroke-width="2.2" stroke-linecap="round" />
+
+    <!-- Chimneys -->
+    <rect x="70" y="42" width="11" height="14" stroke={navy} stroke-width="1.6" fill="none" />
+    <line x1="68" y1="42" x2="83" y2="42" stroke={gold} stroke-width="2" stroke-linecap="round" />
+    <rect x="175" y="42" width="11" height="14" stroke={navy} stroke-width="1.6" fill="none" />
+    <line x1="173" y1="42" x2="188" y2="42" stroke={gold} stroke-width="2" stroke-linecap="round" />
+
+    <!-- Central Dormer -->
+    <path d="M 117 72 L 128 58 L 139 72 L 139 94 L 117 94 Z" stroke={navy} stroke-width="1.6" fill="none" stroke-linejoin="round" />
+    <path d="M 122 88 L 122 79 A 6 6 0 0 1 134 79 L 134 88 Z" stroke={gold} stroke-width="1.3" fill="none" />
+    <line x1="128" y1="73" x2="128" y2="88" stroke={gold} stroke-width="1" />
+
+    <!-- Left & Right Dormers -->
+    <path d="M 82 77 L 91 66 L 100 77 L 100 94 L 82 94 Z" stroke={navy} stroke-width="1.4" fill="none" stroke-linejoin="round" />
+    <rect x="86" y="80" width="10" height="11" rx="1" stroke={navy} stroke-width="1.1" fill="none" />
+    <path d="M 156 77 L 165 66 L 174 77 L 174 94 L 156 94 Z" stroke={navy} stroke-width="1.4" fill="none" stroke-linejoin="round" />
+    <rect x="160" y="80" width="10" height="11" rx="1" stroke={navy} stroke-width="1.1" fill="none" />
+
+    <!-- Cornice -->
+    <line x1="42" y1="98" x2="214" y2="98" stroke={gold} stroke-width="1.4" />
+    
+    <!-- Floor stringcourses -->
+    <line x1="46" y1="129" x2="210" y2="129" stroke={navy} stroke-width="1.1" />
+    <line x1="46" y1="160" x2="210" y2="160" stroke={gold} stroke-width="1.4" />
+
+    <!-- 3rd Floor Windows -->
+    <rect x="58" y="105" width="11" height="17" rx="1" stroke={navy} stroke-width="1.3" fill="none" />
+    <line x1="55" y1="106" x2="55" y2="121" stroke={navy} stroke-width="1" />
+    <line x1="72" y1="106" x2="72" y2="121" stroke={navy} stroke-width="1" />
+
+    <rect x="88" y="105" width="11" height="17" rx="1" stroke={navy} stroke-width="1.3" fill="none" />
+    <line x1="85" y1="106" x2="85" y2="121" stroke={navy} stroke-width="1" />
+    <line x1="102" y1="106" x2="102" y2="121" stroke={navy} stroke-width="1" />
+
+    <path d="M 121 103 L 128 99 L 135 103" stroke={gold} stroke-width="1.2" fill="none" />
+    <rect x="122.5" y="105" width="11" height="17" rx="1" stroke={navy} stroke-width="1.3" fill="none" />
+    <line x1="119.5" y1="106" x2="119.5" y2="121" stroke={navy} stroke-width="1" />
+    <line x1="136.5" y1="106" x2="136.5" y2="121" stroke={navy} stroke-width="1" />
+
+    <rect x="157" y="105" width="11" height="17" rx="1" stroke={navy} stroke-width="1.3" fill="none" />
+    <line x1="154" y1="106" x2="154" y2="121" stroke={navy} stroke-width="1" />
+    <line x1="171" y1="106" x2="171" y2="121" stroke={navy} stroke-width="1" />
+
+    <rect x="187" y="105" width="11" height="17" rx="1" stroke={navy} stroke-width="1.3" fill="none" />
+    <line x1="184" y1="106" x2="184" y2="121" stroke={navy} stroke-width="1" />
+    <line x1="201" y1="106" x2="201" y2="121" stroke={navy} stroke-width="1" />
+
+    <!-- 2nd Floor Windows -->
+    <rect x="58" y="136" width="11" height="18" rx="1" stroke={navy} stroke-width="1.3" fill="none" />
+    <line x1="63.5" y1="136" x2="63.5" y2="154" stroke={navy} stroke-width="0.8" />
+    <line x1="55" y1="137" x2="55" y2="153" stroke={navy} stroke-width="1" />
+    <line x1="72" y1="137" x2="72" y2="153" stroke={navy} stroke-width="1" />
+
+    <rect x="88" y="136" width="11" height="18" rx="1" stroke={navy} stroke-width="1.3" fill="none" />
+    <line x1="93.5" y1="136" x2="93.5" y2="154" stroke={navy} stroke-width="0.8" />
+    <line x1="85" y1="137" x2="85" y2="153" stroke={navy} stroke-width="1" />
+    <line x1="102" y1="137" x2="102" y2="153" stroke={navy} stroke-width="1" />
+
+    <rect x="122.5" y="136" width="11" height="18" rx="1" stroke={navy} stroke-width="1.3" fill="none" />
+    <line x1="128" y1="136" x2="128" y2="154" stroke={navy} stroke-width="0.8" />
+    <line x1="119.5" y1="137" x2="119.5" y2="153" stroke={navy} stroke-width="1" />
+    <line x1="136.5" y1="137" x2="136.5" y2="153" stroke={navy} stroke-width="1" />
+    <line x1="121" y1="151" x2="135" y2="151" stroke={gold} stroke-width="1.3" />
+
+    <rect x="157" y="136" width="11" height="18" rx="1" stroke={navy} stroke-width="1.3" fill="none" />
+    <line x1="162.5" y1="136" x2="162.5" y2="154" stroke={navy} stroke-width="0.8" />
+    <line x1="154" y1="137" x2="154" y2="153" stroke={navy} stroke-width="1" />
+    <line x1="171" y1="137" x2="171" y2="153" stroke={navy} stroke-width="1" />
+
+    <rect x="187" y="136" width="11" height="18" rx="1" stroke={navy} stroke-width="1.3" fill="none" />
+    <line x1="192.5" y1="136" x2="192.5" y2="154" stroke={navy} stroke-width="0.8" />
+    <line x1="184" y1="137" x2="184" y2="153" stroke={navy} stroke-width="1" />
+    <line x1="201" y1="137" x2="201" y2="153" stroke={navy} stroke-width="1" />
+
+    <!-- Ground Floor Entrance & Windows -->
+    <path d="M 57 188 L 57 173 A 6.5 6.5 0 0 1 70 173 L 70 188 Z" stroke={navy} stroke-width="1.3" fill="none" />
+    <path d="M 87 188 L 87 173 A 6.5 6.5 0 0 1 100 173 L 100 188 Z" stroke={navy} stroke-width="1.3" fill="none" />
+
+    <path d="M 117 188 L 117 171 A 11 11 0 0 1 139 171 L 139 188" stroke={navy} stroke-width="2" fill="none" />
+    <path d="M 119.5 188 L 119.5 172 A 8.5 8.5 0 0 1 136.5 172 L 136.5 188" stroke={gold} stroke-width="1" fill="none" />
+    <line x1="128" y1="174" x2="128" y2="188" stroke={navy} stroke-width="1.2" />
+    <polygon points="126,166 130,166 129,170 127,170" fill={gold} />
+
+    <path d="M 156 188 L 156 173 A 6.5 6.5 0 0 1 169 173 L 169 188 Z" stroke={navy} stroke-width="1.3" fill="none" />
+    <path d="M 186 188 L 186 173 A 6.5 6.5 0 0 1 199 173 L 199 188 Z" stroke={navy} stroke-width="1.3" fill="none" />
+
+    <circle cx="112" cy="175" r="1.8" fill={gold} />
+    <circle cx="144" cy="175" r="1.8" fill={gold} />
+  </g>
+
+  <!-- Divider -->
+  <line x1="262" y1="62" x2="262" y2="178" stroke={divider} stroke-width="1.2" stroke-linecap="round" />
+  <circle cx="262" cy="120" r="2.5" fill={gold} />
+
+  <!-- Right: 3 Stars -->
+  <g transform="translate(585, 75)">
+    <use href={`#logo-star-${variant}`} x="-32" y="0" />
+    <use href={`#logo-star-${variant}`} x="0" y="0" />
+    <use href={`#logo-star-${variant}`} x="32" y="0" />
+  </g>
+
+  <!-- Title -->
+  <text x="585" y="126" class="hotel-logo__title" fill={navy}>GRAND HÔTEL DE FRANCE</text>
+
+  <!-- Tagline -->
+  <line x1="330" y1="156" x2="410" y2="156" stroke={gold} stroke-width="1" stroke-linecap="round" opacity="0.65" />
+  <polygon points="418,156 421,153.5 424,156 421,158.5" fill={gold} />
+  <text x="585" y="160.5" class="hotel-logo__tagline" fill={gold}>MEYRUEIS · DEPUIS 1946</text>
+  <polygon points="746,156 749,153.5 752,156 749,158.5" fill={gold} />
+  <line x1="760" y1="156" x2="840" y2="156" stroke={gold} stroke-width="1" stroke-linecap="round" opacity="0.65" />
+</svg>

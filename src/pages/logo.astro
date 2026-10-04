@@ -1,0 +1,51 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import Logo from '../components/Logo.astro';
+import { hotel } from '../data/hotel';
+---
+
+<BaseLayout title={`Identité visuelle & Logo | ${hotel.nom}`} description="Présentation et téléchargement du logo officiel du Grand Hôtel de France à Meyrueis.">
+  <Breadcrumbs items={[{ href: '/logo/', label: 'Identité visuelle' }]} />
+
+  <section class="section">
+    <div class="container--narrow stack">
+      <h1>Identité visuelle &amp; Logo</h1>
+      <p class="lead">
+        Conception du logo officiel du {hotel.nom} en disposition horizontale : illustration vectorielle épurée de la façade historique du relais de poste du XVIIᵉ siècle, trois étoiles dorées et typographie statutaire à empattements.
+      </p>
+
+      <!-- Version principale fond clair -->
+      <div class="panel mt-6" style="background: #FFFFFF; padding: 2.5rem; border-radius: var(--radius-lg); border: 1px solid var(--c-border); box-shadow: var(--shadow-1);">
+        <p class="eyebrow" style="color: var(--c-text-muted); margin-bottom: 1.5rem;">Version principale · Fond clair</p>
+        <div style="display: flex; justify-content: center; align-items: center; padding: 1rem 0;">
+          <Logo width="100%" height="auto" style="max-width: 620px;" />
+        </div>
+      </div>
+
+      <!-- Version sombre -->
+      <div class="panel mt-5" style="background: #1A2B49; padding: 2.5rem; border-radius: var(--radius-lg); box-shadow: var(--shadow-2);">
+        <p class="eyebrow" style="color: rgba(255,255,255,0.7); margin-bottom: 1.5rem;">Version inversée · Fond sombre</p>
+        <div style="display: flex; justify-content: center; align-items: center; padding: 1rem 0;">
+          <Logo variant="dark" width="100%" height="auto" style="max-width: 620px;" />
+        </div>
+      </div>
+
+      <!-- Version image haute définition -->
+      <div class="panel mt-5" style="background: #FFFFFF; padding: 2rem; border-radius: var(--radius-lg); border: 1px solid var(--c-border);">
+        <p class="eyebrow" style="color: var(--c-text-muted); margin-bottom: 1rem;">Rendu graphique haute résolution</p>
+        <img src="/images/logo/logo-hotel-de-france.jpg" alt="Rendu graphique du logo Grand Hôtel de France" style="width: 100%; height: auto; border-radius: var(--radius-md);" />
+      </div>
+
+      <!-- Téléchargements -->
+      <div class="stack mt-6">
+        <h2>Fichiers sources &amp; Téléchargements</h2>
+        <ul class="checklist">
+          <li><strong>Format vectoriel SVG (fond transparent) :</strong> <a href="/images/logo/logo-hotel-de-france.svg" download>logo-hotel-de-france.svg</a> (idéal pour le web, l'impression, la papeterie)</li>
+          <li><strong>Bannière vectorielle SVG (fond blanc) :</strong> <a href="/images/logo/logo-hotel-de-france-banner.svg" download>logo-hotel-de-france-banner.svg</a></li>
+          <li><strong>Rendu image haute définition (1920×1080) :</strong> <a href="/images/logo/logo-hotel-de-france.jpg" download>logo-hotel-de-france.jpg</a></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
