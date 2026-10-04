@@ -88,7 +88,7 @@ const hotelLd = {
   <body>
     <a class="skip-link" href="#contenu">Aller au contenu</a>
     <div class="header-sentinel" aria-hidden="true"></div>
-    <header class="site-header" data-header>
+    <header class:list={['site-header', { 'site-header--transparent': path === '/' }]} data-header>
       <div class="container site-header__inner">
         <a class="brand" href="/" aria-label={`${hotel.nom} — Accueil`}>
           <span class="brand__mark" aria-hidden="true">

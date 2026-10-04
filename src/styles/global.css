@@ -399,9 +399,47 @@
     position: sticky; top: 0; z-index: 50;
     background: var(--c-surface);
     border-bottom: 1px solid var(--c-border);
-    transition: box-shadow 150ms;
+    transition: background-color 250ms ease, border-color 250ms ease, box-shadow 250ms ease;
   }
-  .site-header.is-scrolled { box-shadow: var(--shadow-2); }
+  .site-header.is-scrolled {
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 4px 20px rgba(26, 43, 73, 0.08);
+  }
+  @media (min-width: 64rem) {
+    .site-header--transparent:not(.is-scrolled) {
+      background: transparent;
+      border-bottom-color: rgba(255, 255, 255, 0.15);
+    }
+    .site-header--transparent:not(.is-scrolled) .brand__name {
+      color: #FFFFFF;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+    }
+    .site-header--transparent:not(.is-scrolled) .brand__sub {
+      color: rgba(255, 255, 255, 0.9);
+      text-shadow: 0 1px 6px rgba(0, 0, 0, 0.5);
+    }
+    .site-header--transparent:not(.is-scrolled) .brand__building polygon,
+    .site-header--transparent:not(.is-scrolled) .brand__building rect {
+      stroke: #FFFFFF;
+    }
+    .site-header--transparent:not(.is-scrolled) .site-nav li a {
+      color: #FFFFFF;
+      text-shadow: 0 1px 6px rgba(0, 0, 0, 0.6);
+    }
+    .site-header--transparent:not(.is-scrolled) .site-nav li a:hover {
+      color: var(--c-gold);
+    }
+    .site-header--transparent:not(.is-scrolled) .header-actions .tel {
+      border-color: rgba(255, 255, 255, 0.4);
+      color: #FFFFFF;
+    }
+    .site-header--transparent:not(.is-scrolled) .header-actions .tel:hover {
+      border-color: var(--c-gold);
+      color: var(--c-gold);
+    }
+  }
   .site-header__inner {
     display: flex; align-items: center; gap: var(--sp-4);
     min-height: var(--header-h);
@@ -539,7 +577,9 @@
     isolation: isolate;
     display: grid;
     align-items: end;
-    min-height: min(88svh, 54rem);
+    min-height: min(92svh, 56rem);
+    margin-top: calc(-1 * var(--header-h));
+    padding-top: var(--header-h);
     overflow: hidden;
     background: #1E1915;
     color: #fff;
@@ -554,7 +594,7 @@
       linear-gradient(to right, rgb(22 18 14 / .72), rgb(22 18 14 / .35) 45%, transparent 70%);
   }
   .hero__content { padding-block: clamp(var(--sp-6), 8vh, var(--sp-8)) calc(var(--sp-6) + clamp(4rem, 9vw, 8rem)); }
-  .hero__text { max-width: 46rem; }
+  .hero__text { max-width: 48rem; }
   .hero__text > * { animation: hero-rise .8s cubic-bezier(.2, .7, .2, 1) both; }
   .hero__text > :nth-child(2) { animation-delay: .08s; }
   .hero__text > :nth-child(3) { animation-delay: .16s; }
@@ -568,19 +608,31 @@
     font-size: 1.25rem;
     line-height: 1;
   }
+  .hero__stars-inline {
+    color: var(--c-gold);
+    font-size: clamp(1.15rem, 2.2vw, 1.85rem);
+    letter-spacing: 0.25em;
+    line-height: 1;
+    white-space: nowrap;
+    vertical-align: middle;
+  }
   .hero__accent {
     color: var(--c-gold);
     font-size: clamp(1.85rem, 3.5vw, 2.75rem);
     margin-bottom: -0.65rem;
   }
   .hero__title {
-    font-size: clamp(2.5rem, 1.8rem + 4.2vw, 4.85rem);
+    font-size: clamp(2.4rem, 1.8rem + 4vw, 4.75rem);
     font-family: var(--ff-title);
     font-weight: 700;
     line-height: 1.05;
     letter-spacing: 0.02em;
     color: #fff;
     text-shadow: 0 4px 28px rgba(0, 0, 0, 0.65);
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.35em;
   }
   .hero__tagline {
     font-size: clamp(1.05rem, 0.95rem + 0.3vw, 1.25rem);
@@ -1299,4 +1351,325 @@
   .sommaire ol a { display: inline-flex; align-items: center; min-height: var(--tap); }
   .faq-photo img { aspect-ratio: 21 / 9; border-radius: var(--radius-lg); }
   .page404-photo img { aspect-ratio: 16 / 9; border-radius: var(--radius-lg); }
+
+  /* ---------- Boutique Hotel Polish : Hero Overlay & Booking ---------- */
+  .hero-booking-wrap {
+    position: relative;
+    z-index: 20;
+    margin-top: -3.5rem;
+    padding-bottom: var(--sp-6);
+  }
+  .hero-booking-wrap .booking {
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(197, 160, 89, 0.35);
+    box-shadow: 0 16px 40px rgba(26, 43, 73, 0.12);
+    border-radius: var(--radius-lg);
+  }
+  .hero-booking-wrap .booking h2 {
+    font-family: var(--ff-title);
+    font-size: var(--fs-xl);
+    color: var(--c-navy);
+  }
+  @media (max-width: 48rem) {
+    .hero-booking-wrap {
+      margin-top: -1.5rem;
+    }
+  }
+
+  /* ---------- Compteurs animés (Welcome Section) ---------- */
+  .counters-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
+    gap: var(--sp-4);
+  }
+  .counter-card {
+    background: var(--c-surface);
+    border: 1px solid rgba(197, 160, 89, 0.35);
+    border-radius: var(--radius-md);
+    padding: var(--sp-4);
+    display: flex;
+    flex-direction: column;
+    box-shadow: var(--shadow-1);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+  .counter-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-2);
+  }
+  .counter-number {
+    font-family: var(--ff-title);
+    font-size: clamp(2.2rem, 3.8vw, 3rem);
+    font-weight: 700;
+    color: var(--c-navy);
+    line-height: 1;
+  }
+  .counter-number small {
+    font-size: 0.55em;
+    font-weight: 500;
+    color: var(--c-text-muted);
+  }
+  .counter-label {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--c-text);
+    margin-top: var(--sp-2);
+  }
+  .counter-sub {
+    font-size: 0.8125rem;
+    color: var(--c-text-muted);
+    margin-top: 2px;
+  }
+
+  /* ---------- Chambres : Cartes enrichies ---------- */
+  .room-card .card__media {
+    position: relative;
+  }
+  .room-card__badge {
+    position: absolute;
+    top: var(--sp-3);
+    left: var(--sp-3);
+    background: rgba(26, 43, 73, 0.9);
+    color: #FFFFFF;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.2rem 0.6rem;
+    border-radius: var(--radius-sm);
+    letter-spacing: 0.04em;
+    backdrop-filter: blur(4px);
+    z-index: 1;
+  }
+  .room-card__desc {
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: var(--c-text);
+    margin: 0;
+  }
+  .room-card__ideal {
+    font-size: 0.8125rem;
+    background: #F4EFE6;
+    padding: var(--sp-2) var(--sp-3);
+    border-radius: var(--radius-sm);
+    border-left: 3px solid var(--c-gold);
+    color: var(--c-text);
+  }
+  .room-card__ideal-label {
+    font-weight: 600;
+    color: var(--c-navy);
+  }
+  .room-card__facts {
+    font-size: 0.8125rem;
+    padding-block: var(--sp-2);
+    border-top: 1px solid var(--c-border);
+    border-bottom: 1px solid var(--c-border);
+  }
+  .room-card__pricing {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding-top: var(--sp-2);
+  }
+  .room-card__price-label {
+    font-size: 0.78rem;
+    color: var(--c-text-muted);
+    font-weight: 500;
+  }
+  .room-card__price-val {
+    font-family: var(--ff-title);
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--c-navy);
+  }
+  .room-card__price-val small {
+    font-family: var(--ff-body);
+    font-size: 0.75rem;
+    font-weight: 400;
+    color: var(--c-text-muted);
+  }
+  .room-card__actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--sp-2);
+    margin-top: auto;
+    padding-top: var(--sp-3);
+  }
+  .room-card__actions .btn {
+    padding-inline: var(--sp-2);
+    font-size: 0.875rem;
+    min-height: 40px;
+  }
+
+  /* ---------- Services & attentions ---------- */
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+    gap: var(--sp-5);
+  }
+  .service-item {
+    background: var(--c-surface);
+    border: 1px solid var(--c-border);
+    border-radius: var(--radius-lg);
+    padding: var(--sp-6);
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-2);
+    box-shadow: var(--shadow-1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  }
+  .service-item:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 30px rgba(26, 43, 73, 0.08);
+    border-color: rgba(197, 160, 89, 0.4);
+  }
+  .service-icon {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    background: #F4EFE6;
+    color: var(--c-gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: var(--sp-2);
+  }
+  .service-icon svg {
+    width: 1.5rem;
+    height: 1.5rem;
+    stroke-width: 2;
+  }
+  .service-item h3 {
+    font-size: var(--fs-lg);
+    color: var(--c-navy);
+    margin: 0;
+  }
+  .service-item p {
+    font-size: 0.92rem;
+    color: var(--c-text-muted);
+    line-height: 1.55;
+    margin: 0;
+  }
+
+  /* ---------- Avis voyageurs / Social Proof ---------- */
+  .avis-rating-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--sp-2);
+    background: #F4EFE6;
+    border: 1px solid rgba(197, 160, 89, 0.4);
+    padding: var(--sp-2) var(--sp-4);
+    border-radius: 999px;
+    font-size: 0.95rem;
+    margin-inline: auto;
+  }
+  .avis-stars {
+    color: var(--c-gold);
+    letter-spacing: 0.15em;
+  }
+  .review-card {
+    background: var(--c-surface);
+    border: 1px solid var(--c-border);
+    border-radius: var(--radius-lg);
+    padding: var(--sp-6);
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-4);
+    box-shadow: var(--shadow-1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .review-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(26, 43, 73, 0.08);
+  }
+  .review-card__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .review-card__stars {
+    color: var(--c-gold);
+    letter-spacing: 0.18em;
+    font-size: 1rem;
+  }
+  .review-card__date {
+    font-size: 0.8125rem;
+    color: var(--c-text-muted);
+  }
+  .review-card__quote {
+    font-style: italic;
+    line-height: 1.6;
+    color: var(--c-text);
+    margin: 0;
+    flex: 1;
+    font-size: 0.95rem;
+  }
+  .review-card__author {
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid var(--c-border);
+    padding-top: var(--sp-3);
+    font-size: 0.875rem;
+  }
+  .review-card__author strong {
+    color: var(--c-navy);
+  }
+  .review-card__author span {
+    color: var(--c-text-muted);
+    font-size: 0.8125rem;
+  }
+
+  /* ---------- FAQ Accordéon ---------- */
+  .faq-list {
+    max-width: 48rem;
+    margin-inline: auto;
+    display: grid;
+    gap: var(--sp-3);
+  }
+  .faq-item {
+    background: var(--c-surface);
+    border: 1px solid var(--c-border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+  .faq-item[open] {
+    border-color: var(--c-gold);
+    box-shadow: var(--shadow-1);
+  }
+  .faq-question {
+    padding: var(--sp-4) var(--sp-5);
+    font-family: var(--ff-title);
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--c-navy);
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .faq-question::-webkit-details-marker {
+    display: none;
+  }
+  .faq-question::after {
+    content: '+';
+    font-size: 1.35rem;
+    font-weight: 400;
+    color: var(--c-gold);
+    transition: transform 0.2s ease;
+  }
+  .faq-item[open] .faq-question::after {
+    content: '−';
+    transform: rotate(180deg);
+  }
+  .faq-answer {
+    padding: 0 var(--sp-5) var(--sp-4);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--c-text-muted);
+  }
+  .faq-answer p {
+    margin: 0;
+  }
 }

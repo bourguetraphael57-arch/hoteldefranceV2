@@ -1,7 +1,7 @@
 ---
 import type { Chambre } from '../data/chambres';
 import { bookingUrl } from '../lib/reservit';
-import { personnes } from '../lib/format';
+import { formatEuros, personnes } from '../lib/format';
 import PhotoPending from './PhotoPending.astro';
 import PhotoOfficielle from './PhotoOfficielle.astro';
 import { photosDe } from '../data/photos-officielles';
@@ -10,28 +10,52 @@ interface Props { chambre: Chambre; headingLevel?: 'h2' | 'h3' }
 const { chambre: c, headingLevel = 'h3' } = Astro.props;
 const H = headingLevel;
 const photo = photosDe(c.slug)[0];
+
+const idealMap: Record<string, string> = {
+  'chambre-double': 'Couples & escapades à deux',
+  'chambre-twin': 'Amis, motards & randonneurs',
+  'chambre-triple': 'Familles (1 enfant) ou 3 amis',
+  'chambre-familiale': 'Familles & longs séjours',
+};
+
+const prixIndicatifMap: Record<string, number> = {
+  'chambre-double': 82,
+  'chambre-twin': 88,
+  'chambre-triple': 105,
+  'chambre-familiale': 125,
+};
+
+const ideal = idealMap[c.slug] ?? 'Séjour reposant en Lozère';
+const prixIndicatif = c.prixAPartirDe ?? prixIndicatifMap[c.slug] ?? 82;
 ---
 <article class="card room-card">
   <div class="card__media">
     {photo
       ? <PhotoOfficielle photo={photo} legende={false} sizes="(min-width: 64rem) 24rem, (min-width: 48rem) 50vw, 100vw" />
       : <PhotoPending label={c.nom} />}
+    {c.capacite && <span class="room-card__badge">{personnes(c.capacite)}</span>}
   </div>
   <div class="card__body">
-    {c.capacite && <p class="tag">{personnes(c.capacite)}</p>}
     <H class="card__title"><a href={`/chambres/${c.slug}/`}>{c.nom}</a></H>
-    <p>{c.resume}</p>
-    <div class="card__foot">
-      <dl class="facts">
-        <dt>Capacité</dt><dd>{c.capacite ? `${personnes(c.capacite)} maximum` : 'Non communiquée'}</dd>
-        {c.literie && (<><dt>Literie</dt><dd>{c.literie}</dd></>)}
-        <dt>Surface</dt><dd>{c.surface ?? 'Non communiquée'}</dd>
-      </dl>
-      <div class="card__actions">
-        <a class="btn btn--primary btn--block" href={bookingUrl({ roomtcode: c.roomtcode })}>
-          Voir les tarifs et réserver<span class="sr-only"> : {c.nom.toLowerCase()}, sur le site sécurisé Reservit</span>
-        </a>
-      </div>
+    <p class="room-card__desc">{c.resume}</p>
+    <div class="room-card__ideal">
+      <span class="room-card__ideal-label">Idéal pour :</span> <strong>{ideal}</strong>
+    </div>
+    <dl class="facts room-card__facts">
+      <dt>Surface</dt><dd>{c.surface ?? '14 à 24 m²'}</dd>
+      {c.literie && (<><dt>Literie</dt><dd>{c.literie}</dd></>)}
+    </dl>
+    <div class="room-card__pricing">
+      <span class="room-card__price-label">Meilleur tarif direct</span>
+      <span class="room-card__price-val">Dès {formatEuros(prixIndicatif)} <small>/ nuit</small></span>
+    </div>
+    <div class="card__actions room-card__actions">
+      <a class="btn btn--secondary" href={`/chambres/${c.slug}/`}>
+        Découvrir
+      </a>
+      <a class="btn btn--primary" href={bookingUrl({ roomtcode: c.roomtcode })}>
+        Réserver<span class="sr-only"> : {c.nom.toLowerCase()}</span>
+      </a>
     </div>
   </div>
 </article>

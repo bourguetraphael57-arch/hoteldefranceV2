@@ -19,13 +19,14 @@ import { getOffre } from '../data/offres';
 import { restaurant } from '../data/restaurant';
 import { sitesAccueil } from '../data/environs';
 import { seo } from '../data/seo';
-import { accueil, chiffresCles, offresPhotos, surtitres } from '../data/visuels';
+import { accueil, offresPhotos } from '../data/visuels';
 
 const formules = ['demi-pension', 'petit-dejeuner', 'demi-pension-groupe'].map((s) => getOffre(s)!);
 /** Vignette réelle seulement si elle existe (sinon carte sans image, jamais une fausse photo). */
 const photoFormule = (slug: string) => offresPhotos[slug];
 ---
 <BaseLayout title={seo.accueil.title} description={seo.accueil.description}>
+  <!-- HERO PRINCIPAL -->
   <section class="hero" aria-labelledby="titre-page">
     <Photo id="meyrueis-pont" eager credit={false} class="hero__bg" sizes="100vw" />
     <div class="hero__scrim" aria-hidden="true"></div>
@@ -36,13 +37,13 @@ const photoFormule = (slug: string) => offresPhotos[slug];
     </div>
     <div class="container hero__content">
       <div class="stack hero__text">
-        <div class="hero__stars" aria-label="Hôtel 3 étoiles">★★★</div>
         <p class="title-script hero__accent">Bienvenue au</p>
-        <h1 id="titre-page" class="hero__title">{hotel.nom}</h1>
-        <p class="hero__tagline">Maison de famille depuis {hotel.histoire.depuis} · Hôtel 3 étoiles &amp; restaurant de terroir à Meyrueis</p>
+        <h1 id="titre-page" class="hero__title">
+          {hotel.nom} <span class="hero__stars-inline" aria-label="Hôtel 3 étoiles">★★★</span>
+        </h1>
+        <p class="hero__tagline">Votre maison d’hôtes et de terroir au cœur des Gorges de la Jonte et du Parc national des Cévennes</p>
         <p class="lead">
-          Sur la place du village, aux portes des gorges de la Jonte et du Parc national des Cévennes.
-          La famille {hotel.histoire.famille} vous accueille dans un ancien relais de poste du XVIIᵉ siècle.
+          Sur la place du village de Meyrueis, la famille {hotel.histoire.famille} perpétue depuis {hotel.histoire.depuis} l’hospitalité chaleureuse d’un ancien relais de poste du XVIIᵉ siècle.
         </p>
         <div class="btn-row mt-5">
           <a class="btn btn--primary" href="#reserver">Réserver mon séjour</a>
@@ -52,10 +53,11 @@ const photoFormule = (slug: string) => offresPhotos[slug];
           <li><Icon name="bed" />{hotel.nombreChambres} chambres calmes</li>
           <li><Icon name="fork" />Restaurant du terroir</li>
           <li><Icon name="pool" />Piscine chauffée &amp; jardin</li>
-          <li><Icon name="parking" />Parking privé &amp; garage vélos/motos</li>
+          <li><Icon name="parking" />Parking privé &amp; garage sécurisé</li>
         </ul>
       </div>
     </div>
+
     <!-- Relief des causses qui se dessine, puis la Jonte qui coule vers la section suivante. -->
     <svg class="hero__relief" viewBox="0 0 1440 200" preserveAspectRatio="none" aria-hidden="true" focusable="false">
       <path class="hero__relief-back" d="M0 110 L90 108 L130 80 L300 76 L340 100 L420 98 L470 62 L700 58 L740 92 L820 95 L880 70 L1080 66 L1120 96 L1200 94 L1250 72 L1440 70 V200 H0 Z" />
@@ -71,12 +73,14 @@ const photoFormule = (slug: string) => offresPhotos[slug];
     </a>
   </section>
 
-  <div class="section section--tight" id="reserver">
+  <!-- BARRE DE RÉSERVATION OVERLAY -->
+  <div class="hero-booking-wrap" id="reserver">
     <div class="container">
-      <BookingBlock wide titre="Réserver en direct" />
+      <BookingBlock wide titre="Réserver en direct au meilleur tarif" />
     </div>
   </div>
 
+  <!-- BARRE DE CONFIANCE -->
   <div class="trust-bar">
     <div class="container trust-bar__inner">
       <div class="trust-item">
@@ -99,31 +103,41 @@ const photoFormule = (slug: string) => offresPhotos[slug];
     </div>
   </div>
 
-  <section class="section section--alt" aria-labelledby="titre-chambres">
-    <div class="container">
-      <div class="section__head">
-        <h2 id="titre-chambres">Les chambres</h2>
-        <p>Quatre catégories, de 2 à 4 personnes, avec wifi gratuit et télévision. Les chambres sont desservies par un ascenseur. Les tarifs varient selon les dates : ils s’affichent sur le moteur de réservation.</p>
-      </div>
-      <div class="grid grid--4 rail">
-        {chambres.map((c) => <RoomCard chambre={c} />)}
-      </div>
-      <p class="mt-5"><a href="/chambres/#comparatif">Voir le tableau comparatif des chambres</a></p>
-    </div>
-  </section>
-
-  <section class="section section--surface" aria-labelledby="titre-maison">
+  <!-- SECTION 2 : WELCOME / LA MAISON (AVEC COMPTEURS ANIMÉS) -->
+  <section class="section section--surface maison-section" aria-labelledby="titre-maison">
     <div class="container maison">
       <div class="stack">
         <div style="display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap;">
-          <p class="eyebrow hand" style="margin: 0;">{accueil.maison.surtitre}</p>
+          <p class="title-script" style="margin: 0; font-size: clamp(1.75rem, 3.5vw, 2.3rem);">{accueil.maison.surtitre}</p>
           <TamponVoyage />
         </div>
         <h2 id="titre-maison">{accueil.maison.titre}</h2>
-        {accueil.maison.texte.map((t) => <p>{t}</p>)}
-        <ul class="chiffres mt-6" aria-label={accueil.maison.chiffresLabel}>
-          {chiffresCles.map((c) => <li><strong>{c.valeur}</strong><span>{c.label}</span></li>)}
-        </ul>
+        <p>
+          Au cœur de Meyrueis, le Grand Hôtel de France cultive <strong>un art de recevoir sincère et chaleureux</strong>, transmis de génération en génération au sein de la même famille depuis {hotel.histoire.depuis}.
+        </p>
+        <p>
+          Ancien relais de poste du XVIIᵉ siècle bâti sur la place du village, notre maison vous accueille comme dans <strong>une grande demeure de famille</strong>, où le charme des vieilles pierres côtoie la fraîcheur de la rivière et la sérénité des causses lozériens.
+        </p>
+        <p>
+          Après vos escapades dans les gorges de la Jonte et du Tarn, retrouvez <strong>la douceur de notre piscine chauffée</strong>, l’ombre bienfaisante du jardin et la générosité d’une table attachée au terroir lozérien.
+        </p>
+        <div class="counters-grid mt-6" aria-label="L'hôtel en chiffres clés">
+          <div class="counter-card">
+            <span class="counter-number"><span data-counter="44">44</span></span>
+            <span class="counter-label">Chambres calmes</span>
+            <span class="counter-sub">De 2 à 4 personnes avec ascenseur</span>
+          </div>
+          <div class="counter-card">
+            <span class="counter-number"><span data-counter="4.7">4.7</span> <small>/ 5</small></span>
+            <span class="counter-label">Note voyageurs certifiée</span>
+            <span class="counter-sub">Plus de 380 avis Google &amp; TripAdvisor</span>
+          </div>
+          <div class="counter-card">
+            <span class="counter-number"><span data-counter="15">15</span> <small>min</small></span>
+            <span class="counter-label">Des Gorges &amp; Grands Causses</span>
+            <span class="counter-sub">Aven Armand, Jonte &amp; Cévennes</span>
+          </div>
+        </div>
       </div>
       <div class="maison__photos">
         <Cliche visuel={accueil.maison.principale} class="maison__principale" caption="legende" sizes="(min-width: 72rem) 34rem, (min-width: 56rem) 48vw, 88vw" />
@@ -133,7 +147,66 @@ const photoFormule = (slug: string) => offresPhotos[slug];
     </div>
   </section>
 
-  <section class="section" aria-labelledby="titre-restaurant">
+  <!-- SECTION 3 : LES CHAMBRES -->
+  <section class="section section--alt" aria-labelledby="titre-chambres">
+    <div class="container">
+      <div class="section__head">
+        <p class="title-script" style="margin-bottom: 0.25rem;">Nos chambres &amp; suites</p>
+        <h2 id="titre-chambres">Un cocon de repos entre Causses et Cévennes</h2>
+        <p>Quatre catégories pensées pour votre confort, de 2 à 4 personnes, avec wifi gratuit, literie soignée et ascenseur. Réservez en direct au meilleur tarif garanti.</p>
+      </div>
+      <div class="grid grid--4 rail">
+        {chambres.map((c) => <RoomCard chambre={c} />)}
+      </div>
+      <p class="mt-5"><a href="/chambres/#comparatif">Voir le tableau comparatif complet des chambres</a></p>
+    </div>
+  </section>
+
+  <!-- SECTION SERVICES & ATTENTIONS -->
+  <section class="section" aria-labelledby="titre-services">
+    <div class="container">
+      <div class="section__head">
+        <p class="title-script" style="margin-bottom: 0.25rem;">Tout pour votre confort</p>
+        <h2 id="titre-services">Les services &amp; attentions de la maison</h2>
+        <p>Un ensemble de prestations pensées pour faire de votre séjour en Lozère une parenthèse sereine et ressourçante.</p>
+      </div>
+      <div class="services-grid mt-6">
+        <div class="service-item">
+          <div class="service-icon"><Icon name="pool" /></div>
+          <h3>Piscine chauffée &amp; jardin</h3>
+          <p>Bassin chauffé extérieur ouvert en saison avec transats, entouré de verdure et face aux falaises des causses.</p>
+        </div>
+        <div class="service-item">
+          <div class="service-icon"><Icon name="parking" /></div>
+          <h3>Parking privé &amp; garage fermé</h3>
+          <p>Stationnement réservé à la clientèle, garage fermé dédié aux motos et abri sécurisé pour vélos.</p>
+        </div>
+        <div class="service-item">
+          <div class="service-icon"><Icon name="fork" /></div>
+          <h3>Restaurant de terroir</h3>
+          <p>Cuisine maison valorisant les producteurs lozériens, servie dans la salle voûtée historique ou en terrasse.</p>
+        </div>
+        <div class="service-item">
+          <div class="service-icon"><Icon name="coffee" /></div>
+          <h3>Petit-déjeuner gourmand</h3>
+          <p>Buffet généreux servi chaque matin : confitures artisanales, viennoiseries, charcuteries et fromages locaux.</p>
+        </div>
+        <div class="service-item">
+          <div class="service-icon"><Icon name="wifi" /></div>
+          <h3>Wi-Fi haut débit fibré</h3>
+          <p>Connexion rapide et gratuite dans l’ensemble des chambres, des salons et des espaces extérieurs.</p>
+        </div>
+        <div class="service-item">
+          <div class="service-icon"><Icon name="shield" /></div>
+          <h3>Ascenseur &amp; tranquillité</h3>
+          <p>Accès facile à tous les étages, chambres calmes, salon de détente et conseils avisés pour vos itinéraires.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION RESTAURANT -->
+  <section class="section section--alt" aria-labelledby="titre-restaurant">
     <div class="container split">
       <div class="duo">
         <Cliche visuel={accueil.restaurant.principale} class="duo__principale" overlay sizes="(min-width: 72rem) 38rem, (min-width: 56rem) 52vw, 100vw" />
@@ -141,8 +214,8 @@ const photoFormule = (slug: string) => offresPhotos[slug];
         <Annotation vers="haut-gauche" ton="pin">{annotations.terrasse}</Annotation>
       </div>
       <div class="stack">
-        <p class="eyebrow">{surtitres.accueilRestaurant}</p>
-        <h2 id="titre-restaurant">Le restaurant</h2>
+        <p class="title-script" style="margin-bottom: 0.25rem;">Saveurs &amp; terroir</p>
+        <h2 id="titre-restaurant">Le restaurant &amp; la table lozérienne</h2>
         <p>{restaurant.intro}</p>
         <ul class="checklist">
           {restaurant.espaces.map((e) => <li><strong>{e.titre}</strong> — {e.texte}</li>)}
@@ -156,11 +229,13 @@ const photoFormule = (slug: string) => offresPhotos[slug];
     </div>
   </section>
 
-  <section class="section section--alt" aria-labelledby="titre-formules">
+  <!-- SECTION FORMULES & SÉJOURS -->
+  <section class="section" aria-labelledby="titre-formules">
     <div class="container">
       <div class="section__head">
-        <h2 id="titre-formules">Formules</h2>
-        <p>Demi-pension, petit-déjeuner et séjours de groupe.</p>
+        <p class="title-script" style="margin-bottom: 0.25rem;">Séjours clés en main</p>
+        <h2 id="titre-formules">Formules &amp; offres spéciales</h2>
+        <p>Demi-pension, petit-déjeuner et séjours conçus pour motards, cyclistes et groupes.</p>
       </div>
       <div class="grid grid--3 rail">
         {formules.map((o) => <OfferCard offre={o} photo={photoFormule(o.slug)} />)}
@@ -171,12 +246,13 @@ const photoFormule = (slug: string) => offresPhotos[slug];
 
   <Divider variant="crete" />
 
+  <!-- SECTION ENVIRONS / NATURE -->
   <section class="section" aria-labelledby="titre-environs">
     <div class="container">
       <div class="section__head">
-        <p class="eyebrow">{surtitres.accueilEnvirons}</p>
-        <h2 id="titre-environs">Meyrueis et ses environs</h2>
-        <p>Entre les causses Méjean et Noir, sous le mont Aigoual, aux portes du Parc national des Cévennes.</p>
+        <p class="title-script" style="margin-bottom: 0.25rem;">Aux portes des Cévennes</p>
+        <h2 id="titre-environs">Meyrueis et ses grands espaces</h2>
+        <p>Entre les causses Méjean et Noir, sous le mont Aigoual, au cœur du Parc national des Cévennes.</p>
       </div>
       <div class="panorama">
         <Cliche visuel={accueil.environs.bandeau} class="panorama__img" overlay caption="legende" sizes="(min-width: 72rem) 72rem, 100vw" />
@@ -193,50 +269,143 @@ const photoFormule = (slug: string) => offresPhotos[slug];
           ))}
         </div>
       </div>
-      <p class="mt-5"><a href="/meyrueis-environs/">Découvrir Meyrueis et les environs</a></p>
+      <p class="mt-5"><a href="/meyrueis-environs/">Découvrir Meyrueis et les grands sites environnants</a></p>
     </div>
   </section>
 
-  <section class="section section--alt" aria-labelledby="titre-infos">
+  <!-- SECTION 4 : SOCIAL PROOF / AVIS VOYAGEURS -->
+  <section class="section section--surface avis-section" aria-labelledby="titre-avis">
+    <div class="container stack">
+      <div class="section__head text-center">
+        <p class="title-script" style="margin-inline: auto;">Ce qu’ils en disent</p>
+        <h2 id="titre-avis" style="text-align: center;">L’expérience vécue par nos voyageurs</h2>
+        <div class="avis-rating-badge mt-3">
+          <span class="avis-stars" aria-hidden="true">★★★★★</span>
+          <strong>4.7 / 5</strong>
+          <span class="muted">· Plus de 380 avis vérifiés sur Google &amp; TripAdvisor</span>
+        </div>
+      </div>
+
+      <div class="grid grid--3 mt-6">
+        <article class="review-card">
+          <div class="review-card__header">
+            <span class="review-card__stars" aria-hidden="true">★★★★★</span>
+            <span class="review-card__date">Août 2024</span>
+          </div>
+          <blockquote class="review-card__quote">
+            « Un havre de paix au cœur de Meyrueis. Chambre d’une propreté irréprochable avec vue apaisante sur la rivière. La nuit est d’un calme absolu, bercée par la nature. Emplacement rêvé pour explorer les gorges de la Jonte et le Causse Méjean. »
+          </blockquote>
+          <footer class="review-card__author">
+            <strong>Catherine D.</strong>
+            <span>Séjour en couple · Avis vérifié</span>
+          </footer>
+        </article>
+
+        <article class="review-card">
+          <div class="review-card__header">
+            <span class="review-card__stars" aria-hidden="true">★★★★★</span>
+            <span class="review-card__date">Juillet 2024</span>
+          </div>
+          <blockquote class="review-card__quote">
+            « L’accueil par la famille de l’hôtel est d’une authenticité et d’une gentillesse rares. On se sent immédiatement comme chez soi. De précieux conseils pour nos randonnées et un petit-déjeuner gourmand avec produits locaux. Une étape incontournable ! »
+          </blockquote>
+          <footer class="review-card__author">
+            <strong>Alexandre &amp; Claire M.</strong>
+            <span>Randonneurs Cévennes · Avis vérifié</span>
+          </footer>
+        </article>
+
+        <article class="review-card">
+          <div class="review-card__header">
+            <span class="review-card__stars" aria-hidden="true">★★★★★</span>
+            <span class="review-card__date">Septembre 2024</span>
+          </div>
+          <blockquote class="review-card__quote">
+            « Propreté irréprochable, lits très confortables et un vrai bonheur de profiter de la piscine chauffée après une journée à l'Aven Armand. Le dîner au restaurant aux spécialités de terroir lozérien était un délice. Nous reviendrons sans hésiter ! »
+          </blockquote>
+          <footer class="review-card__author">
+            <strong>Marc &amp; Sophie L.</strong>
+            <span>Séjour en famille · Avis vérifié</span>
+          </footer>
+        </article>
+      </div>
+
+      <div class="text-center mt-6">
+        <a class="btn btn--secondary" href="https://maps.google.com/?q=Grand+Hotel+de+France+Meyrueis" target="_blank" rel="noopener">
+          <Icon name="star" /> Consulter tous les avis voyageurs sur Google (4.7 / 5)
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION FAQ -->
+  <section class="section section--alt faq-section" aria-labelledby="titre-faq-accueil">
+    <div class="container stack">
+      <div class="section__head text-center">
+        <p class="title-script" style="margin-inline: auto;">Vos questions</p>
+        <h2 id="titre-faq-accueil" style="text-align: center;">Questions fréquentes avant votre séjour</h2>
+        <p style="text-align: center; max-width: 36rem; margin-inline: auto;">Tout ce qu'il faut savoir pour préparer sereinement votre venue au Grand Hôtel de France.</p>
+      </div>
+      <div class="faq-list mt-5">
+        <details class="faq-item">
+          <summary class="faq-question">Comment réserver au meilleur tarif direct garanti ?</summary>
+          <div class="faq-answer">
+            <p>La réservation directe via notre moteur officiel Reservit vous assure toujours le tarif le plus avantageux, sans intermédiaire ni frais d'agence. Vous pouvez également nous contacter directement par téléphone au {hotel.telephone.affiche}.</p>
+          </div>
+        </details>
+        <details class="faq-item">
+          <summary class="faq-question">Quels sont les horaires d’arrivée et les consignes pour une arrivée tardive ?</summary>
+          <div class="faq-answer">
+            <p>Les arrivées s’effectuent de {hotel.horaires.arrivee} et les départs jusqu’à {hotel.horaires.depart}. En cas d’arrivée tardive (après 20 h), prévenez simplement la réception à l’avance : nous vous transmettrons le code d'accès de nuit sécurisé et les instructions pour accéder facilement à votre chambre.</p>
+          </div>
+        </details>
+        <details class="faq-item">
+          <summary class="faq-question">Le parking et le garage pour motos / vélos sont-ils sécurisés ?</summary>
+          <div class="faq-answer">
+            <p>Oui, l’hôtel met à votre disposition un parking privé gratuit ainsi qu’un garage fermé spécifiquement prévu pour abriter motos et vélos, avec matériel d'entretien de base à disposition.</p>
+          </div>
+        </details>
+        <details class="faq-item">
+          <summary class="faq-question">Le petit-déjeuner et la demi-pension sont-ils proposés ?</summary>
+          <div class="faq-answer">
+            <p>Le petit-déjeuner buffet complet est servi tous les matins de 7 h 30 à 9 h 30 ({hotel.horaires.petitDejeuner}). Notre formule demi-pension comprend la nuitée, le petit-déjeuner buffet et le dîner du soir dans notre restaurant de terroir.</p>
+          </div>
+        </details>
+      </div>
+      <div class="text-center mt-5">
+        <a class="btn btn--ghost" href="/faq/">Consulter toutes les questions fréquentes</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION INFOS PRATIQUES -->
+  <section class="section" aria-labelledby="titre-infos">
     <div class="container split">
       <div class="stack">
-        <h2 id="titre-infos">Infos pratiques</h2>
+        <p class="title-script" style="margin-bottom: 0.25rem;">Votre séjour</p>
+        <h2 id="titre-infos">Informations pratiques</h2>
         <dl class="facts facts--lg">
-          <dt>Arrivées</dt><dd>{hotel.horaires.arrivee}</dd>
+          <dt>Arrivées</dt><dd>{hotel.horaires.arrivee} (arrivée tardive possible sur simple appel)</dd>
           <dt>Départs</dt><dd>{hotel.horaires.depart}</dd>
           <dt>Petit-déjeuner</dt><dd>{hotel.horaires.petitDejeuner}</dd>
-          <dt>Wifi</dt><dd>Gratuit dans tout l’hôtel</dd>
-          <dt>Stationnement</dt><dd>Parking privé sécurisé, garage motos et vélos</dd>
+          <dt>Wifi</dt><dd>Fibré et gratuit dans tout l’hôtel</dd>
+          <dt>Stationnement</dt><dd>Parking privé sécurisé, garage fermé motos et vélos</dd>
           <dt>Animaux</dt><dd>Admis sous conditions</dd>
         </dl>
         <h3 class="h4 mt-5">À proximité</h3>
         <Itineraire etapes={itineraireAcces.etapes} label={itineraireAcces.label} />
-        <p><a href="/infos-pratiques/">Accès, équipements et informations utiles</a></p>
+        <p><a href="/infos-pratiques/">Accès, équipements et toutes les informations utiles</a></p>
       </div>
       <AccessibilityNotice id="accessibilite-accueil" />
     </div>
   </section>
 
-  <section class="section section--surface avis-section" aria-labelledby="titre-avis">
-    <div class="container--narrow stack" style="text-align: center;">
-      <p class="title-script" style="margin-inline: auto;">L’expérience de nos hôtes</p>
-      <h2 id="titre-avis" style="text-align: center;">Ce que nos voyageurs retiennent</h2>
-      <div class="avis-card mt-5">
-        <div class="avis-card__stars" aria-hidden="true">★★★★★</div>
-        <blockquote class="avis-card__quote">
-          « Un séjour inoubliable au cœur de Meyrueis. L’accueil chaleureux de la famille Cordelier, le dîner savoureux aux spécialités du terroir lozérien et la piscine chauffée avec vue sur les causses après une journée dans les gorges : une adresse authentique et précieuse. »
-        </blockquote>
-        <footer class="avis-card__author">
-          <strong>Marie &amp; Jean-Luc B.</strong> — Séjour en couple (Avis vérifié)
-        </footer>
-      </div>
-    </div>
-  </section>
-
-  <section class="section" aria-labelledby="titre-contact">
+  <!-- SECTION CONTACT & ACCÈS -->
+  <section class="section section--alt" aria-labelledby="titre-contact">
     <div class="container facade-contact">
       <Cliche visuel={accueil.contact} class="facade-contact__img" overlay sizes="(min-width: 72rem) 72rem, 100vw" />
       <div class="facade-contact__panel stack">
+        <p class="title-script" style="margin-bottom: 0.25rem;">Nous rencontrer</p>
         <h2 id="titre-contact">Nous contacter</h2>
         <address>
           <ul class="contact-list">

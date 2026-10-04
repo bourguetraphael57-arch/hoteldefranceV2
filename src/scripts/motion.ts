@@ -33,4 +33,30 @@ if ('IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: re
     el.classList.add('is-armed');
     once.observe(el);
   });
+
+  // Compteurs animés au défilement (data-counter="XX")
+  const counterObserver = new IntersectionObserver((entries) => {
+    for (const entry of entries) {
+      if (entry.isIntersecting) {
+        const el = entry.target as HTMLElement;
+        const target = parseFloat(el.dataset.counter ?? '0');
+        const isDecimal = String(target).includes('.');
+        const duration = 1600;
+        const start = performance.now();
+        const update = (now: number) => {
+          const progress = Math.min((now - start) / duration, 1);
+          const easeOut = 1 - Math.pow(1 - progress, 3);
+          const current = target * easeOut;
+          el.textContent = isDecimal ? current.toFixed(1) : Math.round(current).toString();
+          if (progress < 1) requestAnimationFrame(update);
+        };
+        requestAnimationFrame(update);
+        counterObserver.unobserve(el);
+      }
+    }
+  }, { threshold: 0.3 });
+
+  document.querySelectorAll<HTMLElement>('[data-counter]').forEach((el) => {
+    counterObserver.observe(el);
+  });
 }
