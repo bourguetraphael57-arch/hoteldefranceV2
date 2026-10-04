@@ -5,7 +5,6 @@ import { hotel, adresseComplete } from '../data/hotel';
 import { navPrincipale, navPied } from '../data/navigation';
 import { bookingUrl } from '../lib/reservit';
 import Icon from '../components/Icon.astro';
-import Logo from '../components/Logo.astro';
 import VillageSketch from '../components/motion/VillageSketch.astro';
 
 interface Props {
@@ -85,9 +84,7 @@ const hotelLd = {
     <div class="header-sentinel" aria-hidden="true"></div>
     <header class="site-header" data-header>
       <div class="container site-header__inner">
-        <a class="brand" href="/" aria-label={`${hotel.nom} — Accueil`}>
-          <Logo class="brand__logo" />
-        </a>
+        <a class="brand" href="/">{hotel.nom}<span>Meyrueis · Lozère</span></a>
         <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="menu-principal" hidden data-nav-toggle>
           <span class="nav-toggle__open"><Icon name="menu" /></span><span class="nav-toggle__close"><Icon name="close" /></span><span data-label>Menu</span>
         </button>
@@ -121,8 +118,7 @@ const hotelLd = {
         <VillageSketch ton="sombre" class="site-footer__sketch" />
         <div class="footer-grid">
           <div>
-            <Logo variant="dark" class="footer__logo" />
-            <h2 class="sr-only">{hotel.nom}</h2>
+            <h2>{hotel.nom}</h2>
             <address class="stack">
               <p>{hotel.adresse.rue}<br />{hotel.adresse.codePostal} {hotel.adresse.ville}</p>
               <p><a href={hotel.telephone.href}>{hotel.telephone.affiche}</a><br /><a href={`mailto:${hotel.email}`}>{hotel.email}</a></p>

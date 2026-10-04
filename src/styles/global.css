@@ -386,17 +386,9 @@
     min-height: var(--header-h);
   }
   .brand {
-    display: inline-flex; align-items: center; text-decoration: none; color: var(--c-text);
-    margin-right: auto; padding-block: var(--sp-1); min-height: var(--tap);
-  }
-  .brand__logo {
-    height: 36px; width: auto; max-width: 175px; display: block;
-  }
-  @media (min-width: 48rem) {
-    .brand__logo { height: 46px; max-width: 230px; }
-  }
-  .footer__logo {
-    height: 48px; width: auto; max-width: 240px; display: block; margin-bottom: var(--sp-3);
+    display: grid; line-height: 1.1; text-decoration: none; color: var(--c-text);
+    font-family: var(--ff-title); font-weight: 650; font-size: 1.125rem;
+    margin-right: auto; padding-block: var(--sp-1); min-height: var(--tap); align-content: center;
   }
   .brand span { font-family: var(--ff-body); font-size: .75rem; font-weight: 500; color: var(--c-text-muted); letter-spacing: .04em; }
   .brand:hover { color: var(--c-text); }
