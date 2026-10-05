@@ -20,6 +20,24 @@
 
   .hero .hero__accent { color: var(--c-gold); text-shadow: 0 1px 12px rgb(0 0 0 / .5); }
 
+  /* Room explorer */
+  .explorer { border: 0; padding: 0; width: 100vw; max-width: none; height: 100dvh; max-height: none; background: #0e1624; color: #fff; }
+  .explorer[open] { display: grid; grid-template-columns: 1fr; grid-template-rows: 42dvh 1fr; }
+  .explorer::backdrop { background: #0e1624; }
+  .explorer__stage { overflow: hidden; }
+  .explorer__stage img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .explorer__info { padding: var(--sp-5) var(--gutter) var(--sp-6); display: grid; gap: var(--sp-3); align-content: center; overflow-y: auto; max-width: 36rem; }
+  .explorer__title { font-size: var(--fs-2xl, 2rem); color: #fff; }
+  .explorer__desc { color: #d9dee8; }
+  .explorer__price { color: var(--c-gold); font-weight: 600; }
+  .explorer__count { color: #aab3c4; font-size: var(--fs-sm); }
+  .explorer .btn--ghost, .explorer .btn--secondary { background: transparent; color: #fff; border: 1px solid rgb(255 255 255 / .5); }
+  .explorer__close { position: absolute; top: var(--sp-3); right: var(--sp-3); z-index: 2; min-height: var(--tap); padding: 0 var(--sp-4); border-radius: 999px; border: 1px solid rgb(255 255 255 / .6); background: rgb(14 22 36 / .7); color: #fff; font-weight: 600; }
+  @media (min-width: 56rem) {
+    .explorer[open] { grid-template-columns: 1.4fr 1fr; grid-template-rows: 1fr; }
+    .explorer__info { padding-inline: var(--sp-7); }
+  }
+
   /* Lenis */
   html.lenis, html.lenis body { height: auto; }
   .lenis.lenis-smooth { scroll-behavior: auto !important; }
@@ -78,6 +96,8 @@
     .room-gallery__thumbs a { position: relative; }
     .room-gallery__thumbs a::after { content: ''; position: absolute; inset: 0; background: rgb(14 22 36 / .25); opacity: 0; transition: opacity .3s; }
     .room-gallery__thumbs a:hover::after { opacity: 1; }
+    .room-gallery__thumbs a:hover, .room-gallery__thumbs a:focus-visible { box-shadow: 0 10px 28px rgb(14 22 36 / .35); transform: translateY(-3px); }
+    .room-gallery__thumbs a { transition: transform .35s cubic-bezier(.2, .7, .2, 1), box-shadow .35s; }
     .room-gallery__thumbs a:hover img { transform: scale(1.08); }
 
     /* Coches des équipements : tracées quand la ligne apparaît. */

@@ -104,6 +104,11 @@ mm.add('(min-width: 64rem) and (hover: hover) and (pointer: fine)', () => {
     });
   }
 
+  // Cartes chambres : profondeur (la 2e et la 4e glissent plus lentement que les autres).
+  $$('main .rail:has(.room-card) > *').forEach((el, i) => {
+    if (i % 2) gsap.fromTo(el, { y: 36 }, { y: -12, ease: 'none', scrollTrigger: { trigger: el, start: 'top bottom', end: 'bottom top', scrub: 0.6 } });
+  });
+
   // Activités / sites : entrée latérale alternée.
   $$('main .sites > li').forEach((li, i) => {
     if (!below(li)) return;
@@ -141,6 +146,69 @@ for (const img of $$<HTMLImageElement>('dialog.lightbox .lightbox__figure img'))
   new MutationObserver(() => {
     gsap.fromTo(img, { clipPath: 'inset(0 100% 0 0)' }, { clipPath: 'inset(0 0% 0 0)', duration: 0.8, ease: 'power3.inOut', clearProps: 'clipPath' });
   }).observe(img, { attributes: true, attributeFilter: ['src'] });
+}
+
+// Room explorer : les cartes chambres de l'accueil s'ouvrent dans une visionneuse plein écran (sans JS : lien vers la fiche).
+const cards = $$('.room-card');
+if (cards.length > 1 && document.querySelector('main .rail') && typeof HTMLDialogElement !== 'undefined') {
+  const data = cards.map((c) => ({
+    title: c.querySelector('.card__title')?.textContent?.trim() ?? '',
+    desc: c.querySelector('.room-card__desc')?.textContent?.trim() ?? '',
+    price: c.querySelector('.room-card__price-val')?.textContent?.replace(/\s+/g, ' ').trim() ?? '',
+    img: c.querySelector<HTMLImageElement>('.card__media img'),
+    href: c.querySelector<HTMLAnchorElement>('.card__title a')?.href ?? '#',
+    book: c.querySelector<HTMLAnchorElement>('.btn--primary')?.href ?? '#',
+  }));
+  const dlg = document.createElement('dialog');
+  dlg.className = 'explorer';
+  dlg.setAttribute('aria-label', 'Explorer les chambres');
+  dlg.innerHTML = `<button type="button" class="explorer__close" data-x="close">Fermer</button>
+    <div class="explorer__stage"><img alt="" /></div>
+    <div class="explorer__info"><h2 class="explorer__title"></h2><p class="explorer__desc"></p><p class="explorer__price"></p>
+      <div class="btn-row"><a class="btn btn--secondary" data-x="more">Découvrir la chambre</a><a class="btn btn--primary" data-x="book">Réserver</a></div>
+      <div class="btn-row explorer__nav"><button type="button" class="btn btn--ghost" data-x="prev">← Précédente</button><button type="button" class="btn btn--ghost" data-x="next">Suivante →</button></div>
+      <p class="explorer__count" aria-live="polite"></p></div>`;
+  document.body.append(dlg);
+  const q = <T extends HTMLElement>(sel: string) => dlg.querySelector<T>(sel)!;
+  let cur = 0;
+  const show = (i: number, animate = true) => {
+    cur = (i + data.length) % data.length;
+    const d = data[cur]!;
+    const img = q<HTMLImageElement>('.explorer__stage img');
+    img.src = d.img?.currentSrc || d.img?.src || '';
+    img.alt = d.img?.alt ?? '';
+    q('.explorer__title').textContent = d.title;
+    q('.explorer__desc').textContent = d.desc;
+    q('.explorer__price').textContent = d.price;
+    q<HTMLAnchorElement>('[data-x=more]').href = d.href;
+    q<HTMLAnchorElement>('[data-x=book]').href = d.book;
+    q('.explorer__count').textContent = `Chambre ${cur + 1} sur ${data.length}`;
+    if (animate) {
+      gsap.fromTo(img, { clipPath: 'inset(0 100% 0 0)', scale: 1.08 }, { clipPath: 'inset(0 0% 0 0)', scale: 1, duration: 0.9, ease: 'power3.inOut' });
+      gsap.fromTo('.explorer__info > *', { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: 0.7, stagger: 0.07, ease: 'power3.out', delay: 0.2 });
+    }
+  };
+  cards.forEach((card, i) => {
+    const peek = card.querySelector<HTMLAnchorElement>('.room-card__peek');
+    peek?.addEventListener('click', (e) => {
+      e.preventDefault();
+      const r = card.getBoundingClientRect();
+      show(i, false);
+      dlg.showModal();
+      gsap.fromTo(dlg, { clipPath: `inset(${r.top}px ${innerWidth - r.right}px ${innerHeight - r.bottom}px ${r.left}px round 12px)` }, { clipPath: 'inset(0px 0px 0px 0px round 0px)', duration: 0.8, ease: 'power3.inOut', clearProps: 'clipPath' });
+      gsap.fromTo('.explorer__info > *', { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: 0.7, stagger: 0.07, ease: 'power3.out', delay: 0.45 });
+    });
+  });
+  dlg.addEventListener('click', (e) => {
+    const x = (e.target as HTMLElement).closest<HTMLElement>('[data-x]')?.dataset.x;
+    if (x === 'close') dlg.close();
+    if (x === 'prev') show(cur - 1);
+    if (x === 'next') show(cur + 1);
+  });
+  dlg.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowLeft') show(cur - 1);
+    if (e.key === 'ArrowRight') show(cur + 1);
+  });
 }
 
 window.addEventListener('load', () => ScrollTrigger.refresh(), { once: true });
