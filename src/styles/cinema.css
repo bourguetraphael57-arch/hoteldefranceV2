@@ -12,6 +12,14 @@
 }
 
 @layer components {
+  /* En-tête : logo sur une ligne ; sur l'accueil (grand écran) il flotte sur le hero au lieu de laisser une bande vide. */
+  .brand__name, .brand__sub { white-space: nowrap; }
+  @media (min-width: 64rem) {
+    .site-header--transparent { margin-bottom: calc(var(--header-h) * -1); }
+  }
+
+  .hero .hero__accent { color: var(--c-gold); text-shadow: 0 1px 12px rgb(0 0 0 / .5); }
+
   /* Lenis */
   html.lenis, html.lenis body { height: auto; }
   .lenis.lenis-smooth { scroll-behavior: auto !important; }
@@ -73,7 +81,8 @@
     .room-gallery__thumbs a:hover img { transform: scale(1.08); }
 
     /* Coches des équipements : tracées quand la ligne apparaît. */
-    .checklist li::before { transition: clip-path .6s .25s ease-out; }
+    .cin-check::before { clip-path: inset(0 100% 0 0); transition: clip-path .5s ease-out; }
+    .cin-check.is-drawn::before { clip-path: inset(-10% -10% -10% -10%); }
   }
   .room-card__peek { display: none; }
   @media (prefers-reduced-motion: no-preference) and (hover: hover) { .room-card__peek { display: flex; } }

@@ -37,10 +37,15 @@ mm.add('(min-width: 0px)', () => {
   for (const sel of groups) {
     const items = take($$(sel));
     if (!items.length) continue;
+    const check = sel.endsWith('li') && sel.includes('checklist');
+    if (check) items.forEach((li) => li.classList.add('cin-check'));
     gsap.set(items, { opacity: 0, y: 48 });
     ScrollTrigger.batch(items, {
       start: 'top 88%', once: true,
-      onEnter: (b) => gsap.to(b, { opacity: 1, y: 0, duration: 0.9, stagger: 0.1, ease: 'power3.out', clearProps: 'transform,opacity' }),
+      onEnter: (b) => gsap.to(b, {
+        opacity: 1, y: 0, duration: 0.9, stagger: 0.1, ease: 'power3.out', clearProps: 'transform,opacity',
+        onStart: check ? () => b.forEach((li, i) => setTimeout(() => li.classList.add('is-drawn'), 300 + i * 100)) : undefined,
+      }),
     });
   }
 
