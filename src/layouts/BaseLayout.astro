@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import '../styles/motion.css';
+import '../styles/cinema.css';
 import { hotel, adresseComplete } from '../data/hotel';
 import { navPrincipale, navPied } from '../data/navigation';
 import { bookingUrl } from '../lib/reservit';
@@ -81,7 +82,7 @@ const hotelLd = {
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={new URL(image, site).href} />
-    <script is:inline>document.documentElement.classList.add('js');</script>
+    <script is:inline>document.documentElement.classList.add('js');if(!matchMedia('(prefers-reduced-motion: reduce)').matches){document.documentElement.classList.add('cin');window.__cin=setTimeout(function(){document.documentElement.classList.remove('cin')},4000)}</script>
     {!noindex && <script type="application/ld+json" set:html={JSON.stringify(hotelLd)} />}
     <slot name="head" />
   </head>
@@ -174,6 +175,11 @@ const hotelLd = {
     <script>
       // Apparitions au défilement (blocs + animations vectorielles) : script unique partagé.
       import '../scripts/motion';
+
+      // Couche cinéma (GSAP, Lenis) : chargée à part, après le script de base, jamais en mouvement réduit.
+      if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        import('../scripts/cinema').catch(() => document.documentElement.classList.remove('cin'));
+      }
 
       // En-tête : ombre après défilement (IntersectionObserver sur une sentinelle).
       const header = document.querySelector<HTMLElement>('[data-header]');

@@ -7,6 +7,7 @@ import Cliche from '../components/Cliche.astro';
 import PhotoPending from '../components/PhotoPending.astro';
 import Divider from '../components/motion/Divider.astro';
 import Itineraire from '../components/motion/Itineraire.astro';
+import CarteEnvirons from '../components/motion/CarteEnvirons.astro';
 import Boussole from '../components/motion/Boussole.astro';
 import { itineraireEnvirons } from '../data/motion';
 import { heros, villageMosaique, galeriesEnvirons, environsTextes, surtitres } from '../data/visuels';
@@ -45,6 +46,7 @@ const sitesTries = themes.flatMap((t) => sites.filter((s) => s.theme === t));
         </div>
         <p>{itineraireEnvirons.intro}</p>
       </div>
+      <CarteEnvirons />
       <Itineraire etapes={itineraireEnvirons.etapes} label={itineraireEnvirons.label} />
     </div>
   </section>

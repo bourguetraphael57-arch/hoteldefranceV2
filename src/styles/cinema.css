@@ -1,0 +1,80 @@
+/* Couche « cinéma » (src/scripts/cinema.ts) : états de départ de l'intro et micro-interactions CSS.
+   Tout ce qui masque du contenu est conditionné à .cin, retirée par le script ou, à défaut, après 4 s. */
+@layer reset, tokens, base, layout, components, utilities;
+
+/* Transition entre pages (navigateurs compatibles), en-tête stable. */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition { navigation: auto; }
+  ::view-transition-old(root) { animation: .25s ease-in both cin-out; }
+  ::view-transition-new(root) { animation: .45s ease-out both cin-in; }
+  @keyframes cin-out { to { opacity: 0; } }
+  @keyframes cin-in { from { opacity: 0; } }
+}
+
+@layer components {
+  /* Lenis */
+  html.lenis, html.lenis body { height: auto; }
+  .lenis.lenis-smooth { scroll-behavior: auto !important; }
+  .lenis.lenis-stopped { overflow: clip; }
+
+  /* Intro du hero : états de départ pris en charge par GSAP (les animations CSS d'origine sont suspendues). */
+  .cin .hero__text > * { animation: none; opacity: 0; }
+  .cin .hero__bg img { animation: none; position: absolute; top: -20%; height: 120%; }
+  .cin .hero__bg { overflow: clip; }
+  .hero__bg img { will-change: transform; }
+  .cin .hero__relief-back { animation: none; }
+  .cin [data-header] { will-change: transform; }
+  .site-header.is-scrolled { background: rgb(255 255 255 / .86); backdrop-filter: blur(14px) saturate(1.3); -webkit-backdrop-filter: blur(14px) saturate(1.3); }
+
+  /* Titres découpés en lignes : place pour les jambages sous le masque. */
+  .is-split { padding-bottom: .12em; }
+
+  /* Carte des environs */
+  .carte { margin: 0 auto var(--sp-6); max-width: 44rem; }
+  .carte svg { width: 100%; height: auto; overflow: visible; }
+  .carte__trait { fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1; stroke-dashoffset: 0; }
+  .carte__trait--relief { stroke: var(--c-pin); }
+  .carte__trait--eau { stroke: var(--c-sky); stroke-width: 3.2; }
+  .carte__trait--sentier { stroke: var(--c-accent); stroke-dasharray: .02 .02; stroke-dasharray: 6 8; }
+  .carte__dot { fill: var(--c-surface); stroke: var(--c-accent); stroke-width: 2.5; }
+  .carte__dot--hotel { fill: var(--c-accent); }
+  .carte text { font: 600 .95rem var(--ff-title, inherit); fill: var(--c-text); paint-order: stroke; stroke: var(--c-bg); stroke-width: 4px; }
+  .carte figcaption { text-align: center; font-size: var(--fs-sm); }
+
+  /* Micro-interactions (CSS : équivalent de Framer Motion, sans JS ni dépendance React). */
+  @media (prefers-reduced-motion: no-preference) {
+    .site-nav li a { position: relative; }
+    .site-nav li:not(.site-nav__extra) a::after {
+      content: ''; position: absolute; left: 0; bottom: .55rem; height: 2px; width: 100%;
+      background: var(--c-accent); transform: scaleX(0); transform-origin: left; transition: transform .45s cubic-bezier(.2, .7, .2, 1);
+    }
+    @media (min-width: 64rem) {
+      .site-nav li a:hover::after, .site-nav li a:focus-visible::after { transform: scaleX(1); }
+    }
+
+    .service-icon { transition: transform .4s cubic-bezier(.3, 1.6, .5, 1); }
+    .service-item:hover .service-icon { transform: scale(1.08) rotate(-3deg); }
+
+    .room-card .card__media img { transition-duration: .9s; }
+    .room-card:hover .card__media img { transform: scale(1.03); }
+    .room-card__peek {
+      position: absolute; inset: 0; z-index: 1; display: flex; align-items: flex-end; justify-content: center;
+      padding: var(--sp-4); color: #fff; text-decoration: none; font-weight: 600; letter-spacing: .02em;
+      background: linear-gradient(to top, rgb(14 22 36 / .72), rgb(14 22 36 / 0) 60%);
+      opacity: 0; transform: translateY(40%); transition: opacity .45s ease, transform .55s cubic-bezier(.2, .7, .2, 1);
+    }
+    .room-card:hover .room-card__peek, .room-card:focus-within .room-card__peek { opacity: 1; transform: none; }
+    .room-card__peek span { transform: translateY(1rem); transition: transform .55s .05s cubic-bezier(.2, .7, .2, 1); }
+    .room-card:hover .room-card__peek span { transform: none; }
+
+    .room-gallery__thumbs a { position: relative; }
+    .room-gallery__thumbs a::after { content: ''; position: absolute; inset: 0; background: rgb(14 22 36 / .25); opacity: 0; transition: opacity .3s; }
+    .room-gallery__thumbs a:hover::after { opacity: 1; }
+    .room-gallery__thumbs a:hover img { transform: scale(1.08); }
+
+    /* Coches des équipements : tracées quand la ligne apparaît. */
+    .checklist li::before { transition: clip-path .6s .25s ease-out; }
+  }
+  .room-card__peek { display: none; }
+  @media (prefers-reduced-motion: no-preference) and (hover: hover) { .room-card__peek { display: flex; } }
+}

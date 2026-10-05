@@ -1,0 +1,29 @@
+---
+/**
+ * Schéma (non à l'échelle) des environs : la Jonte coule vers l'ouest, le causse Méjean au nord, le causse Noir au sud,
+ * le mont Aigoual à l'est. Positions relatives indicatives ; distances réelles : voir les fiches de la page.
+ * L'état final (tout tracé) est l'état par défaut ; src/scripts/cinema.ts ajoute le tracé au défilement.
+ */
+const pois = [
+  { x: 330, y: 188, nom: 'Meyrueis', h: true },
+  { x: 560, y: 70, nom: 'Mont Aigoual' },
+  { x: 250, y: 70, nom: 'Causse Méjean' },
+  { x: 250, y: 300, nom: 'Causse Noir · Dargilan' },
+  { x: 90, y: 232, nom: 'Gorges de la Jonte' },
+];
+---
+<figure class="carte">
+  <svg data-carte viewBox="0 0 640 360" role="img" aria-label="Schéma des environs de Meyrueis : le mont Aigoual à l’est, le causse Méjean au nord, le causse Noir au sud et les gorges de la Jonte à l’ouest. Positions indicatives, non à l’échelle.">
+    <path class="carte__trait carte__trait--relief" pathLength="1" d="M20 120 L90 110 L120 84 L260 80 L300 100 L380 98 L420 74 L520 70 L560 40 L610 96" />
+    <path class="carte__trait carte__trait--relief" pathLength="1" d="M20 280 L100 290 L150 268 L330 278 L380 300 L520 296 L620 310" />
+    <path class="carte__trait carte__trait--eau" pathLength="1" d="M335 188 C290 176 250 214 200 208 S120 240 70 232 S30 240 14 236" />
+    <path class="carte__trait carte__trait--sentier" pathLength="1" d="M335 188 C400 170 470 140 540 84" />
+    {pois.map((p) => (
+      <g class="carte__poi" transform={`translate(${p.x} ${p.y})`}>
+        <circle r={p.h ? 9 : 6} class:list={['carte__dot', { 'carte__dot--hotel': p.h }]} />
+        <text y={p.h ? 26 : -14} text-anchor="middle">{p.nom}</text>
+      </g>
+    ))}
+  </svg>
+  <figcaption class="muted">Schéma indicatif, non à l’échelle.</figcaption>
+</figure>

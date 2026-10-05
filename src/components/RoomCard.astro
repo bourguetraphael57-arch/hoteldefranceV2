@@ -33,6 +33,7 @@ const prixIndicatif = c.prixAPartirDe ?? prixIndicatifMap[c.slug] ?? 82;
     {photo
       ? <PhotoOfficielle photo={photo} legende={false} sizes="(min-width: 64rem) 24rem, (min-width: 48rem) 50vw, 100vw" />
       : <PhotoPending label={c.nom} />}
+    <a class="room-card__peek" href={`/chambres/${c.slug}/`} tabindex="-1" aria-hidden="true"><span>Voir la chambre</span></a>
     {c.capacite && <span class="room-card__badge">{personnes(c.capacite)}</span>}
   </div>
   <div class="card__body">
