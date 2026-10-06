@@ -37,11 +37,11 @@ Règles : jamais de texte en `--c-border`. L'anneau de focus fait 3 px avec `out
 
 ### Typographie (2 familles + 1 manuscrite d'appoint)
 
-- Titres : Source Serif 4 (SIL OFL, variable), auto-hébergée en woff2 via `@fontsource-variable/source-serif-4` ou fichier local. Graisses 600 (titres) et 400 italique (accroches, rare). `font-display: swap`, précharger uniquement le fichier latin normal.
-  Pile : `"Source Serif 4", "Iowan Old Style", "Palatino Linotype", Georgia, serif`.
+- Titres : Instrument Serif (SIL OFL 1.1), une seule graisse (400) et son italique, auto-hébergée en woff2 dans `public/fonts/`. Jamais de gras sur les titres (pas de gras synthétique : `font-synthesis-weight: none`). Tailles relevées (x 1.1) car la police est étroite. `font-display: swap`, préchargement des fichiers latin.
+  Pile : `'Instrument Serif', 'Instrument Serif Repli', Georgia, serif`. Texte, menus, boutons et étiquettes : Hanken Grotesk variable (SIL OFL 1.1).
 - Texte et interface : pile système, 400 / 600, sans téléchargement.
   Pile : `system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif`.
-- Manuscrite : Caveat 600 (SIL OFL 1.1, woff2 latin auto-hébergé, `public/fonts/OFL-caveat.txt`), classe `.hand`. Usage parcimonieux : quelques sur-titres et annotations, taille ≥ 1.25rem, jamais pour le texte courant, les boutons ou une information essentielle.
+- Accent éditorial : italique d'Instrument Serif, classe `.hand`, pour quelques sur-titres et annotations, jamais pour le texte courant, les boutons ou une information essentielle.
 - Échelle fluide (320 → 1280 px) :
 
 ```css

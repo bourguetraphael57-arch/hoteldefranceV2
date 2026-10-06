@@ -3,13 +3,26 @@
 
 @layer reset, tokens, base, layout, components, utilities;
 
+/* Instrument Serif (titres, une seule graisse + italique) et Hanken Grotesk (texte, variable), SIL OFL 1.1, sous-ensemble latin.
+   Hébergées sur le site : aucun appel à un service tiers. */
 @font-face {
-  font-family: 'Source Serif 4';
-  src: url('/fonts/source-serif-4-latin-wght-normal.woff2') format('woff2');
-  font-weight: 200 900;
-  font-style: normal;
-  font-display: swap;
+  font-family: 'Instrument Serif';
+  src: url('/fonts/instrument-serif-latin-400-normal.woff2') format('woff2');
+  font-weight: 400; font-style: normal; font-display: swap;
 }
+@font-face {
+  font-family: 'Instrument Serif';
+  src: url('/fonts/instrument-serif-latin-400-italic.woff2') format('woff2');
+  font-weight: 400; font-style: italic; font-display: swap;
+}
+@font-face {
+  font-family: 'Hanken Grotesk';
+  src: url('/fonts/hanken-grotesk-latin-wght-normal.woff2') format('woff2');
+  font-weight: 100 900; font-style: normal; font-display: swap;
+}
+/* Repli à métriques ajustées : limite le saut de mise en page quand la police arrive. */
+@font-face { font-family: 'Instrument Serif Repli'; src: local('Georgia'); size-adjust: 90%; ascent-override: 98%; descent-override: 28%; }
+@font-face { font-family: 'Hanken Grotesk Repli'; src: local('Arial'); size-adjust: 102%; ascent-override: 96%; descent-override: 24%; }
 
 @layer reset {
   *, *::before, *::after { box-sizing: border-box; }
@@ -51,9 +64,9 @@
     --c-footer-link: #E2C48D;
 
     /* Typographie : Pairing strict de 3 familles */
-    --ff-title: 'Cormorant Garamond', 'Source Serif 4', Georgia, serif;
-    --ff-body: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    --ff-script: 'Caveat', cursive;
+    --ff-title: 'Instrument Serif', 'Instrument Serif Repli', Georgia, 'Times New Roman', serif;
+    --ff-body: 'Hanken Grotesk', 'Hanken Grotesk Repli', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    --ff-script: var(--ff-title);
     --ff-hand: var(--ff-script);
 
     --fs-sm: clamp(0.875rem, 0.85rem + 0.1vw, 0.9375rem);
@@ -98,15 +111,17 @@
     line-height: var(--lh-body);
     padding-bottom: calc(var(--mobile-bar-h) + env(safe-area-inset-bottom, 0px));
   }
+  html { font-synthesis-weight: none; }
   h1, h2, h3, h4 {
     font-family: var(--ff-title);
-    font-weight: 600;
+    font-weight: 400;
+    letter-spacing: -0.005em;
     line-height: var(--lh-snug);
     text-wrap: balance;
   }
-  h1 { font-size: var(--fs-3xl); line-height: var(--lh-tight); }
-  h2 { font-size: var(--fs-2xl); line-height: var(--lh-tight); }
-  h3 { font-size: var(--fs-xl); }
+  h1 { font-size: calc(var(--fs-3xl) * 1.12); line-height: 1.02; letter-spacing: -0.015em; }
+  h2 { font-size: calc(var(--fs-2xl) * 1.12); line-height: 1.06; letter-spacing: -0.01em; }
+  h3 { font-size: calc(var(--fs-xl) * 1.1); }
   h4 { font-size: var(--fs-lg); }
   p, li, dd { max-width: 65ch; }
   address { font-style: normal; }
@@ -458,7 +473,7 @@
     font-size: 0.625rem; letter-spacing: 0.25em; color: var(--c-gold); line-height: 1; margin-bottom: 2px;
   }
   .brand__name {
-    font-family: var(--ff-title); font-weight: 700; font-size: 1.2rem; letter-spacing: 0.03em; color: var(--c-text);
+    font-family: var(--ff-title); font-weight: 400; font-size: 1.45rem; letter-spacing: 0; color: var(--c-text);
   }
   .brand__sub {
     font-family: var(--ff-body); font-size: 0.6875rem; font-weight: 500; color: var(--c-text-muted); letter-spacing: 0.08em; text-transform: uppercase;
@@ -466,7 +481,7 @@
   .brand:hover .brand__name { color: var(--c-accent); }
   @media (min-width: 48rem) {
     .brand__mark { width: 2.65rem; height: 2.15rem; }
-    .brand__name { font-size: 1.35rem; }
+    .brand__name { font-size: 1.6rem; }
   }
   .nav-toggle {
     display: inline-flex; align-items: center; gap: var(--sp-2);
@@ -624,9 +639,10 @@
   .hero__title {
     font-size: clamp(2.4rem, 1.8rem + 4vw, 4.75rem);
     font-family: var(--ff-title);
-    font-weight: 700;
-    line-height: 1.05;
-    letter-spacing: 0.02em;
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: -0.015em;
+    font-size: clamp(2.9rem, 2rem + 5vw, 6rem);
     color: #fff;
     text-shadow: 0 4px 28px rgba(0, 0, 0, 0.65);
     display: inline-flex;
@@ -984,14 +1000,15 @@
   .credits-groupe[open] > summary::after { content: "−"; }
   @media (min-width: 48rem) { .credits-groupe > summary { display: none; } }
 
-  /* Typographie d'accent manuscrite (Caveat) : intros, citations et surtitres sélectionnés (>= 28px) */
+  /* Accent éditorial : italique du serif pour les sur-titres, intros et citations. */
   .title-script,
   .hand {
-    font-family: var(--ff-script, cursive);
-    font-weight: 600;
-    font-size: clamp(1.75rem, 1.45rem + 0.8vw, 2.35rem); /* Min 28px (1.75rem) */
-    line-height: 1.25;
-    letter-spacing: 0.02em;
+    font-family: var(--ff-title);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(1.6rem, 1.35rem + 0.8vw, 2.2rem);
+    line-height: 1.2;
+    letter-spacing: 0;
     text-transform: none;
     color: var(--c-accent);
   }

@@ -68,7 +68,7 @@ Aucune donnée n'est stockée par le site : la demande est seulement transmise p
 - **Photos libres** (`public/images/libres/`, déclarées dans `src/data/photos-libres.json`) : 31 photos Wikimedia Commons du village et des environs (dont 20 ajoutées pour la refonte : l'hôtel et le monument aux morts, le patrimoine du village (tour de l'Horloge, maison du Viguier, halle, quais, chapelle Notre-Dame-du-Rocher), vautours, gorges, causses, Aigoual, Bramabiau, Florac et deux fromages d'illustration (pélardon, pérail)). Auteur et licence sont crédités près de chaque image et sur `/credits-photos/`, qui liste automatiquement toutes les photos (libres et officielles) et les polices. Ajout : placer `{id}-800` et `{id}-1600` en `.webp` et `.jpg`, puis déclarer l'entrée dans le JSON.
 - **`src/data/visuels.ts`** décide quelle photo va où (en-têtes de page, compositions de l'accueil, mosaïques, vignettes d'offres) avec légende et recadrage. Une entrée `{ attendu: '…' }` est un emplacement « Photo à venir » : sujet à photographier à l'hôtel, jamais remplacé par une autre photo.
 - **Composants** : `Cliche.astro` affiche une photo libre ou officielle avec légende et crédit ; `CreditsGroupe.astro` regroupe les crédits sous une composition serrée (mosaïque, bandeau).
-- **Police Caveat** (manuscrite, SIL OFL 1.1) : classe `.hand`, limitée à quelques sur-titres.
+- **Italique Instrument Serif** (SIL OFL 1.1) : classe `.hand`, pour les sur-titres et annotations.
 
 Photos à faire faire par l'hôtel : salle voûtée (vide et dressée), salon particulier, terrasse en gros plan, jardin belvédère, vrai petit-déjeuner, plats, vue depuis la salle de séminaires, chambre familiale montrant ses 4 couchages.
 

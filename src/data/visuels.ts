@@ -256,8 +256,8 @@ export const creditsPage = {
     titre: 'Polices',
     texte: 'Les polices sont hébergées sur le site (aucun appel à un service tiers).',
     liste: [
-      { nom: 'Source Serif 4', usage: 'Titres et texte courant', auteur: 'Adobe', licence: 'SIL Open Font License 1.1', fichier: '/fonts/OFL-source-serif-4.txt' },
-      { nom: 'Caveat', usage: 'Quelques sur-titres manuscrits', auteur: 'The Caveat Project Authors', licence: 'SIL Open Font License 1.1', fichier: '/fonts/OFL-caveat.txt' },
+      { nom: 'Instrument Serif', usage: 'Titres et accents en italique', auteur: 'The Instrument Serif Project Authors', licence: 'SIL Open Font License 1.1', fichier: '/fonts/OFL-instrument-serif.txt' },
+      { nom: 'Hanken Grotesk', usage: 'Texte courant et interface', auteur: 'The Hanken Grotesk Project Authors', licence: 'SIL Open Font License 1.1', fichier: '/fonts/OFL-hanken-grotesk.txt' },
     ],
   },
 } as const;
